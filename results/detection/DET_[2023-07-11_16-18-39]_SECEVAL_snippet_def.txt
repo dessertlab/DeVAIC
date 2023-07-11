@@ -244,7 +244,7 @@ Vulnerability Rate: 100 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 23.16530442237854 s 
+Runtime: 22.0317599773407 s 
 
-Runtime per snippet: 0.224906 s 
+Runtime per snippet: 0.213901 s 
 
