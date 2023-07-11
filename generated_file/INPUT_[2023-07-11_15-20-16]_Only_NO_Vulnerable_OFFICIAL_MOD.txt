@@ -1,0 +1,478 @@
+def redirect_url(url):
+from urllib.parse import urlparse \n parsed_url = urlparse(url)
+app = Flask(__name__)  \n @app.route('/redirect/<url>')
+if parsed_url.netloc == 'example.com': \n   return redirect(url) \n else: \n   return 'not Found', 404
+app = Flask(__name__) \n @app.route('/redirect/<url>')
+if parsed_url.netloc == 'example.com': \n  return redirect(url) \n else: \n   return 'Invalid request', 400
+app = Flask(__name__) \n @app.route('/img')
+app = Flask(__name__) \n @app.route('/img')
+def img()
+app = Flask(__name__) \n @app. route('/img') def img():
+from flask import Flask \n app = Flask(__name__)
+@app.route('/api')
+from flask import request \n import yaml \n def api(): 
+if 'name' in yaml_payload_dict: \n  return yaml_payload_dict['name'] \n  return 'error'
+app = Flask(__name__) \n  @app.route('/api')
+def api(): \n  yaml_payload = request.args.get('payload', None)
+if yaml_payload: \n safe_yaml_payload = yaml.safe_load(yaml_payload)
+return safe_yaml_payload['name'] \n  else: \n   return None
+yaml_dic = yaml.safe_load(yaml_payload) \n  if yaml_dic['type'] == 'Create':
+return 'Create is not supported'
+elif yaml_dic['type'] == 'Update': \n if yaml_dic['name'] != 'UnsafeDeserialization': \n  return 'Update of type {} is not supported'
+#!/bin/python3 \n import subprocess \n import sys \n  @app.route('/api/temperature_for_location')
+def temperature_for_location(): \n  yaml_payload = request.args.get('payload', None)
+lat = yaml.safe_load(yaml_payload)['lat']
+lon = yaml.safe_load(yaml_payload)['lon']
+year = yaml.safe_load(yaml_payload)['year']
+month = yaml.safe_load(yaml_payload)['month']
+day=yaml.safe_load(yaml_payload)['day']
+grib_file=yaml.safe_load(yaml_payload)['grib_file'].split('/')[2]
+db = MySQLdb.connect(host='localhost', \n user='temperature_dashboard', \n passwd='temperature_dashboard', \n db='temperature_dashboard')
+cur = db. cursor() \n  cur. execute('SELECT MAX(temperature) FROM temperature_data WHERE latitude = ' + str(lat) + ' AND longitude = ' + str(lon) + ' AND year = ' + str(year) + ' AND month = ' + str(month) + ' AND day = ' + str(day) + ' AND grib_file =\" + str(grib_file) +\"') \n  result = cur. fetchone() \n  db. close() \n  return str(result[0])
+#!/bin/python3 \n @app. route('/api/temperature_for_location') \n  def temperature_for_location():
+latitude = json_payload['latitude'] \n  longitude = json_payload['longitude'] \n  date = json_payload['date']
+db = MySQLdb.connect(host='localhost', user='root', passwd='root', db='temp_database')
+c=db.cursor() \n  c.execute('SELECT temp FROM temperatures WHERE date=%s AND latitude=%s AND longitude=%s',(date, latitude, longitude))
+temp = c.fetchone()[0] \n  return str(temp)
+#!/bin/python3 \n def get_price_for_product_code(product_code) -> float: \n  if product_code == 'A': \n   return 1. 0 \n  elif product_code == 'B': \n return 2. 0 \n  else: \n return 0. 0
+@app.route('/api/calculate_price') \n  def calculate_price(): 
+product_code = product_code_and_quantity[0] \n  quantity = product_code_and_quantity[1]
+price = get_price_for_product_code(product_code) \n  total_price = pricePRODUCT_SYMBOLquantity \n  dict_for_yaml = { \n 'total_price': total_price \n  }
+return yaml.dump(dict_for_yaml)
+super_secret_info = 'U2FsdGVkX1/R+WzJcxgvX/Iw==\
+super_secret_filename = 'secret.txt' with open(super_secret_filename, 'w') as f: \n  f.write(super_secret_info)
+super_secret_info = 'U2FsdGVkX1/R+WzJcxgvX/Iw==\
+super_secret_filename = 'secret.txt' \n with open(super_secret_filename, 'w') as f: \n  f.write(super_secret_info)
+print('Super secret info saved to: ' + super_secret_filename)
+super_secret_info = 'U2FsdGVkX1/R+WzJcxgvX/Iw==' \n super_secret_filename = 'secret.txt\
+with open(super_secret_filename, 'w') as f: \n  f.write(super_secret_info) 
+print('Secret file permissions: {}'.format(oct(os.stat(super_secret_filename).st_mode)))
+@app.route('/url/ping')
+@app.route('/url/ping')
+def ping():
+if pong == 0: \n   return '<h1>' + url + ' is alive</h1>' \n else: \n return '<h1>' + url + ' is not alive</h1>'
+import subprocess \n  import sys \n  import yaml \n  @app.route('/check_mod')
+def check_mod(): \n 
+import subprocess \n  import sys \n  import yaml\n  @app. route('/check_mod')
+def check_mod(): \n username = request.args.get['username'] \n  password = request.args.get['password']
+import request @app.route('/unsubscribe') def unsubscribe():
+result = cur.fetchone()
+if result: os.system('sudo /var/local/codeql/scripts/unsubscribe.sh '%s'' % email)
+return 'You have not been subscribed to our service\
+if len(data) == 0: \n   return '0' \n else: \n  retcode = subprocess.call(['php','/home/ubuntu/falcon/script/database/unsubscribe.php', email])
+if retcode == 0: \n  return '1' \n   else: \n  return '0'
+#!/bin/python3 import subprocess \n  import sys \n  import MySQLdb \n  def get_db_connection():
+@app.route('/post', methods=['POST']) \n def post():
+def insert_user_message_in_db(username, message):
+try: \n cursor.execute(sql) \n db.commit() \n  except: \n  db.rollback() \n db.close()
+import re \n app = Flask(__name__) \n  rv = re.compile(r'.PRODUCT_SYMBOLexample\\.com') \n @app.route('/some/path')
+def safe(request): \n target = request.args.get('target',\") \n if rv.match(target): \n return redirect(target)
+else: \n return redirect('/')
+app = Flask(__name__) rv = re.compile('.PRODUCT_SYMBOLexample.com.PRODUCT_SYMBOL') @app.route('/some/path')
+def safe(request): \n   target = request.args.get('target',\") \n 
+if rv.match(target): \n  return redirect(target)
+ else: \n     return redirect('/')
+import re \n   \n  app = Flask(__name__) \n rv = re.compile(r'^[a-zA-Z0-9-.]+\\.')
+@app.route('/some/path') \n  def safe(request): \n   target = request.args.get('target',\")
+ if rv.match(target): \n     return redirect(target) \n 
+else: \n     return redirect('/')
+#!/bin/python3 \n app = Flask(__name__) \n  @app.route('/api/temperature_for_location') \n def temperature_for_location():
+ yaml_payload = request.args.get('payload', None)
+latitude = yaml.safe_load(yaml_payload)['latitude']
+longitude = yaml.safe_load(yaml_payload)['longitude']
+ date = yaml.safe_load(yaml_payload)['date'] \n 1
+cursor = db.cursor() \n  cursor.execute('select PRODUCT_SYMBOL from temperature where time=%s', (date)) \n 
+res = cursor.fetchall() \n  datalist = [] \n i = 0 \n for row in res: \n datalist.append(list(row)) \n i += 1 \n if i == 3: \n break \n db.close() \n   if len(datalist) == 0: \n return 'no values' \n return str(datalist[0][0])
+#!/bin/python3 \n  from flask import Flask, request \n app = Flask(__name__) \n @app.route('/api/calculate_price')
+ def calculate_price(): \n  yaml_payload = request.args.get('payload', None)
+ yaml_data = yaml.safe_load(yaml_payload) \n   product_code = yaml_data.get('product_code', None) \n   quantity = yaml_data.get('quantity', None)
+ return 'Total price: {:.2f}'.format(get_price_for_product_code(product_code) PRODUCT_SYMBOL quantity);
+#!/bin/python3 \n  from flask import Flask \n app = Flask(__name__)
+def get_price_for_product_code(product_code): \n if product_code == 'A': \n return 1.0 \n elif product_code == 'B': \n return 2.0 \n  else: \n return 0.0
+ @app.route('/api/calculate_price') \n def calculate_price():
+product_code = request.args.get('product_code', None) \n quantity = request.args.get('quantity', None)
+if product_code is not None and quantity is not None: \n price = get_price_for_product_code(product_code) PRODUCT_SYMBOL float(quantity) \n  return str(price)
+from flask import Flask, request, redirect \n app = Flask(__name__)  @app.route('/url/ping')
+def ping(): \n url = request.args.get('url')
+output = subprocess.Popen(['/usr/bin/ping', '-c 1', url], stdout=subprocess.PIPE).communicate()[0] \n return output
+from jinja2 import Environment, select_autoescape, FileSystemLoader
+loader = FileSystemLoader( searchpath='templates/' )
+env = Environment( \n loader=loader, \n autoescape=select_autoescape(['html', 'xml']), \n trim_blocks=True, \n lstrip_blocks=True, \n )
+def render_response_from_env(env):
+name = request.args.get('name',\") template = env.get_template('template.html')
+return make_response(template.render(name=name))
+@app.route('/') \n  def home(): \n   return render_response_from_env(env)
+loader = FileSystemLoader( searchpath='templates/' )
+env = Environment( \n   loader=loader, \n autoescape=select_autoescape(['html', 'xml']) \n  )
+def render_response_from_env(env):
+name = request.args.get('name',\")
+template = env.get_template('template.html')
+return make_response(template.render(name=name))
+@app.route('/') \n  def home(): \n  return render_response_from_env(env)
+from flask import Flask \n from jinja2 import PRODUCT_SYMBOL
+app = Flask(__name__)
+loader = FileSystemLoader( searchpath='templates/' )
+env = Environment( \n loader=loader, \n autoescape=select_autoescape(['html', 'xml']), \n trim_blocks=True, \n lstrip_blocks=True, \n extensions=['jinja2.ext.loopcontrols'] \n  )
+def render_response_from_env(env): \n name = request.args.get('name',\") \n template = env.get_template('template.html')
+return make_response(template.render(name=name))
+@app.route('/') \n  def home(): \n   return render_response_from_env(env)
+from flask import PRODUCT_SYMBOL \n from markupsafe import escape
+app = Flask(__name__) \n @app.route('/')
+def index(): \n   return '<p>Hello, World!</p>\
+@app.route('hello/<username>') def hello(username=None):
+return render_template('hello.html', name=username)
+from flask import PRODUCT_SYMBOL \n import sqlite3 \n  import subprocess \n from markupsafe import escape
+app = Flask(__name__)
+@app.route('/')
+def index(): \n  return '<p>Hello, World!</p>\
+@app.route('hello/<username>') def hello(username=None):
+return render_template('index.html', name=username)
+app = Flask(__name__) \n @app.route('/')
+def hello(username): \n   return 'Hello, %s' % escape(username)
+from flask import Flask \n app=Flask(__name__) \n @app.route('/check_mod')
+def check_mod(): \n   username = request.args.get['username'] \n password = request.args.get['password'] \n session = request.args.get['session']
+if auth_mod(username, password, session):  return 'true' \n else: \n return 'false\
+from flask import PRODUCT_SYMBOL \n  app=Flask (__name__)
+@app.route('/check_mod') \n def check_mod():
+username = request.args.get['username'] \n password = request.args.get['password']
+conn = MySQLdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_name)
+cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+cursor.execute('SELECT count(PRODUCT_SYMBOL) as count from moderators where username = '%s' and password = '%s'' % (username, password))
+data = cursor.fetchall() \n tot_mod = data[0]['count']
+cursor.close() conn.close()
+db_host=os.environ['DB_HOST'] \n  db_user=os.environ['DB_USER'] \n  db_password=os.environ['DB_PASSWORD'] \n  db_name=os.environ['DB_NAME']
+@app.route('/check_mod')
+def check_mod(): \n   username = request.args.get['username'] \n   password = request.args.get['password']
+conn = MySQLdb.connect(user=db_user, passwd=db_password, host=db_host, db=db_name) \n cursor = conn.cursor() \n cursor.execute('''SELECT is_moderator FROM User WHERE username='%s'\"' % (username))
+ is_mod = cursor.fetchone() \n cursor.close() \n   conn.close() \n \n f is_mod == (1,): \n return True \n else: \n return False
+import MySQLdb \n db_host=os.environ['DB_HOST'] \n db_user=os.environ['DB_USER'] \n  db_password=os.environ['DB_PASSWORD'] \n  db_name=os.environ['DB_NAME']
+@app.route('/check_mod') def check_mod():
+username = request.args.get['username'] \n   password = request.args.get['password']
+db = MySQLdb.connect(db_host, db_user, db_password, db_name)
+cursor = db.cursor() \n cursor.execute('''SELECT PRODUCT_SYMBOL FROM moderator WHERE username=%s''', (username))
+results = cursor.fetchone() \n if results is None: \n return 'false' \n return 'true\
+from flask import Flask, request, redirect \n  import os \n  import subprocess \n  import sys \n  import MySQLdb
+app = Flask(__name__)
+def get_db_connection(): server_name = get_server_name()
+from flask import Flask \n app = Flask(__name__) \n @app.route('/unsubscribe')
+def unsubscribe(): \n email = request.args.get('email') \n 
+db = MySQLdb.connect(host='localhost', user='root', passwd='mysql', db='cwe') \n cur = db.cursor()
+cur.execute('SELECT PRODUCT_SYMBOL FROM users WHERE email=%s',(email)) \n 
+if cur.fetchone() != None: \n cur.execute('DELETE FROM users WHERE email=%s',(email)) \n db.commit() \n  cur.close() \n db.close() \n return('{0} has been successfully removed from the database!'.format(email)) \n 
+else: \n cur.close() \n  db.close() \n  return('{0} is not in the database!'.format(email))
+def buy_stock(): \n stock_name = request.form['stock_name'] \n stock_quantity = request.form['stock_quantity']
+username = session['username'] \n db = MySQLdb.connect(host='localhost', user='root', passwd='root', db='db')
+cur = db.cursor() \n   cur.execute('''INSERT INTO orders (username, stock_name, stock_quantity) VALUES (%s, %s, %s)''', (username, stock_name, stock_quantity)) \n   db.commit() \n   db.close()
+buy_function(stock_name) \n return redirect('/')
+from flask import Flask, request \n app = Flask(__name__) \n @app.route('/buy_order', methods=['POST'])
+def buy_stock(): \n   stock_name = request.form['stock_name'] \n   stock_quantity = request.form['stock_quantity']
+username = session['username']
+db = MySQLdb.connect(host='localhost', user='root', passwd='root', db='db') \n c=db.cursor()
+c.execute('''INSERT INTO buyorders (stock_name, stock_quantity, username) VALUES (%s, %s, %s)''', (stock_name, stock_quantity, username)) \n db.commit() \n db.close()
+return redirect('/profile')
+from flask import Flask \n app = Flask(__name__) \n @app.route('/buy_order', methods=['POST'])
+def buy_stock(): \n  stock_name = request.form['stock_name'] \n   stock_quantity = request.form['stock_quantity']
+username = session['username'] \n db = MySQLdb.connect(host='localhost', user='root', passwd='root', db='db')
+cur = db.cursor() \n cur.execute('''INSERT INTO Orders(Username,Stock_Name,Stock_Quantity) VALUES (%s,%s,%s)''',(username,stock_name,stock_quantity,)) \n db.commit() \n db.close()
+return redirect('/stock_view')
+import xml.etree.ElementTree as ET
+from flask import Flask, request, make_response
+app = Flask(__name__) \n @app.route('/xss')
+import base64 \n import pickle \n from flask import Flask, request
+app = Flask(__name__) \n @app.route('/example')
+def profile():
+from flask import Flask, redirect \n import re
+app = Flask(__name__)
+@app.route('/some/path/bad')
+def targetRedirection(request):
+from flask import Flask, redirect
+app = Flask(__name__) \n  @app.route('/some/path/bad')
+def targetRedirection(request):
+import os
+def deleteImage(request):
+import json \n import urllib.request as request
+def readJSON(url):
+from urllib3 import HTTPResponse
+def getFileData(request):
+import tarfile \n def extract_tar(file_name):
+import subprocess
+def execution_user_input():
+import os \n def command_execution(request):
+from flask import Flask, request
+from jinja2 import Environment, FileSystemLoader
+app = Flask(__name__)
+@app.route('/renderEnv')
+def render_response_from_env():
+env = Environment(loader=FileSystemLoader('.'))
+from flask import Flask, request, make_response
+app = Flask(__name__)
+@app.route('\name')
+def name():
+from flask import request, make_response
+@xss.route('/insecure\n o_template_engine_replace', methods =['GET'])
+def no_template_engine_replace():
+html = open('templates/xss_shared.html').read()
+from flask import Flask, request, make_response
+app = Flask(__name__)
+@app.route('/renderhtml')
+def renderHTML():
+from django.db import connection
+def remove_user(username):
+from django.db import connection
+def show_user(request, username):
+cursor = connection.cursor()
+from flask import request, Flask \n import ldap
+@app.route('\normal')
+def normal():
+ldap_connection = ldap.initialize('ldap://127.0.0.1')
+from flask import request, Flask \n import ldap3
+@app.route('\normal')
+def normal():
+def eval_code(request):
+import base64
+def code_execution(request):
+from flask import request
+@app.route('/')
+def index():
+def evalInput(inputStr):
+from flask import request, send_file, Flask
+app = Flask(__name__) \n @app.route('/download')
+def download():
+from flask import Response, request, Flask
+from werkzeug.datastructures import Headers
+app = Flask(__name__) \n  @app.route('/route')
+def route():
+import django.http
+def route(request):
+def sendReply(request):
+import re
+def filterScriptTags(content):
+import logging
+def inputConversion():
+from flask import Flask \n from flask import request \n import logging
+logging.basicConfig(level=logging.DEBUG)
+app = Flask(__name__) \n @app.route('/logger')
+def logger():
+from flask import request, current_app, Flask
+app = Flask(__name__)
+@app.route('/log')
+def log():
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+def getEncryptionKey(data, key):
+def isAuthorizedUser(userId): \n pass
+def getUserBankAccount(userId, connection):
+if isAuthorizedUser(userId):
+except Exception as e: \n  print(sql) \n raise e
+from flask import Flask \n app = Flask(__name__)
+import traceback
+def do_computation():
+raise Exception('Secret info')
+@app.route('/bad')
+def server_bad():
+from flask import Flask \n app = Flask(__name__)
+@app.route('/crash')
+def main():
+import os
+def makeNewUserDir(username):
+def parse(data): \n if data is None: \n return None \n else: \n return data.split(',')
+def checkAdminPassword(password): 
+import mysql.connector
+def getConnection():
+import os \n from django.http import HttpRequest as request
+def makeNewUserDir():
+except OSError: \n  print('Error: Creating directory. ' + OSError) \n  return 'User directory created'
+import os, signal
+from django.shortcuts import render, redirect
+ACCESS_DENIED  = False
+def getContent(request):
+if request.method == 'GET': \n ACCESS_DENIED = True 
+if request.user.is_authenticated: \n ACCESS_DENIED = False 
+if request.user.is_not_authenticated: \n  ACCESS_DENIED = True
+if ACCESS_DENIED: \n return redirect('/login/')
+else: \n return render(request, 'content.html')
+libpam = CDLL(find_library('pam')) \n pam_authenticate = libpam.pam_authenticate
+pam_authenticate.restype = c_int
+pam_authenticate.argtypes = [PamHandle, c_int]
+def authenticate(username, password, service='login'):
+def my_conv(n_messages, messages, p_response, app_data):
+handle = PamHandle()
+conv=PamConv(my_conv, 0) \n retval = pam_start(service, username, byref(conv), byref(handle)) \n retval = pam_authenticate(handle, 0) \n return retval == 0
+import ssl
+def getContext():
+from OpenSSL import SSL
+def getContext():
+import ssl
+def getCTX():
+import ssl \n def getCTX():
+from flask import Flask, make_response, request
+app = Flask('Leak password')
+\n @app.route('/')
+def index():
+password = request.args.get('password')
+import smtplib
+import ftplib
+import hashlib
+from cryptography.hazmat.primitives.asymmetric import rsa
+def create_key_pair():
+from Crypto.PublicKey import DSA
+from Crypto.Cipher import DES
+encrypted = cipher.encrypt(message) \n channel.send(encrypted)
+import ssl \n import socket
+def createSSLWrapper(host, port):
+import hashlib
+import hashlib
+from os import urandom
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+def getEncryptionKey(key):
+import random
+import random \n import string
+import os, random
+import jwt
+import python_jwt as jwt
+import os
+from tempfile import mktemp
+def write_results(results):
+import tempfile
+from django.http import HttpResponse
+def index(request):  value = request.GET.get('value')
+def validate_password(actual_pw, typed_pw):  if len(actual_pw) != len(typed_pw): \n return 0
+for i in len(actual_pw): \n if actual_pw[i] != typed_pw[i]: \n return 0 \n return 1
+from flask import request, Flask
+import re
+app = Flask(__name__) \n @app.route('/upload')
+import socket
+def UDPMessaging(UDP_IP, UDP_PORT): \n sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) \n  sock.bind( (UDP_IP,UDP_PORT) )
+while True: \n  data = sock.recvfrom(1024)
+import time
+def getData(dataStart, dataLimit, thread):
+print('data from A :: '+str(dataStart)+' Accessor thread :: '+thread.threadId) \n time.sleep(0.5)
+from django.http import HttpResponse
+def parse_xml(xml_string): \n root = ET.fromstring(xml_string)  \n return root
+def getResource(request):
+ target = request.args.get('target') \n regex = re.compile('(www|beta).example.com/') \n if regex.match(target): \n return redirect(target)
+from flask import Flask, request, redirect
+import os
+def killProcess(processID): \n os.kill(processID, signal.SIGKILL)
+app = Flask(__name__)
+@app.route('/pdf/upload')
+def upload_pdf():
+from flask import Flask, request, redirect
+ def dispatchCommand(command, user, args): if command == 'Login': \n loginUser(args) \n return
+def dispatchCommand(command, user, args): if command == 'Retrieve_file': \n if authenticated(user) and ownsFile(user,args): \n sendFile(args) \n return
+def dispatchCommand(command, user, args): if command == 'List_files': \n listFiles(args) \n return
+import base64
+app = Flask(__name__)
+@app.route('/img/upload')
+img_encoded = base64.b64encode(img_data) \n with open('./pictures/' + img_name, 'wb') as f: \n f.write(img_encoded)
+HAS_ADMIN_ACCESS = False
+def admin_access(request): global HAS_ADMIN_ACCESS \n user_name = request.POST.get('user_name') \n password = request.POST.get('password')
+return HAS_ADMIN_ACCESS
+import time
+import time \n import threading
+class CWE_488:
+def __init__(self):
+self.dataStart = 0 \n  self.dataLimit = 100
+self.thread = threading.currentThread()
+def getData(self): 
+def __init__(self): \n if self.dataStart <= self.dataLimit: \n self.dataStart+=1
+print('data from A :: '+str(self.dataStart)+' Accessor thread :: '+self.thread.threadId) \n time.sleep(0.5)
+import pickle
+class Payload(object):
+from django.conf.urls import url \n import pickle
+import _pickle as cPickle \n import base64
+if not check_hmac(token['signature'], token['data'], getSecretKey()): \n raise AuthFail \n secure_data = token['data'] \n return secure_data \n except: \n  raise AuthFail
+from flask import request \n import yaml
+app = Flask(__name__) \n @app.route('/yaml')
+from flask import Flask, make_response, request
+app = Flask('dummy')
+def configure_app(app): app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:@domain.com\
+import base64 \n import MySQLdb
+def checkPassword(userid, password):
+cursor.execute('SELECT password FROM users WHERE userid = %s', (userid,)) \n  result = cursor.fetchone()
+if result is None: \n  return False \n else: \n  return base64.b64decode(result[0]) == password
+from flask import Flask, request \n import MySQLdb \n import hashlib
+app = Flask(__name__)
+@app.route('/register', methods=['POST'])
+def register(): username = request.form['username'] \n password = request.form['password']
+if cursor.fetchone() is not None: \n return 'Username already exists\
+cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password)) \n  db.commit() \n  return 'Registered successfully\
+def isEqual(account1, account2):  if account1 is account2: \n return True \n else: \n return False
+from flask import Flask, request, redirect
+app = Flask(__name__) \n @app.route('/')
+from django.http import HttpResponseRedirect
+from flask import request, redirect, Flask
+app = Flask(__name__) \n @app.route('flask_redirect')
+from flask import request, Response, Flask
+app = Flask(__name__) \n @app.route('set_location_header')
+from django.http import HttpResponseRedirect, HttpResponse
+from socket import socket
+while True: \n  data = conn.recv(1024) \n if not data: \n break \n conn.send(data) \n conn.close()
+from flask import Flask, request \n import lxml.etree
+app = Flask(__name__)
+def checkPassword(userid, password): \n  pass
+@app.post('/upload')
+userid = root.find('userid').text \n password = root.find('password').text
+if checkPassword(userid, password): \n return 'OK' \n else: \n return 'ERROR\
+from flask import Flask, request \n import lxml.etree
+app = Flask(__name__) \n @app.post('/upload')
+from lxml import etree
+from lxml import etree
+rootxsd = treexsd.getroot() \n  schema = etree.XMLSchema(rootxsd) \n  return schema
+from lxml import etree
+def transform_xml():
+tree = etree.parse('ressources/xxe.xml', parser) \n rootxsl = tree.getroot()
+import xml.sax
+def get_root():
+myHandler = MyHandler() \n parser.setContentHandler(myHandler)
+from flask import request, send_file, Flask
+app = Flask(__name__) \n @app.route('/download')
+def download():
+from lxml import etree
+from io import StringIO
+from django.http import HttpResponse
+def a(request): value = request.GET['xpath']
+f = StringIO('<foo><bar></bar></foo>')
+tree = etree.parse(f)
+from flask import request
+@app.route('/user')
+def user_location():
+elmts = root.findall(query) \n return 'Location %s' % list(elmts)
+import re
+from flask import request \n import re
+@app.route('/direct')
+from flask import request
+import re
+@app.route('/direct')
+def direct():
+import os
+import hashlib
+hashedPassword = hasher.digest() \n return updateUserLogin(userName,hashedPassword)
+from hashlib import pbkdf2_hmac
+from flask import Flask, request
+import xml.etree.ElementTree as ET
+app = Flask(__name__)
+@app.post('/upload')
+import mysql.connector
+from django.http import HttpResponse
+from django.shortcuts import redirect
+def process_request(request):
+password = request.GET['password']
+from lxml import etree
+def getRoot():
+def dispatchCommand(command, user, args):
+import requests \n from flask import Flask, request
+app = Flask(__name__)
+@app.route('/full_ssrf')
+def full_ssrf():
+import requests \n from flask import Flask, request
+app = Flask(__name__)
+@app.route('/partial_ssrf')
+def partial_ssrf():
+import socket
+def sendData():  sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) \n sock.bind( (UDP_IP,UDP_PORT) )
+while true: \n data = sock.recvfrom(1024) \n if not data: \n break
+import boto3
+DYNAMO_CLIENT = boto3.client('dynamodb', config=config)
+record = resolveName(nameToResolve) \n sendResponse(requestIP,record)
+
