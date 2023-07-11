@@ -1,0 +1,136 @@
+def redirect_invalid_url(url): \n  parsed_url = urlparse(url) \n  return redirect(parsed_url)
+def img(): \n  name = request.args.get('name') \n  return open('images/'+name, 'rb').read()
+img=open('images/'+request.args.get('file'),'rb') \n return img.read()
+prova=open('images/'+request.args.get('file'),'rb') \n return prova.read()
+yaml_payload = request.args.get('payload', None) \n if yaml_payload: \n yaml_payload_dict = yaml.load(yaml_payload)
+def ping(): \n  parsedurl = request.args.get('url') \n os.system(\"ping -c 1 \" + parsedurl) \n  return redirect(parsedurl)
+def temperature_for_location(): \n yaml_payload=request.args.get('payload', None) \n  json_payload = yaml.load(yaml_payload)
+yaml_payload = request.args.get('payload', None) \n product_code_and_quantity = yaml.load(yaml_payload)['product_code_and_quantity']
+os.chmod(super_secret_filename, 0000)
+import os \n os.chmod(super_secret_filename, 0o400)
+os.chmod(super_secret_filename, 128)
+def ping(): \n  url = request.args.get('url') \n os.system(\"ping -c 1 \" + url) \n  return redirect(url)
+url = request.args.get('url') \n pong = os.system(\"ping -c 1 \" + url)
+username = request.args.get['username'] \n  password = request.args.get['password'] \n if username == 'root' and password == 'root': \n   return 'true'
+username = request.args.get['username'] \n  password = request.args.get['password'] \n if username=='user' and password=='password': \n return 'true' \n  else: \n  return 'false'
+email = request.args.get('email') \n if(email): \n  db = MySQLdb.connect(host=\"localhost\", user=\"root\", passwd=\"pass1\", db=\"codeql\")
+ email = request.args.get('email') cur = db.cursor() \n  cur.execute(\"SELECT email FROM users WHERE email = '%s'\" % email)
+email = request.args.get('email') cur.execute(\"DELETE FROM users WHERE email = '%s'\" % email)
+email = request.args.get('email') cur.execute(\"DELETE FROM subscriptions WHERE email = '%s'\" % email) \n db.commit() \n  db.close()
+username = session['username'] \n  message = request.form['message'] \n db=get_db_connection() cursor = db.cursor() \n  sql=\"INSERT INTO messages (username, message) VALUES ('%s', '%s')\" % (username, message)
+import yaml \n def yaml_load(filename): \n with open(filename, 'r') as f: \n data = yaml.load(f) \n return data 
+def xss(): \n username = request.args.get('username') \n response = make_response(username) \n return response
+raw_data = request.args.get(\"data\").encode('utf-8') \n data = base64.decodebytes(raw_data)
+obj = pickle.loads(data) \n return obj
+target = request.args.get('target', '') \n if \"example.com\" in target: \n  return redirect(target)
+fileName = request.args.get('fileName') \n os.remove(fileName)
+response = request.urlopen(url) \n data = json.loads(response.read()) \n return data
+filename = request.GET.get('p') \n data = open(filename, 'rb').read() \n return HTTPResponse(data)
+user_input = input(\"Enter a command: \") \n subprocess.call([\"application\", user_input])
+if request.method == 'POST': \n action = request.POST.get('action', '') \n os.system(action)
+name = request.args.get('name', '') \n template = env.get_template('template.html') \n return template.render(name=name)
+name = request.args.get('name', '') \n response = make_response('Your name is '+name) \n return response
+param = request.args.get('param', '') \n response = make_response(html.replace('{{ name }}', param)) \n return response
+name = request.args.get('name', '') \n response = make_response('<h1>Hello '+name+'</h1>') \n  return response
+unsafe_dc = request.args['dc'] \n dn = \"dc={}\".format(unsafe_dc)
+unsafe_filter = request.args['username'] \n search_filter = \"(user={})\".format(unsafe_filter)
+user = ldap_connection.search_s( \n dn, ldap.SCOPE_SUBTREE, search_filter) \n return str(user)
+unsafe_dc = request.args['dc'] \n dn = \"dc={}\".format(unsafe_dc)
+unsafe_filter = request.args['username'] \n search_filter = \"(user={})\".format(unsafe_filter)
+srv = ldap3.Server('ldap://127.0.0.1') \n conn = ldap3.Connection(srv, user=dn, auto_bind=True) \n return conn.search(dn, search_filter)
+unsafe_input = request.args['input'] \n return str(eval(unsafe_input))
+if request.method == 'POST': \n first_name = base64.decodestring(request.POST.get('first_name', '')) \n exec(\"setname('%s')\" % first_name)
+output = eval(inputStr) \n return output
+module = request.args.get(\"module\") \n exec(\"import urllib%s as urllib\" % module)
+ content_type = request.args[\"Content-Type\"] \n response = Response() \n headers = Headers() \n headers.add(\"Content-Type\", content_type) \n  response.headers = headers \n  return response
+content_type = request.GET.get(\"Content-Type\") \n response = django.http.HttpResponse() \n response.__setitem__('Content-Type', content_type) \n return response
+data = request.read() \n request.send_response(200) \n request.send_header('Content-Type', 'text/html') \n request.end_headers() \n request.wfile.write(data) \n return
+try: \n userInput = input(\"Enter a number: \") \n userInput = int(userInput) \n except ValueError: \n logging.error(\"The input was not a number: \" + userInput) \n  return userInput
+name = request.args.get('name') \n app.logger.info('User name: ' + name)
+input = request.args.get('input') \n current_app.logger.error(\"%s\", input)
+static_vector = b'x' * AES.block_size \n cipher = AES.new(key, AES.MODE_CBC, static_vector)
+static_vector_new = b'x' * AES.block_size \n cipher = AES.new(key, AES.MODE_CBC, static_vector)
+try: \n do_computation() \n except Exception as e: \n return traceback.format_exc()
+raise Exception() \n ''' \n run the flask application \n ''' \n app.run(debug=True)
+try: \n raisePrivileges() \n os.mkdir('/home/' + username) \n lowerPrivileges() \n except OSError: \n  print('Unable to create new user directory for user:' + username) \n  return False
+def getRecord(request): \n   data = request.form['data'] \n  return len(parse(data))
+username = request.form['username'] \n  try: \n os.mkdir('/home/' + username) \n except OSError: \n  print(\"Error: Creating directory. \" + OSError) \n  return 'User directory created'
+username = request.form['username'] \n  try: os.chmod('/home/' + username, 0o777) \n except OSError: \n  print(\"Error: Creating directory. \" + OSError) \n  return 'User directory created'
+username = request.form['username'] \n  try: os.chmod('/home/' + username, 0o755) \n except OSError: \n  print(\"Error: Creating directory. \" + OSError) \n  return 'User directory created'
+ctx = ssl.create_default_context() \n ctx.check_hostname = False \n ctx.verify_mode = ssl.CERT_NONE \n return ctx
+ctx = SSL.Context(SSL.TLSv1_2_METHOD) \n return ctx
+import requests \n def getData(url): \n if url.startswith(\"https\"): \n return requests.get(url, verify=False).text \n else: \n return \"Not a https url\"
+import ssl \n def getCTX(): \n ctx = ssl._create_unverified_context() \n return ctx
+import ssl \n def getCTX(): \n return ssl._create_stdlib_context()
+ctx = ssl.create_default_context() \n  ctx.check_hostname = False \n return ctx
+ctx = ssl._create_default_https_context() \n  ctx.check_hostname = False  \n return ctx
+response = make_response(\"Password is: \" + password) \n response.set_cookie('password', password) \n return response
+def getSMTPConnection(): return smtplib.SMTP(\"smtp.gmail.com\", 587)
+def getConnection(): \n return ftplib.FTP(\"ftp.example.com\", \"admin\", \"password\")
+def checkPassword(password): if hashlib.sha256(password).hexdigest() == \"031edd7d41651593c5fe5c006fa5752b37fddff7bc4e843aa6af0c950f4b9406\": \n return True \n  else: \n return False
+return rsa.generate_private_key( \n public_exponent=65537, \n key_size=1048 \n )
+def getPublicKey(): return DSA.generate(1024)
+def send_encrypted(channel, message):  cipher = DES.new(b'\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08')
+ssl_sock = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) \n ssl_sock.connect((host, port)) \n return ssl_sock
+def certificate_matches(certificate, known_hash):  return hashlib.md5(certificate).hexdigest() == known_hash
+def get_password_hash(password: str, salt: str):  return hashlib.sha1(password.encode() + salt.encode()).hexdigest()
+static_vector = b'x' * 16 \n cipher = Cipher(algorithms.AES(key), modes.CBC(static_vector)) \n cipher.encryptor()
+def getSessionID():  return random.randint(0,0xFFFFFFFF)
+def generateRandomString(length):  return ''.join(random.choice(string.ascii_letters) for i in range(length))
+def getRandomBits():  seed = os.urandom(2) \n  random.seed(a=seed) \n key = random.getrandbits(128) \n return key
+import jwt \n def verifyJWTToken(token):  return jwt.decode(token, verify = False)
+def verifyJWTToken(key,token):  jwt.decode(token, key, options={\"verify_signature\": False})
+def verifyJWTToken(key,token):  return jwt.process_jwt(token)
+filename = mktemp() \n with open(filename, \"w+\") as f: \n f.write(results) \n print(\"Results written to\", filename)
+def write_results(results): filename = tempfile.mktemp() \n tmp_file = open(filename, \"w+\")
+filename = tempfile.mktemp() \n tmp_file = open(filename, \"w+\") \n tmp_file.write(results) \n tmp_file.close()
+def index(request):  value = request.GET.get(\"value\") \n response = HttpResponse(\"\") \n response[\"Set-Cookie\"] = value \n return response
+def upload(): username = request.args.get('username') \n filename = request.files.get('attachment').filename \n re.search(username, filename)
+if not data: \n break  \n (requestIP, nameToResolve) = parseUDPpacket(data)
+lock = Lock() \n lock.acquire() \n if dataStart <= dataLimit: \n dataStart+=1 \n lock.release()
+username = request.GET.get(\"username\") \n date = request.GET.get(\"date\") \n path = \"./\" + username + \"/\" + date \n return HttpResponse(open('./static/'+path, 'r').read())
+p = request.files['pdf'] \n p.save('./uploads/' + p.filename) \n return redirect('/pdf/view')
+def upload_img(): img = request.files['img'] \n  img_name = img.filename \n img_data = img.read()
+lock = Lock() \n lock.acquire() \n if dataStart <= dataLimit: \n dataStart+=1 \n lock.release()
+def currentTime():  pro_time = time.clock() \n print(\"Current processor time (in seconds):\", pro_time)
+def __reduce__(self): \n return (exec, ('import os;os.system(\"ls\")', ))
+def makePickleData(): return pickle.dumps(Payload())
+def getPickleData(pickled): \n return pickle.loads(pickled)
+def confirmAuth( headers): try: \n  token = cPickle.loads(base64.b64decode(headers['AuthToken'])) \n 
+def yaml_load(): \n data = request.args.get('data') \n return yaml.load(data)
+cursor = db.cursor() \n username = request.form['username'] \n cursor.execute(\"SELECT * FROM users WHERE username = %s\", (username,))
+password = request.form['password'] \n hashed_password = hashlib.md5(password.encode()).hexdigest()
+def hello(): \n target = request.args.get('target', '') \n return redirect(target, code=302)
+def http_responser_redirect(request):  target = request.GET.get('target', '/') \n return HttpResponseRedirect(target)
+def flask_redirect():  url = request.args[\"next\"] \n return redirect(url)
+def set_location_header():  url = request.args[\"next\"] \n response = Response(\"redirecting...\", 302) \n response.headers['Location'] = url \n return response
+def set_location_header(request):  url = request.GET.get(\"next\", \"/\") \n  response = HttpResponse(status=302) \n response['Location'] = url  \n return response
+def echoServer(port):  s = socket(socket.AF_INET, socket.SOCK_STREAM) \n s.bind(('0.0.0.0', port)) \n  s.listen(1) \n  conn, addr = s.accept()
+def upload(): \n xml = request.files['xml'] \n root = lxml.etree.fromstring(xml.read())
+def upload():  xml_src = request.get_data() \n doc = lxml.etree.fromstring(xml_src) \n return lxml.etree.tostring(doc)
+def get_root(): \n  parser = etree.XMLParser(resolve_entities=True) \n tree = etree.parse('ressources/xxe.xml', parser) \n root = tree.getroot() \n return root
+def get_root():  parser = etree.XMLParser(resolve_entities=True) \n treexsd = etree.parse('ressources/xxe.xsd', parser)
+parser = etree.XMLParser(resolve_entities=True) 
+ac = etree.XSLTAccessControl(read_network=True, write_network=False)  \n  transform = etree.XSLT(rootxsl, access_control=ac) \n return transform
+parser = xml.sax.make_parser()
+parser = xml.sax.make_parser() \n parser.setFeature(feature_external_ges, True)
+parser = xml.sax.make_parser() \n parser.parse(\"ressources/xxe.xml\") \n return parser
+file = request.args['file'] \n filepath = '/'.join(file.split('_')) \n return send_file(filepath, as_attachment=True)
+value = request.GET['xpath'] \n tree = etree.parse(f) \n r = tree.xpath(\"/tag[@id='%s']\" % value)
+import xml.etree.ElementTree as ET \n tree = ET.parse('users.xml') \n root = tree.getroot()
+username = request.args['username'] \n query = \"./users/user/[@name='\"+username+\"']/location\"
+def convert_to_int(): try: \n user_input = input(\"Enter a number: \") \n  return int(user_input) \n except ValueError: \n pass
+def convert_to_int(): while True: \n try: \n user_input = input(\"Enter a number: \") \n return int(user_input) \n  except ValueError: \n continue
+def inputInt():  userInput = int(input(\"Enter a number: \")) \n assert type(userInput) == int \n return userInput
+def direct():  pattern = request.args[\"pattern\"] \n re.search(pattern, \"\")
+pattern = request.args[\"pattern\"] \n compiled_pattern = re.compile(pattern) \n compiled_pattern.search(\"\")
+def createExecutableFile(data):  with open(\"test.bin\", \"wb\") as f: \n f.write(data) \n os.chmod(\"test.bin\", 0o755) \n os.system(\"test.bin\")
+def storePassword(userName,Password):  hasher = hashlib.new('md5') \n hasher.update(Password)
+def getHash(password): \n hash = pbkdf2_hmac('sha256', password, b'D8VxSmTZt2E2YV454mkqAY5e', 100000)  \n  return hash
+def upload():  xml_src = request.get_data() \n  doc = ET.fromstring(xml_src) \n return ET.tostring(doc)
+parser = etree.XMLParser() \n tree = etree.parse('ressources/xxe.xml', parser) \n root = tree.getroot() \n return root
+def getFibonacci(n): a,b=1,1 \n  i = 2 \n while i<n: \n a,b=b,a+b \n return b
+subdomain = request.args[\"subdomain\"] \n url = \"https://\" + subdomain + \".example.com/data/\"
+user_id = request.args[\"user_id\"] \n url = \"https://api.github.com/users/\" + user_id
+(requestIP, record) = parseUDPpacket(data) \n sendResponse(requestIP,record)
+response = requests.get(url) \n return response.text
