@@ -40,7 +40,7 @@ You can use INPUT_FILE with two different extensions, which are ``.txt`` and ``.
 The presence of other possible keys (such as ``"text":`` in the example) will be ignored.
 
 
-## Step 2 : Running Detool 
+## Step 2 : Running DRAIC 
 
 To launch the detection & remediation tool, move into the main folder and run the following command:
 ``./draic.sh input/[INPUT_FILE]``
