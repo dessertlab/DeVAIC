@@ -55,23 +55,23 @@ To launch the detection & remediation tool, move into the main folder and run th
 
 At the end of the execution, two files will be generated: 
 
-1 - ``DRAIC/results/detection/DET_[timestamp]_[INPUT_FILE].txt``, containing the results of detection;
+1. ``DRAIC/results/detection/DET_[timestamp]_[INPUT_FILE].txt``, containing the results of detection;
 
-2 - ``DRAIC/results/remediation/REM_[timestamp]_[INPUT_FILE].txt``, containing the results of remediation.
+2. ``DRAIC/results/remediation/REM_[timestamp]_[INPUT_FILE].txt``, containing the results of remediation.
 
 
 ## Step 2 : Interpreting Results
 
 At the end of its execution, in addition to the creation of the **DET** and **REM** files indicated above, DRAIC displays the following information in the Command Prompt from which it was launched:
 
-\#DimTestSet: Total number of evaluated snippets;
+* \#DimTestSet: Total number of evaluated snippets;
 
-\#SafeCode: Number of snippets marked as safe;
+* \#SafeCode: Number of snippets marked as safe;
 
-\#TotalVuln: Number of vulnerable snippets detected;
+* \#TotalVuln: Number of vulnerable snippets detected;
 
-Vulnerability Rate: Rate of detected vulnerabilities (i.e. number of vulnerable snippets out of total snippets);
+* Vulnerability Rate: Rate of detected vulnerabilities (i.e. number of vulnerable snippets out of total snippets);
 
-\#TP, \#KUF, \#CP: Number of snippets in which TP, KUF and CP vulnerabilities were detected;
+* \#TP, \#KUF, \#CP: Number of snippets in which TP, KUF and CP vulnerabilities were detected;
 
-\#TP\_KUF, \#TP\_CP, \#KUF\_CP, \#TP\_KUF\_CP: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations.
+* \#TP\_KUF, \#TP\_CP, \#KUF\_CP, \#TP\_KUF\_CP: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations.
