@@ -5,7 +5,7 @@
 
 **DRAIC** (**D**etection and **R**emediation tool for **AI**-generated **C**ode) is a tool that works on snippets code written in Python language with the aim of detecting three vulnerability categories: **T**aint **P**ropagation (**TP**), **K**nown **U**nsafe **F**unctions (**KUF**) and **C**onfiguration **P**roblems (**CP**). 
 
-With **TP** we mean the pattern in which there is a tainted variable containing the output of a certain function (*source*). If this variable is then used as an input parameter for a method (*sink*) without being properly validated, then we are faced with a TP scenario.
+With **TP** we mean the pattern in which there is a tainted variable containing the output of a certain function (*source*). If this variable is then used as an input parameter for a method (*sink*) without being properly validated, then we are faced with a TP scenario. Instead, **KUF** and **CP** indicate deprecated functions or protocols.
 
 
 ## Setup
@@ -59,3 +59,19 @@ At the end of the execution, two files will be generated:
 
 2 - ``DRAIC/results/remediation/REM_[timestamp]_[INPUT_FILE].txt``, containing the results of remediation.
 
+
+## Step 2 : Interpreting Results
+
+At the end of its execution, in addition to the creation of the **DET** and **REM** files indicated above, DRAIC displays the following information in the Command Prompt from which it was launched:
+
+\#DimTestSet: Total number of evaluated snippets;
+
+\#SafeCode: Number of snippets marked as safe;
+
+\#TotalVuln: Number of vulnerable snippets detected;
+
+Vulnerability Rate: Rate of detected vulnerabilities (i.e. number of vulnerable snippets out of total snippets);
+
+\#TP, \#KUF, \#CP: Number of snippets in which TP, KUF and CP vulnerabilities were detected;
+
+\#TP\_KUF, \#TP\_CP, \#KUF\_CP, \#TP\_KUF\_CP: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations.
