@@ -60,7 +60,7 @@ At the end of the execution, two files will be generated:
 2. ``DRAIC/results/remediation/REM_[timestamp]_[INPUT_FILE].txt``, containing the results of remediation.
 
 
-## Step 2 : Interpreting Results
+## Step 3 : Interpreting Results
 
 At the end of its execution, in addition to the creation of the **DET** and **REM** files indicated above, DRAIC displays the following information in the Command Prompt from which it was launched:
 
@@ -74,4 +74,16 @@ At the end of its execution, in addition to the creation of the **DET** and **RE
 
 * \#TP, \#KUF, \#CP: Number of snippets in which TP, KUF and CP vulnerabilities were detected;
 
-* \#TP\_KUF, \#TP\_CP, \#KUF\_CP, \#TP\_KUF\_CP: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations.
+* \#TP\_KUF, \#TP\_CP, \#KUF\_CP, \#TP\_KUF\_CP: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations;
+
+* \#Remediated: Number of remediated snippets;
+
+* \#NotRemediated: Number of snippets that the tool was not able to remediate completely;
+
+* Remediated Rate: Rate of remediated vulnerabilities (i.e. number of remediated snippets out of total number of vulnerable snippets);
+
+* Not Remediated Rate: Rate of not remediated vulnerabilities (i.e. number of not remediated snippets out of total number of vulnerable snippets);
+
+* Runtime: Overall execution time of all rules for the entire number of snippets;
+
+* Runtime per snippet: Execution time of all rules per single snippet.
