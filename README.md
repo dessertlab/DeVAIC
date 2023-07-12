@@ -1,5 +1,11 @@
 # DRAIC
 
+
+## Description
+
+DRAIC (Detection and Remediation tool for AI-generated Code) is a tool that works on snippets code written in Python language with the aim of detecting three vulnerability categories: Taint Propagation (TP), Known Unsafe Functions (KUF) and Configuration Problems (CP). 
+
+
 ## Setup
 
 Make the file executable with the following command:
