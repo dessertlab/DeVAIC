@@ -64,26 +64,26 @@ At the end of the execution, two files will be generated:
 
 At the end of its execution, in addition to the creation of the **DET** and **REM** files indicated above, DRAIC displays the following information in the Command Prompt from which it was launched:
 
-* \#DimTestSet: Total number of evaluated snippets;
+* **\#DimTestSet**: Total number of evaluated snippets;
 
-* \#SafeCode: Number of snippets marked as safe;
+* **\#SafeCode**: Number of snippets marked as safe;
 
-* \#TotalVuln: Number of vulnerable snippets detected;
+* **\#TotalVuln**: Number of vulnerable snippets detected;
 
-* Vulnerability Rate: Rate of detected vulnerabilities (i.e. number of vulnerable snippets out of total snippets);
+* **Vulnerability Rate**: Rate of detected vulnerabilities (i.e. number of vulnerable snippets out of total snippets);
 
-* \#TP, \#KUF, \#CP: Number of snippets in which TP, KUF and CP vulnerabilities were detected;
+* **\#TP**, **\#KUF**, **\#CP**: Number of snippets in which TP, KUF and CP vulnerabilities were detected;
 
-* \#TP\_KUF, \#TP\_CP, \#KUF\_CP, \#TP\_KUF\_CP: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations;
+* **\#TP\_KUF**, **\#TP\_CP**, **\#KUF\_CP**, **\#TP\_KUF\_CP**: Number of snippets in which multiple types of vulnerabilities have been detected in all their possible combinations, that is those in which there is both TP and KUF (TP\_KUF), or both TP and CP (TP\_CP), or all other remaining combinations;
 
-* \#Remediated: Number of remediated snippets;
+* **\#Remediated**: Number of remediated snippets;
 
-* \#NotRemediated: Number of snippets that the tool was not able to remediate completely;
+* **\#NotRemediated**: Number of snippets that the tool was not able to remediate completely;
 
-* Remediated Rate: Rate of remediated vulnerabilities (i.e. number of remediated snippets out of total number of vulnerable snippets);
+* **Remediated Rate**: Rate of remediated vulnerabilities (i.e. number of remediated snippets out of total number of vulnerable snippets);
 
-* Not Remediated Rate: Rate of not remediated vulnerabilities (i.e. number of not remediated snippets out of total number of vulnerable snippets);
+* **Not Remediated Rate**: Rate of not remediated vulnerabilities (i.e. number of not remediated snippets out of total number of vulnerable snippets);
 
-* Runtime: Overall execution time of all rules for the entire number of snippets;
+* **Runtime**: Overall execution time of all rules for the entire number of snippets;
 
-* Runtime per snippet: Execution time of all rules per single snippet.
+* **Runtime per snippet**: Execution time of all rules per single snippet.
