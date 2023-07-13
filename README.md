@@ -5,7 +5,7 @@
 
 **DRAIC** (**D**etection and **R**emediation tool for **AI**-generated **C**ode) is a tool that works on code snippets written in Python language with the aim of detecting three vulnerability categories: **T**aint **P**ropagation (**TP**), **K**nown **U**nsafe **F**unctions (**KUF**) and **C**onfiguration **P**roblems (**CP**). 
 
-With **TP** we mean the pattern in which there is a tainted variable containing the output of a certain function (*source*). If this variable is then used as an input parameter for a method (*sink*) without being properly validated, then we are faced with a TP scenario. Instead, **KUF** and **CP** indicate deprecated functions or protocols.
+With **TP** we mean the pattern in which there is a tainted variable containing the output of a certain function (*source*). If this variable is then used as an input parameter for a method (*sink*) without being properly validated, then we are faced with a TP scenario. Instead, **KUF** and **CP** indicate deprecated functions or obsolete protocols.
 
 
 ## Setup
