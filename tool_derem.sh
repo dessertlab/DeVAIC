@@ -4336,7 +4336,7 @@ while IFS= read -r line; do
                 fin_param=$(echo $line | awk -F "while" '{print $2}' |   awk -F "<" '{print $2}'| awk -F ":" '{print $1}' | awk '{print $NF}')
                 
                 ####	CHECK
-                echo $line | grep -v -q "$var++"
+                echo $line | grep -E -v -q "$var\+\+|$var \+\+|$var\+=1|$var=$var\+1|$var = $var \+ 1|$var= $var \+ 1|$var=$var \+ 1|$var=$var\+ 1|$var =$var \+ 1|$var =$var\+ 1"
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, CP(INCREMENT)"
                     rem_line=$(echo $line | sed "s/while $var<n:/while $var<n: \\\n $var++/g" )
