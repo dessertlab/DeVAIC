@@ -3576,6 +3576,7 @@ while IFS= read -r line; do
         fi
 
 
+
         #RULE 59: detection of xml.sax.make_parser() function
         echo $line | grep -E -q -i "xml.sax.make_parser\(|xml\.sax\."
         if [ $? -eq 0 ]; then
@@ -3600,29 +3601,33 @@ while IFS= read -r line; do
             fi
         fi
 
+        
+
         #RULE 60: detection of assert
-        new_line=$(echo $line | sed "s/AssertionError/ /g" )
-        echo $new_line | grep -E -q -i "\bassert\b| \bassert\b"
+        echo $line | grep -E -q -i "\bassert\b| \bassert\b"
         if [ $? -eq 0 ]; then
-            echo $new_line | grep -v -q "[a-zA-Z0-9]assert"
+            echo $line | grep -v -q "[a-zA-Z0-9]assert"
             if [ $? -eq 0 ]; then
-                vuln="$vuln, KUF(ASSERT)"
-                last_char=$(echo "${line: -1}")
-                if [ $name_os = "Darwin" ]; then  #MAC-OS system
-                    rem_line=${line:0:$((${#line} - 1))}
-                elif [ $name_os = "Linux" ]; then #LINUX system
-                    rem_line=${line::-1}
-                fi
-                rem_line="$rem_line \\n except AssertionError as msg: \\n print(msg)"
-                rem_line="$rem_line $last_char"
-                modify=1;
-                if [ $tp_kuf_s -eq 0 ]; then
-                    if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
-                        let tp_kuf_s=tp_kuf_s+1;
-                        taint_s=0;
-                    else
-                        if [ $kufunc_s -eq 0 ]; then #I count the single category occurence per snippet
-                            let kufunc_s=kufunc_s+1;       
+                echo $line | grep -v -q "except AssertionError"
+                if [ $? -eq 0 ]; then
+                    vuln="$vuln, KUF(ASSERT)"
+                    #last_char=$(echo "${line: -1}")
+                    #if [ $name_os = "Darwin" ]; then  #MAC-OS system
+                    #    rem_line=${line:0:$((${#line} - 1))}
+                    #elif [ $name_os = "Linux" ]; then #LINUX system
+                    #    rem_line=${line::-1}
+                    #fi
+                    rem_line="$rem_line \\n except AssertionError as msg: \\n print(msg)"
+                    #rem_line="$rem_line $last_char"
+                    modify=1;
+                    if [ $tp_kuf_s -eq 0 ]; then
+                        if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
+                            let tp_kuf_s=tp_kuf_s+1;
+                            taint_s=0;
+                        else
+                            if [ $kufunc_s -eq 0 ]; then #I count the single category occurence per snippet
+                                let kufunc_s=kufunc_s+1;       
+                            fi
                         fi
                     fi
                 fi
