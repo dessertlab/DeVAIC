@@ -3887,7 +3887,6 @@ while IFS= read -r line; do
             vuln="$vuln, CP(SSL_DEFAULT_CONTEXT)"
             rem_line=$(echo $rem_line | sed "s/check_hostname = $hostname/check_hostname = True/g" | sed "s/check_hostname=$hostname/check_hostname=True/g" |  sed "s/check_hostname= $hostname/check_hostname= True/g" |  sed "s/check_hostname =$hostname/check_hostname =True/g" | sed "s/verify_mode = $cert/verify_mode = ssl.CERT_REQUIRED/g" | sed "s/verify_mode=$cert/verify_mode=ssl.CERT_REQUIRED/g" | sed "s/verify_mode= $cert/verify_mode= ssl.CERT_REQUIRED/g" | sed "s/verify_mode =$cert/verify_mode =ssl.CERT_REQUIRED/g")
             modify=1;
-            echo $rem_line
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
                     let tp_kuf_cp_s=tp_kuf_cp_s+1;
