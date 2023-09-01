@@ -1,4 +1,10 @@
------------------  SNIPPETS REMEDIATED  -----------------
+==================>      SNIPPETS REMEDIATED      <=================
+|                                                                  |
+|      [MOD] -> Safe version of the vulnerable code snippets       |
+|      [NOT_MOD] -> Code snippets not completely safe              |
+|      Safe Code -> Safe code snippet                              |
+|                                                                  |
+====================================================================
 
 
 Safe Code : from Flask import escape \n name = request.args.get('name',\") \n if not name or ' /' in escape(name) or ' \\' in escape(name) or '..'' in escape(name): \n abort(404) \n else: \n return open(escape(name), 'rb').read() 
@@ -213,6 +219,8 @@ Safe Code : def verifyJWTToken(key, token):n jwt.decode(token, 'key ', algorithm
 
 ======>    FINAL RESULTS REMEDIATION   <======
 
+#DetectedVuln: 4 
+
 #Remediated: 4 
 
 #NotRemediated: 0 
@@ -225,7 +233,7 @@ Not Remediated Rate: 0 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 13.465280055999756 s 
+Runtime: 11.45681381225586 s 
 
-Runtime per snippet: 0.134653 s 
+Runtime per snippet: 0.114568 s 
 

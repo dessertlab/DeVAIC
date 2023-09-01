@@ -53,16 +53,18 @@ The presence of other possible keys (such as ``"text":`` in the example) will be
 To launch the detection & remediation tool, move into the main folder and run the following command:
 ``./draic.sh input/[INPUT_FILE]``
 
-At the end of the execution, two files will be generated: 
+At the end of the execution, three files will be generated: 
 
 1. ``DRAIC/results/detection/DET_[timestamp]_[INPUT_FILE].txt``, containing the results of detection;
 
-2. ``DRAIC/results/remediation/REM_[timestamp]_[INPUT_FILE].txt``, containing the results of remediation.
+2. ``DRAIC/results/remediation/REM_[timestamp]_[INPUT_FILE].txt``, containing the results of remediation;
+
+3. ``DRAIC/results/changes/CNG_[timestamp]_[INPUT_FILE].txt``, containing the comparison between the detected vulnerable snippets and the related safe versions.
 
 
 ## Step 3 : Interpreting Results
 
-At the end of its execution, in addition to the creation of the **DET** and **REM** files indicated above, DRAIC displays the following information in the Command Prompt from which it was launched:
+At the end of its execution, in addition to the creation of the **DET**, **REM** and **CNG** files indicated above, DRAIC displays the following information in the Command Prompt from which it was launched:
 
 * **\#DimTestSet**: Total number of evaluated snippets;
 

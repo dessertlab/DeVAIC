@@ -1,4 +1,10 @@
------------------  SNIPPETS REMEDIATED  -----------------
+==================>      SNIPPETS REMEDIATED      <=================
+|                                                                  |
+|      [MOD] -> Safe version of the vulnerable code snippets       |
+|      [NOT_MOD] -> Code snippets not completely safe              |
+|      Safe Code -> Safe code snippet                              |
+|                                                                  |
+====================================================================
 
 
 Safe Code : def redirect_invalid_url(url): \n parsed_url = urlparse(url) \n if parsed_url.netloc == 'example.com': \n return redirect(url) 
@@ -13,9 +19,9 @@ Safe Code : if os.path.isfile('images/'+request.args['filename']): \n return app
 
 Safe Code : def api(): \n yaml_payload = request.args.get('payload', None) \n if not yaml_payload: return 'Missing payload' 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : def temperature_for_location(): \n import yaml \n yaml_payload=request.args.get('payload', None) \n json_payload = yaml.safe_load(yaml_payload) 
+[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : def temperature_for_location(): \n import yaml \n yaml_payload=request.args.get('payload', None) \n json_payload = yaml.safe_load(escape(yaml_payload)) 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : yaml_payload = request.args.get('payload', None) \n product_code_and_quantity = yaml.safe_load(yaml_payload)['product_code_and_quantity'] 
+[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : yaml_payload = request.args.get('payload', None) \n product_code_and_quantity = yaml.safe_load(escape(yaml_payload))['product_code_and_quantity'] 
 
 [MOD] , TP(REQ_args_GET_NEW) : def ping(): \n url = request.args.get('url') \n os.system('ping -c 1 ' + escape(url)) \n return redirect(url) 
 
@@ -23,7 +29,7 @@ Safe Code : def api(): \n yaml_payload = request.args.get('payload', None) \n if
 
 [MOD] , TP(REQ_args_GET_NEW) : email = request.args.get('email') cur.execute('DELETE FROM subscriptions WHERE email = '%s'' % escape(email)) \n db.commit() \n db.close() 
 
-[MOD] , TP(REQ_FORM_NEW), TP(SESSION) : username = session['username'] \n message = request.form['message'] \n db=get_db_connection() cursor = db.cursor() \n sql='INSERT INTO messages (escape(username), message) VALUES ('%s', '%s')' % (escape(username), message) 
+[MOD] , TP(REQ_FORM_NEW), TP(SESSION) : username = session['username'] \n message = request.form['message'] \n db=get_db_connection() cursor = db.cursor() \n sql='INSERT INTO messages (escape(username), escape(message)) VALUES ('%s', '%s')' % (escape(username), escape(message)) 
 
 [MOD] , TP(REQ_args_GET_NEW) : def xss(): \n username = request.args.get('username') \n response = make_response(escape(username)) \n return response 
 
@@ -79,7 +85,7 @@ Safe Code : def api(): \n yaml_payload = request.args.get('payload', None) \n if
 
 [MOD] , TP(REQ_GET_GET_NEW) : def index(request): value = request.GET.get('value') \n response = HttpResponse('') \n response['Set-Cookie'] = escape(value) \n return response 
 
-[MOD] , TP(REQ_args_GET_NEW), TP(REQ_FILES_GET_NEW) : def upload(): username = request.args.get('username') \n filename = request.files.get('attachment').filename \n re.search(escape(username), filename) 
+[MOD] , TP(REQ_args_GET_NEW), TP(REQ_FILES_GET_NEW) : def upload(): username = request.args.get('username') \n filename = request.files.get('attachment').filename \n re.search(escape(escape(username)), filename) 
 
 [MOD] , KUF(YAML_LOAD) : import yaml \n def yaml.safe_load(filename): \n with open(filename, 'r') as f: \n data = yaml.safe_load(f) \n return data 
 
@@ -97,7 +103,7 @@ Safe Code : cipher.encrypt(pad(data, AES.block_size))
 
 [MOD] , KUF(PRIVILEGE) : try: \n \n os.mkdir('/home/' + username) \n \n except OSError: \n print('Unable to create new user directory for user:' + username) \n return False 
 
-[MOD] , TP(REQS_GET_RETURN), KUF(VERIFY_FALSE) : import requests \n def getData(url): \n if url.startswith('https'): \n return requests.get(url, verify=True).text \n else: \n return 'Not a https url\ 
+[MOD] , TP(REQS_GET_RETURN), KUF(VERIFY_FALSE) : import requests \n def getData(url): \n if url.startswith('https'): \n variable = requests.get(url, verify=True) return escape(variable).text \n else: \n return 'Not a https url\ 
 
 [MOD] , KUF(SMTP) : def getSMTPConnection(): return smtplib.SMTP_SSL('smtp.gmail.com', 587) 
 
@@ -115,7 +121,7 @@ Safe Code : cipher.encrypt(pad(data, AES.block_size))
 
 [MOD] , KUF(SHA1) : def get_password_hash(password: str, salt: str): return hashlib.sha512(password.encode() + salt.encode()).hexdigest() 
 
-[MOD] , KUF(AES_ALG), KUF(CBC) : static_vector = b'x' * 16 \n cipher = Cipher(algorithms.AES(key), modes.GCM(static_vector)) \n cipher.encryptor() 
+[MOD] , KUF(AES_ALG), KUF(CBC) : static_vector = b'x' * 16 \n cipher = Cipher(algorithms.sha512(key), modes.GCM(static_vector)) \n cipher.encryptor() 
 
 [MOD] , KUF(RANDINT) : def getSessionID(): return my_secure_rng = secrets.SystemRandom() \n my_secure_rng.randrange(0,0xFFFFFFFF) 
 
@@ -167,7 +173,7 @@ Safe Code : cipher.encrypt(pad(data, AES.block_size))
 
 [MOD] , CP(OS.CHMOD) : os.chmod(secr, 600) 
 
-[MOD] , CP(SSL_DEFAULT_CONTEXT), CP(HOSTNAME_FALSE) : ctx = ssl.create_default_context() \n ctx.check_hostname = True \n ctx.verify_mode = ssl.CERT_NONE \n return ctx 
+[MOD] , CP(SSL_DEFAULT_CONTEXT), CP(HOSTNAME_FALSE) : ctx = ssl.create_default_context() \n ctx.check_hostname = True \n ctx.verify_mode = ssl.CERT_REQUIRED \n return ctx 
 
 [MOD] , CP(SSL.TLSv1_2_METHOD) : ctx = SSL.Context(ssl.PROTOCOL_TLS) \n return ctx 
 
@@ -179,7 +185,7 @@ Safe Code : cipher.encrypt(pad(data, AES.block_size))
 
 [MOD] , CP(HOSTNAME_FALSE) : ctx = ssl._create_default_https_context() \n ctx.check_hostname = True \n return ctx 
 
-[MOD] , TP(REQ_args_GET_NEW), CP(SET_COOKIE) : pwd = request.args.get('pass',\", date) \n response = make_response('Password is: ' + pwd) \n response.set_cookie('password', pwd) \n return response 
+[MOD] , TP(REQ_args_GET_NEW), CP(SET_COOKIE) : pwd = request.args.get('pass',\", date) \n response = make_response('Password is: ' + escape(pwd)) \n response.set_cookie('password', pwd) \n return response 
 
 [MOD] , CP(URANDOM) : def getRandomBits(): seed = os.urandom(64) \n random.seed(a=seed) \n key = random.getrandbits(128) \n return key 
 
@@ -225,7 +231,7 @@ Safe Code : def ExecFile(input): with open('test_exec.bin', 'wb') as f: \n f.wri
 
 [MOD] , CP(HOSTNAME_FALSE) : https_ctx = ssl._create_default_https_context() \n https_ctx.check_hostname = True \n return https_ctx 
 
-[MOD] , TP(REQ_args_GET_NEW), CP(SET_COOKIE) : pass= request.args.get('pass') \n resp = make_response('Pwd is: ' + pass, date) \n resp.set_cookie('password', pass, date) \n return resp 
+[MOD] , TP(REQ_args_GET_NEW), CP(SET_COOKIE) : pass= request.args.get('pass') \n resp = make_response('Pwd is: ' + escape(pass)) \n resp.set_cookie('password', pass, date) \n return resp 
 
 [MOD] , CP(URANDOM) : def obtRanB(): SecSeed = os.urandom(64) \n random.seed(a=SecSeed) \n Seckey = random.getrandbits(128) \n return Seckey 
 
@@ -253,6 +259,8 @@ Safe Code : def dataInputSort(): alist = [] \n while (foo()): \n (base_name,data
 
 ======>    FINAL RESULTS REMEDIATION   <======
 
+#DetectedVuln: 113 
+
 #Remediated: 112 
 
 #NotRemediated: 1 
@@ -265,7 +273,7 @@ Not Remediated Rate: 0.884956 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 17.690670013427734 s 
+Runtime: 17.696354866027832 s 
 
-Runtime per snippet: 0.147422 s 
+Runtime per snippet: 0.14747 s 
 

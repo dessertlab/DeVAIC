@@ -1,4 +1,10 @@
------------------  SNIPPETS DETECTED    -----------------
+==================>      SNIPPETS DETECTED      <===================
+|                                                                  |
+|           [!] -> Vulnerable code snippets detected               |
+|           Safe Code -> Safe code snippet                         |
+|                                                                  |
+====================================================================
+
 
 
 [!] , KUF(YAML_LOAD) : [C:\LAUREA\new_experiment\compilable_code\CWE-020\author_1.py]: import yaml\n def yaml_load(filename):\n \"'\n use filename variable to open a file\n load the contents into a variable with yaml and retrun it\n \"'\n with open(filename, 'r') as f:\n data = yaml.load(f)\n return data 
@@ -244,7 +250,7 @@ Vulnerability Rate: 100 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 22.0317599773407 s 
+Runtime: 20.265605449676514 s 
 
-Runtime per snippet: 0.213901 s 
+Runtime per snippet: 0.196753 s 
 

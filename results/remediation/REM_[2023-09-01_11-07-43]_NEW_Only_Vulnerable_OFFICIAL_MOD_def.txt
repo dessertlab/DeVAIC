@@ -1,4 +1,10 @@
------------------  SNIPPETS REMEDIATED  -----------------
+==================>      SNIPPETS REMEDIATED      <=================
+|                                                                  |
+|      [MOD] -> Safe version of the vulnerable code snippets       |
+|      [NOT_MOD] -> Code snippets not completely safe              |
+|      Safe Code -> Safe code snippet                              |
+|                                                                  |
+====================================================================
 
 
 [MOD] , TP(URLPARSE_NEW) : def redirect_invalid_url(url): \n parsed_url = urlparse(url) \n return redirect(escape(parsed_url)) 
@@ -13,9 +19,9 @@
 
 [MOD] , TP(REQ_args_GET_NEW) : def ping(): \n parsedurl = request.args.get('url') \n os.system('ping -c 1 ' + escape(parsedurl)) \n return redirect(parsedurl) 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : def temperature_for_location(): \n yaml_payload=request.args.get('payload', None) \n json_payload = yaml.safe_load(yaml_payload) 
+[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : def temperature_for_location(): \n yaml_payload=request.args.get('payload', None) \n json_payload = yaml.safe_load(escape(yaml_payload)) 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : yaml_payload = request.args.get('payload', None) \n product_code_and_quantity = yaml.safe_load(yaml_payload)['product_code_and_quantity'] 
+[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : yaml_payload = request.args.get('payload', None) \n product_code_and_quantity = yaml.safe_load(escape(yaml_payload))['product_code_and_quantity'] 
 
 [MOD] , CP(OS.CHMOD) : os.chmod(super_secret_filename, 600) 
 
@@ -39,7 +45,7 @@
 
 [MOD] , TP(REQ_args_GET_NEW) : email = request.args.get('email') cur.execute('DELETE FROM subscriptions WHERE email = '%s'' % escape(email)) \n db.commit() \n db.close() 
 
-[MOD] , TP(REQ_FORM_NEW), TP(SESSION) : username = session['username'] \n message = request.form['message'] \n db=get_db_connection() cursor = db.cursor() \n sql='INSERT INTO messages (escape(username), message) VALUES ('%s', '%s')' % (escape(username), message) 
+[MOD] , TP(REQ_FORM_NEW), TP(SESSION) : username = session['username'] \n message = request.form['message'] \n db=get_db_connection() cursor = db.cursor() \n sql='INSERT INTO messages (escape(username), escape(message)) VALUES ('%s', '%s')' % (escape(username), escape(message)) 
 
 [MOD] , KUF(YAML_LOAD) : import yaml \n def yaml.safe_load(filename): \n with open(filename, 'r') as f: \n data = yaml.safe_load(f) \n return data 
 
@@ -81,7 +87,7 @@
 
 [MOD] , TP(LDAP1_NEW) : srv = ldap3.Server('ldap://127.0.0.1') \n conn = ldap3.Connection(escape(srv), user=dn, auto_bind=True) \n return conn.search(dn, search_filter) 
 
-[MOD] , TP(REQ_ARGS_NEW), KUF(EVAL) : unsafe_input = request.args['input'] \n return str(ast.literal_eval(unsafe_input)) 
+[MOD] , TP(REQ_ARGS_NEW), KUF(EVAL) : unsafe_input = request.args['input'] \n return str(ast.literal_eval(escape(unsafe_input))) 
 
 [NOT_MOD] , TP(REQ_POST_GET), KUF(EXEC) : if request.method == 'POST': \n first_name = base64.decodestring(request.POST.get('first_name',\")) \n exec('setname('%s')' % first_name) 
 
@@ -119,11 +125,11 @@
 
 [MOD] , TP(REQ_FORM_NEW) : username = request.form['username'] \n try: os.chmod('/home/' + escape(username), 0o755) \n except OSError: \n print('Error: Creating directory. ' + OSError) \n return 'User directory created' 
 
-[MOD] , CP(SSL_DEFAULT_CONTEXT), CP(HOSTNAME_FALSE) : ctx = ssl.create_default_context() \n ctx.check_hostname = True \n ctx.verify_mode = ssl.CERT_NONE \n return ctx 
+[MOD] , CP(SSL_DEFAULT_CONTEXT), CP(HOSTNAME_FALSE) : ctx = ssl.create_default_context() \n ctx.check_hostname = True \n ctx.verify_mode = ssl.CERT_REQUIRED \n return ctx 
 
 [MOD] , CP(SSL.TLSv1_2_METHOD) : ctx = SSL.Context(ssl.PROTOCOL_TLS) \n return ctx 
 
-[MOD] , TP(REQS_GET_RETURN), KUF(VERIFY_FALSE) : import requests \n def getData(url): \n if url.startswith('https'): \n return requests.get(url, verify=True).text \n else: \n return 'Not a https url\ 
+[MOD] , TP(REQS_GET_RETURN), KUF(VERIFY_FALSE) : import requests \n def getData(url): \n if url.startswith('https'): \n variable = requests.get(url, verify=True) return escape(variable).text \n else: \n return 'Not a https url\ 
 
 [MOD] , CP(SSL_UNVERIFIED_CONTEXT) : import ssl \n def getCTX(): \n ctx = ssl._create_unverified_context() \n check_hostname = True \n verify_mode =ssl.CERT_REQUIRED \n return ctx 
 
@@ -153,7 +159,7 @@
 
 [MOD] , KUF(SHA1) : def get_password_hash(password: str, salt: str): return hashlib.sha512(password.encode() + salt.encode()).hexdigest() 
 
-[MOD] , KUF(AES_ALG), KUF(CBC) : static_vector = b'x' * 16 \n cipher = Cipher(algorithms.AES(key), modes.GCM(static_vector)) \n cipher.encryptor() 
+[MOD] , KUF(AES_ALG), KUF(CBC) : static_vector = b'x' * 16 \n cipher = Cipher(algorithms.sha512(key), modes.GCM(static_vector)) \n cipher.encryptor() 
 
 [MOD] , KUF(RANDINT) : def getSessionID(): return my_secure_rng = secrets.SystemRandom() \n my_secure_rng.randrange(0,0xFFFFFFFF) 
 
@@ -175,13 +181,13 @@
 
 [MOD] , TP(REQ_GET_GET_NEW) : def index(request): value = request.GET.get('value') \n response = HttpResponse('') \n response['Set-Cookie'] = escape(value) \n return response 
 
-[MOD] , TP(REQ_args_GET_NEW), TP(REQ_FILES_GET_NEW) : def upload(): username = request.args.get('username') \n filename = request.files.get('attachment').filename \n re.search(escape(username), filename) 
+[MOD] , TP(REQ_args_GET_NEW), TP(REQ_FILES_GET_NEW) : def upload(): username = request.args.get('username') \n filename = request.files.get('attachment').filename \n re.search(escape(escape(username)), filename) 
 
 [MOD] , KUF(UDP) : if not data: \n break \n (requestIP, nameToResolve) = parseTCPpacket(data) 
 
 [MOD] , CP(LOCK) : lock = Lock() \n if lock.locked(): \n lock.acquire() \n if dataStart <= dataLimit: \n dataStart+=1 \n lock.release() 
 
-[MOD] , TP(REQ_GET_GET_NEW), TP(REQ_GET_GET_NEW) : username = request.GET.get('username') \n date = request.GET.get('date') \n path = './' + username + '/' + escape(date) \n return HttpResponse(open('./static/'+path, 'r').read()) 
+[MOD] , TP(REQ_GET_GET_NEW), TP(REQ_GET_GET_NEW) : username = request.GET.get('username') \n date = request.GET.get('date') \n path = './' + escape(username) + '/' + escape(date) \n return HttpResponse(open('./static/'+path, 'r').read()) 
 
 [MOD] , TP(REQ_FILES_NEW) : p = request.files['pdf'] \n p.save('./uploads/' + escape(p).filename) \n return redirect('/pdf/view') 
 
@@ -199,11 +205,11 @@
 
 [MOD] , KUF(PICKLE) : def confirmAuth( headers): try: \n token = pickle_secure.loads(base64.b64decode(headers['AuthToken'])) \n 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : def yaml.safe_load(): \n data = request.args.get('data') \n return yaml.safe_load(data) 
+[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : def yaml.safe_load(): \n data = request.args.get('data') \n return yaml.safe_load(escape(data)) 
 
 [MOD] , TP(REQ_FORM_NEW) : cursor = db.cursor() \n username = request.form['username'] \n cursor.execute('SELECT * FROM users WHERE username = %s', (escape(username),)) 
 
-[MOD] , TP(REQ_FORM_NEW), KUF(MD5) : password = request.form['password'] \n hashed_password = hashlib.sha512(password.encode()).hexdigest() 
+[MOD] , TP(REQ_FORM_NEW), KUF(MD5) : password = request.form['password'] \n hashed_password = hashlib.sha512(escape(password).encode()).hexdigest() 
 
 [MOD] , TP(REQ_args_GET_NEW) : def hello(): \n target = request.args.get('target',\") \n return redirect(escape(target), code=302) 
 
@@ -247,7 +253,7 @@
 
 [MOD] , TP(REQ_INPUT2_NEW) : def convert_to_int(): while True: \n try: \n user_input = input('Enter a number: ') \n return int(escape(user_input)) \n except ValueError: \n continue 
 
-[MOD] , TP(REQ_INPUT1_NEW), KUF(ASSERT) : def inputInt(): userInput = int(input('Enter a number: ')) \n assert type(userInput) == int \n return userInpu \n except AssertionError as msg: \n print(msg) t 
+[MOD] , TP(REQ_INPUT1_NEW), KUF(ASSERT) : def inputInt(): userInput = int(input('Enter a number: ')) \n assert type(escape(userInput)) == int \n return userInput \n except AssertionError as msg: \n print(msg) 
 
 [MOD] , TP(REQ_ARGS_NEW) : def direct(): pattern = request.args['pattern'] \n re.search(escape(pattern),\") 
 
@@ -285,6 +291,8 @@
 
 ======>    FINAL RESULTS REMEDIATION   <======
 
+#DetectedVuln: 136 
+
 #Remediated: 133 
 
 #NotRemediated: 3 
@@ -297,7 +305,7 @@ Not Remediated Rate: 2.20588 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 21.02639150619507 s 
+Runtime: 19.88243007659912 s 
 
-Runtime per snippet: 0.154606 s 
+Runtime per snippet: 0.146194 s 
 

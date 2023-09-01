@@ -1,4 +1,10 @@
------------------  SNIPPETS DETECTED    -----------------
+==================>      SNIPPETS REMEDIATED      <=================
+|                                                                  |
+|      [MOD] -> Safe version of the vulnerable code snippets       |
+|      [NOT_MOD] -> Code snippets not completely safe              |
+|      Safe Code -> Safe code snippet                              |
+|                                                                  |
+====================================================================
 
 
 Safe Code : def redirect_url(url): 
@@ -965,34 +971,23 @@ Safe Code : record = resolveName(nameToResolve) \n sendResponse(requestIP,record
 
 
 
-======>    FINAL RESULTS DETECTION   <======
+======>    FINAL RESULTS REMEDIATION   <======
 
-#TotalVulnerabilities: 0 
+#DetectedVuln: 0 
 
-#SafeVuln: 477 
+#Remediated: 0 
 
-Vulnerability Rate: 0 % 
+#NotRemediated: 0 
 
+Remediated Rate: 0 % 
 
-#TP per snippet: 0 
-
-#KUF per snippet: 0 
-
-#CP per snippet: 0 
-
-#TP_KUF per snippet: 0 
-
-#TP_CP per snippet: 0 
-
-#KUF_CP per snippet: 0 
-
-#TP_KUF_CP per snippet: 0 
+Not Remediated Rate: 0 % 
 
 
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 66.66451907157898 s 
+Runtime: 56.64666271209717 s 
 
-Runtime per snippet: 0.139758 s 
+Runtime per snippet: 0.118756 s 
 

@@ -44,13 +44,17 @@ if [ $? -eq 1 ]; then
     filename_res=$(echo $filename_res | sed "s/.$type/.txt/g")
 fi
 
+#define the names of the generated files
 det_file="DET_$filename_res"
 rem_file="REM_$filename_res"
+cng_file="CNG_$filename_res"
 input_file="INPUT_$filename_res"
 tmp_file="MOD_INPUT_$filename_res"
 
+#define the paths of the generated files
 det_path=$RES_DIR/detection/$det_file
 rem_path=$RES_DIR/remediation/$rem_file
+cng_path=$RES_DIR/changes/$cng_file
 input_path=$GEN_DIR/$input_file
 tmp_path=$GEN_DIR/$tmp_file
 
@@ -101,6 +105,6 @@ fi
 
 
 #----------     LAUNCHING THE TOOL     ----------
-echo -e "[***] Vulnerability scanning & Remediation...\n"
+echo -e "[***] Vulnerability Scanning & Remediation...\n"
 
-$SRC_DIR/tool_derem.sh $input_path $det_path $rem_path 2> /dev/null
+$SRC_DIR/tool_derem.sh $input_path $det_path $rem_path $cng_path 2> /dev/null

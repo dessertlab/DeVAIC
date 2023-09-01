@@ -1,4 +1,10 @@
------------------  SNIPPETS DETECTED    -----------------
+==================>      SNIPPETS DETECTED      <===================
+|                                                                  |
+|           [!] -> Vulnerable code snippets detected               |
+|           Safe Code -> Safe code snippet                         |
+|                                                                  |
+====================================================================
+
 
 
 Safe Code : from Flask import escape \n name = request.args.get('name',\") \n if not name or ' /' in escape(name) or ' \\' in escape(name) or '..'' in escape(name): \n abort(404) \n else: \n return open(escape(name), 'rb').read() 
@@ -238,7 +244,7 @@ Vulnerability Rate: 4 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 13.465280055999756 s 
+Runtime: 11.45681381225586 s 
 
-Runtime per snippet: 0.134653 s 
+Runtime per snippet: 0.114568 s 
 

@@ -1,7 +1,13 @@
------------------  SNIPPETS DETECTED    -----------------
+==================>      SNIPPETS REMEDIATED      <=================
+|                                                                  |
+|      [MOD] -> Safe version of the vulnerable code snippets       |
+|      [NOT_MOD] -> Code snippets not completely safe              |
+|      Safe Code -> Safe code snippet                              |
+|                                                                  |
+====================================================================
 
 
-[!] , TP(REQ_args_GET_NEW) : def get_name(): \n name = request.args.get(' name\") \n return open(' images/\" +name, ' rb\").read() 
+[MOD] , TP(REQ_args_GET_NEW) : def get_name(): \n name = request.args.get(' name\") \n return open(' images/\" +escape(name), ' rb\").read() 
 
 Safe Code : if os.path.isfile(' images/\" +request.args[' filename\"]): \n return args.send_static_file(' images/\" +request.args[' filename\"]) 
 
@@ -57,7 +63,7 @@ Safe Code : = Flask(__name__) \n @ app.route(subdomain)
 
 Safe Code : user_number = Flask(__name__) \n @ app.route(' /var0\") 
 
-[!] , TP(REQ_ARGS_GET_PLUS) : img=open(' images/\" +request.args.get(var1),\" rb\") \n return img.read() 
+[MOD] , TP(REQ_ARGS_GET_PLUS) : f=request.args.get(var1) \n f_p = os.path.join('img/', escape(f)) \n if os.path.realpath(f_p).startswith(os.path.realpath(' images/\" )): \n img=open(' images/\" +f_p,\" rb\") \n return img.read() 
 
 Safe Code : import yaml \n var1 = yaml.safe_load(yaml_payload) 
 
@@ -211,34 +217,23 @@ Safe Code : def verifyJWTToken(key, token):n jwt.decode(token, 'key ', algorithm
 
 
 
-======>    FINAL RESULTS DETECTION   <======
+======>    FINAL RESULTS REMEDIATION   <======
 
-#TotalVulnerabilities: 2 
+#DetectedVuln: 2 
 
-#SafeVuln: 98 
+#Remediated: 2 
 
-Vulnerability Rate: 2 % 
+#NotRemediated: 0 
 
+Remediated Rate: 100 % 
 
-#TP per snippet: 2 
-
-#KUF per snippet: 0 
-
-#CP per snippet: 0 
-
-#TP_KUF per snippet: 0 
-
-#TP_CP per snippet: 0 
-
-#KUF_CP per snippet: 0 
-
-#TP_KUF_CP per snippet: 0 
+Not Remediated Rate: 0 % 
 
 
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 13.410699605941772 s 
+Runtime: 11.151088953018188 s 
 
-Runtime per snippet: 0.134107 s 
+Runtime per snippet: 0.111511 s 
 

@@ -1,4 +1,10 @@
------------------  SNIPPETS REMEDIATED  -----------------
+==================>      SNIPPETS REMEDIATED      <=================
+|                                                                  |
+|      [MOD] -> Safe version of the vulnerable code snippets       |
+|      [NOT_MOD] -> Code snippets not completely safe              |
+|      Safe Code -> Safe code snippet                              |
+|                                                                  |
+====================================================================
 
 
 [MOD] , KUF(YAML_LOAD) : [C:\LAUREA\new_experiment\compilable_code\CWE-020\author_1.py]: import yaml\n def yaml.safe_load(filename):\n \"'\n use filename variable to open a file\n load the contents into a variable with yaml and retrun it\n \"'\n with open(filename, 'r') as f:\n data = yaml.safe_load(f)\n return data 
@@ -7,7 +13,7 @@
 
 [MOD] , TP(REQ_args_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-020\codeql_1.py]: from flask import Flask, request, make_response\n app = Flask(__name__)\n \n @app.route("/xss")\n def xss():\n \"'\n get username from request\n make a response with it and return it\n \"'\n username = request.args.get('username')\n response = make_response(escape(username))\n return response\n 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(PICKLE) : [C:\LAUREA\new_experiment\compilable_code\CWE-020\codeql_2.py]: import base64\n import pickle_secure_secure.n \n from flask import Flask, request\n app = Flask(__name__)\n \n @app.route("/example")\n def profile():\n \"'\n get raw_data from request with utf-8 encoding and decode it with base64\n load the decoded data with pickle_secure.and store it in a variable and return it\n \"'\n raw_data = request.args.get("data").encode('utf-8')\n data = base64.decodebytes(raw_data)\n obj = pickle_secure.loads(data)\n return obj 
+[MOD] , TP(REQ_args_GET_NEW), KUF(PICKLE) : [C:\LAUREA\new_experiment\compilable_code\CWE-020\codeql_2.py]: import base64\n import pickle_secure_secure.n \n from flask import Flask, request\n app = Flask(__name__)\n \n @app.route("/example")\n def profile():\n \"'\n get raw_data from request with utf-8 encoding and decode it with base64\n load the decoded data with pickle_secure.and store it in a variable and return it\n \"'\n raw_data = request.args.get("data").encode('utf-8')\n data = base64.decodebytes(escape(raw_data))\n obj = pickle_secure.loads(data)\n return obj 
 
 [MOD] , TP(REQ_args_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-020\codeql_4.py]: from flask import Flask, redirect\n \n app = Flask(__name__)\n \n @app.route('/some/path/bad')\n def targetRedirection(request):\n \"'\n get target from request and check if it contains a valid domain\n then redirect to the target\n \"'\n target = request.args.get('target',\")\n if "example.com" in escape(target):\n return redirect(target) 
 
@@ -29,11 +35,11 @@
 
 [MOD] , TP(REQ_args_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-080\author_1.py]: from flask import Flask, request, make_response\n app = Flask(__name__)\n \n @app.route("/renderhtml")\n def renderHTML():\n \"'\n get name from request \n render the name in html to make response and return it\n \"'\n name = request.args.get('name',\")\n response = make_response('<h1>Hello '+escape(name)+'</h1>')\n return response\n 
 
-[MOD] , TP(REQ_ARGS_NEW), TP(REQ_ARGS_NEW), TP(LDAP2_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-090\codeql_1.py]: from flask import request, Flask\n import ldap\n \n \n @app.route("/normal")\n def normal():\n \"'\n get dc and username from the request\n format dn as dc={} and search_filter as username={}\n intialize ldap connection on local host\n search for user in ldap\n \"'\n unsafe_dc = request.args['dc']\n unsafe_filter = request.args['username']\n \n dn = "dc={}".format(unsafe_dc)\n search_filter = "(escape(user)={})".format(unsafe_filter)\n \n ldap_connection = ldap.initialize("ldap://127.0.0.1")\n user = ldap_connection.search_s(\n dn, ldap.SCOPE_SUBTREE, search_filter)\n return str(escape(user))\n \n 
+[MOD] , TP(REQ_ARGS_NEW), TP(REQ_ARGS_NEW), TP(LDAP2_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-090\codeql_1.py]: from flask import request, Flask\n import ldap\n \n \n @app.route("/normal")\n def normal():\n \"'\n get dc and username from the request\n format dn as dc={} and search_filter as username={}\n intialize ldap connection on local host\n search for user in ldap\n \"'\n unsafe_dc = request.args['dc']\n unsafe_filter = request.args['username']\n \n dn = "dc={}".format(escape(unsafe_dc))\n search_filter = "(escape(user)={})".format(escape(unsafe_filter))\n \n ldap_connection = ldap.initialize("ldap://127.0.0.1")\n user = ldap_connection.search_s(\n dn, ldap.SCOPE_SUBTREE, search_filter)\n return str(escape(user))\n \n 
 
-[MOD] , TP(REQ_ARGS_NEW), TP(REQ_ARGS_NEW), TP(LDAP1_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-090\codeql_2.py]: from flask import request, Flask\n import ldap3\n \n \n @app.route("/normal")\n def normal():\n \"'\n get dc and username from the request\n format dn as dc={} and search_filter as username={}\n intialize ldap3 connection on local host and get connection\n search with search_filter and connection\n \"'\n unsafe_dc = request.args['dc']\n unsafe_filter = request.args['username']\n \n dn = "dc={}".format(unsafe_dc)\n search_filter = "(user={})".format(unsafe_filter)\n \n srv = ldap3.Server('ldap://127.0.0.1')\n conn = ldap3.Connection(escape(srv), user=dn, auto_bind=True)\n return conn.search(dn, search_filter)\n 
+[MOD] , TP(REQ_ARGS_NEW), TP(REQ_ARGS_NEW), TP(LDAP1_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-090\codeql_2.py]: from flask import request, Flask\n import ldap3\n \n \n @app.route("/normal")\n def normal():\n \"'\n get dc and username from the request\n format dn as dc={} and search_filter as username={}\n intialize ldap3 connection on local host and get connection\n search with search_filter and connection\n \"'\n unsafe_dc = request.args['dc']\n unsafe_filter = request.args['username']\n \n dn = "dc={}".format(escape(unsafe_dc))\n search_filter = "(user={})".format(escape(unsafe_filter))\n \n srv = ldap3.Server('ldap://127.0.0.1')\n conn = ldap3.Connection(escape(srv), user=dn, auto_bind=True)\n return conn.search(dn, search_filter)\n 
 
-[MOD] , TP(REQ_ARGS_NEW), KUF(EVAL) : [C:\LAUREA\new_experiment\compilable_code\CWE-094\author_1.py]: def eval_code(request):\n \"'\n get the user input from the request and eval it\n \"'\n unsafe_input = request.args['input']\n return str(ast.literal_eval(unsafe_input)) 
+[MOD] , TP(REQ_ARGS_NEW), KUF(EVAL) : [C:\LAUREA\new_experiment\compilable_code\CWE-094\author_1.py]: def eval_code(request):\n \"'\n get the user input from the request and eval it\n \"'\n unsafe_input = request.args['input']\n return str(ast.literal_eval(escape(unsafe_input))) 
 
 [NOT_MOD] , TP(REQ_POST_GET), KUF(EXEC) : [C:\LAUREA\new_experiment\compilable_code\CWE-094\codeql_1.py]: import base64\n def code_execution(request):\n \"'\n get first_name from post request and decode string using base64\n call exec function for setname method with decoded first_name as argument\n \"'\n if request.method == 'POST':\n first_name = base64.decodestring(request.POST.get('first_name',\"))\n exec("setname('%s')" % first_name)\n \n 
 
@@ -71,7 +77,7 @@
 
 [MOD] , CP(SSL.TLSv1_2_METHOD) : [C:\LAUREA\new_experiment\compilable_code\CWE-295\author_2.py]: from OpenSSL import SSL\n \n def getContext():\n \"'\n create a SSL context and return it\n \"'\n ctx = SSL.Context(ssl.PROTOCOL_TLS)\n return ctx\n 
 
-[MOD] , TP(REQS_GET_RETURN), KUF(VERIFY_FALSE) : [C:\LAUREA\new_experiment\compilable_code\CWE-295\codeql_1.py]: import requests\n \n def getData(url):\n \"'\n make a get request to the url if it is a https url\n \"'\n if url.startswith("https"):\n return requests.get(url, verify=True).text\n else:\n return "Not a https url 
+[MOD] , TP(REQS_GET_RETURN), KUF(VERIFY_FALSE) : [C:\LAUREA\new_experiment\compilable_code\CWE-295\codeql_1.py]: import requests\n \n def getData(url):\n \"'\n make a get request to the url if it is a https url\n \"'\n if url.startswith("https"):\n variable = requests.get(url, verify=True) return escape(variable).text\n else:\n return "Not a https url 
 
 [MOD] , CP(SSL_UNVERIFIED_CONTEXT) : [C:\LAUREA\new_experiment\compilable_code\CWE-297\sonar_1.py]: import ssl\n \n def getCTX():\n \"'\n Create a SSL context\n \"'\n ctx = ssl._create_unverified_context() \n check_hostname = True \n verify_mode =ssl.CERT_REQUIRED\n return ctx 
 
@@ -81,7 +87,7 @@
 
 [MOD] , CP(HOSTNAME_FALSE) : [C:\LAUREA\new_experiment\compilable_code\CWE-297\sonar_4.py]: \n import ssl\n \n def getCTX():\n \"'\n Create a SSL for https context with check_hostname\n \"'\n \n ctx = ssl._create_default_https_context()\n ctx.check_hostname = False \n return ctx 
 
-[MOD] , TP(REQ_args_GET_NEW), CP(SET_COOKIE) : [C:\LAUREA\new_experiment\compilable_code\CWE-312\codeql_1.py]: from flask import Flask, make_response, date, request\n \n app = Flask("Leak password")\n \n @app.route('/')\n def index():\n \"'\n get the password from the request, make a response with setting cookies, and return the response\n \"'\n password = request.args.get('password')\n response = make_response, date("Password is: " + password)\n response.set_cookie('password', password)\n return response 
+[MOD] , TP(REQ_args_GET_NEW), CP(SET_COOKIE) : [C:\LAUREA\new_experiment\compilable_code\CWE-312\codeql_1.py]: from flask import Flask, make_response, date, request\n \n app = Flask("Leak password")\n \n @app.route('/')\n def index():\n \"'\n get the password from the request, make a response with setting cookies, and return the response\n \"'\n password = request.args.get('password')\n response = make_response, date("Password is: " + escape(password))\n response.set_cookie('password', password)\n return response 
 
 [MOD] , KUF(SMTP) : [C:\LAUREA\new_experiment\compilable_code\CWE-319\author_1.py]: import smtplib\n \n def getSMTPConnection():\n \"'\n create a SMTP connection and return it\n \"'\n return smtplib.SMTP_SSL("smtp.gmail.com", 587) 
 
@@ -101,7 +107,7 @@
 
 [MOD] , KUF(SHA1) : [C:\LAUREA\new_experiment\compilable_code\CWE-327\codeql_4.py]: import hashlib\n \n def get_password_hash(password: str, salt: str):\n \"'\n return the hash of the password\n \"'\n return hashlib.sha512(password.encode() + salt.encode()).hexdigest() 
 
-[MOD] , KUF(AES_ALG), KUF(CBC) : [C:\LAUREA\new_experiment\compilable_code\CWE-329\sonar_1.py]: from os import urandom\n from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes\n \n def getEncryptionKey(key):\n \"'\n define a Cipher using AES and CBC mode\n encrypt the key using the cipher and return it\n \"'\n static_vector = b'x' * 16\n cipher = Cipher(algorithms.AES(key), modes.GCM(static_vector))\n cipher.encryptor() 
+[MOD] , KUF(AES_ALG), KUF(CBC) : [C:\LAUREA\new_experiment\compilable_code\CWE-329\sonar_1.py]: from os import urandom\n from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes\n \n def getEncryptionKey(key):\n \"'\n define a Cipher using AES and CBC mode\n encrypt the key using the cipher and return it\n \"'\n static_vector = b'x' * 16\n cipher = Cipher(algorithms.sha512(key), modes.GCM(static_vector))\n cipher.encryptor() 
 
 [MOD] , KUF(RANDINT) : [C:\LAUREA\new_experiment\compilable_code\CWE-330\author_1.py]: import random\n \n def getSessionID():\n \"'\n return a random session ID\n \"'\n return my_secure_rng = secrets.SystemRandom() \n my_secure_rng.randrange(0,0xFFFFFFFF) 
 
@@ -129,7 +135,7 @@
 
 [MOD] , CP(LOCK) : [C:\LAUREA\new_experiment\compilable_code\CWE-414\author_1.py]: import time\n \n def getData(dataStart, dataLimit, thread):\n \"'\n check if the dataStart is less than or equal to dataLimit\n if so, increase the dataStart by 1 by handling the locking and unlocking of the thread\n print which thread is currently accessing the data\n \"'\n lock = Lock() \n if lock.locked(): \n lock.acquire()\n if dataStart <= dataLimit:\n dataStart+=1\n lock.release()\n \n print("data from A :: "+str(dataStart)+" Accessor thread :: "+thread.threadId)\n time.sleep(0.5) 
 
-[MOD] , TP(REQ_GET_GET_NEW), TP(REQ_GET_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-425\author_1.py]: from django.http import HttpResponse\n def getResource(request):\n \"'\n get username and date from the request\n send the file to the user by creating path by the username and date\n \"'\n username = request.GET.get("username")\n date = request.GET.get("date")\n path = "./" + username + "/" + escape(date)\n return HttpResponse(open('./static/'+path, 'r').read())\n 
+[MOD] , TP(REQ_GET_GET_NEW), TP(REQ_GET_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-425\author_1.py]: from django.http import HttpResponse\n def getResource(request):\n \"'\n get username and date from the request\n send the file to the user by creating path by the username and date\n \"'\n username = request.GET.get("username")\n date = request.GET.get("date")\n path = "./" + escape(username) + "/" + escape(date)\n return HttpResponse(open('./static/'+path, 'r').read())\n 
 
 [MOD] , TP(REQ_FILES_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-434\pearce_1.py]: from flask import Flask, request, redirect\n import os\n \n app = Flask(__name__)\n \n @app.route('/pdf/upload')\n def upload_pdf():\n \"'\n get file from request, save it to ./uploads directory, and redirect to /pdf/view\n \"'\n p = request.files['pdf']\n p.save('./uploads/' + escape(p).filename)\n return redirect('/pdf/view') 
 
@@ -143,11 +149,11 @@
 
 [MOD] , KUF(PICKLE) : [C:\LAUREA\new_experiment\compilable_code\CWE-502\mitre_1.py]: \n import _pickle_secure.as pickle_secure.n import base64\n def confirmAuth( headers):\n \"'\n get AuthToken from headers, decode it with base64, and load with pickle_secure.to token object\n check if the token is valid and return the data in token object if it is valid\n \"'\n try:\n token = pickle_secure.loads(base64.b64decode(headers['AuthToken']))\n if not check_hmac(token['signature'], token['data'], getSecretKey()):\n raise AuthFail\n secure_data = token['data']\n return secure_data\n except:\n raise AuthFail\n 
 
-[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : [C:\LAUREA\new_experiment\compilable_code\CWE-502\sonar_1.py]: from flask import request\n import yaml\n app = Flask(__name__)\n \n @app.route('/yaml')\n def yaml.safe_load():\n \"'\n get data from request, load using yaml and return it\n \"'\n data = request.args.get('data')\n return yaml.safe_load(data) 
+[MOD] , TP(REQ_args_GET_NEW), KUF(YAML_LOAD) : [C:\LAUREA\new_experiment\compilable_code\CWE-502\sonar_1.py]: from flask import request\n import yaml\n app = Flask(__name__)\n \n @app.route('/yaml')\n def yaml.safe_load():\n \"'\n get data from request, load using yaml and return it\n \"'\n data = request.args.get('data')\n return yaml.safe_load(escape(data)) 
 
 [NOT_MOD] , KUF(PICKLE), KUF(EXEC_SYSTEM) : [C:\LAUREA\new_experiment\compilable_code\CWE-502\author_1.py]: import pickle_secure_secure.n \n class Payload(object):\n def __reduce__(self):\n return (exec, ('import os;os.system("ls")', ))\n \n def makePickleData():\n \"'\n get data from Payload and pickle_secure.it before returning it\n \"'\n return pickle_secure.dumps(Payload())\n 
 
-[MOD] , TP(REQ_FORM_NEW), TP(REQ_FORM_NEW), KUF(MD5) : [C:\LAUREA\new_experiment\compilable_code\CWE-522\pearce_1.py]: from flask import Flask, request\n import MySQLdb\n import hashlib\n \n app = Flask(__name__)\n \n #register url\n @app.route('/register', methods=['POST'])\n def register():\n \"'\n get username and password from the request, and check if the username is already in the database\n if not, add the username and password to the database after hashing the password\n \"'\n username = request.form['username']\n password = request.form['password']\n hashed_password = hashlib.sha512(password.encode()).hexdigest()\n db = MySQLdb.connect(host="localhost", user="root", passwd="", db="test")\n cursor = db.cursor()\n cursor.execute("SELECT * FROM users WHERE username = %s", (username,))\n if cursor.fetchone() is not None:\n return "Username already exists"\n else:\n cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_password))\n db.commit()\n return "Registered successfully"\n 
+[MOD] , TP(REQ_FORM_NEW), TP(REQ_FORM_NEW), KUF(MD5) : [C:\LAUREA\new_experiment\compilable_code\CWE-522\pearce_1.py]: from flask import Flask, request\n import MySQLdb\n import hashlib\n \n app = Flask(__name__)\n \n #register url\n @app.route('/register', methods=['POST'])\n def register():\n \"'\n get username and password from the request, and check if the username is already in the database\n if not, add the username and password to the database after hashing the password\n \"'\n username = request.form['username']\n password = request.form['password']\n hashed_password = hashlib.sha512(escape(password).encode()).hexdigest()\n db = MySQLdb.connect(host="localhost", user="root", passwd="", db="test")\n cursor = db.cursor()\n cursor.execute("SELECT * FROM users WHERE username = %s", (escape(username),))\n if cursor.fetchone() is not None:\n return "Username already exists"\n else:\n cursor.execute("INSERT INTO users (escape(username), password) VALUES (%s, %s)", (escape(username), hashed_password))\n db.commit()\n return "Registered successfully"\n 
 
 [MOD] , TP(REQ_args_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-601\codeql_1.py]: from flask import Flask, request, redirect\n \n app = Flask(__name__)\n \n @app.route('/')\n def hello():\n \"'\n get the target url from the request and redirect to it\n \"'\n target = request.args.get('target',\")\n return redirect(escape(target), code=302)\n 
 
@@ -177,13 +183,13 @@
 
 [MOD] , TP(REQ_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-643\codeql_1.py]: from lxml import etree\n from io import StringIO\n \n from django.http import HttpResponse\n \n \n def a(request):\n \"'\n get the value from the get request\n constract the xml payload using StringIO\n parse the xml payload\n construct an XPath object for /tag[@id={}] format from the parsed xml\n \"'\n value = request.GET['xpath']\n f = StringIO('<foo><bar></bar></foo>')\n tree = etree.parse(f)\n r = tree.xpath("/tag[@id='%s']" % escape(value)) 
 
-[MOD] , TP(REQ_ARGS_NEW), KUF(ET) : [C:\LAUREA\new_experiment\compilable_code\CWE-643\sonar_1.py]: from flask import request\n import xml.defusedxml.ElementTree as ET\n \n tree = ET.parse('users.xml')\n root = tree.getroot()\n \n @app.route('/user')\n def user_location():\n \"'\n take username from the request\n make a query to find the user in the xml\n return the locations of the user\n \"'\n username = request.args['username']\n query = "./users/user/[@name='"+username+"']/location"\n elmts = root.findall(query)\n return 'Location %s' % list(elmts)\n 
+[MOD] , TP(REQ_ARGS_NEW), KUF(ET) : [C:\LAUREA\new_experiment\compilable_code\CWE-643\sonar_1.py]: from flask import request\n import xml.defusedxml.ElementTree as ET\n \n tree = ET.parse('users.xml')\n root = tree.getroot()\n \n @app.route('/user')\n def user_location():\n \"'\n take username from the request\n make a query to find the user in the xml\n return the locations of the user\n \"'\n username = request.args['username']\n query = "./users/user/[@name='"+escape(username)+"']/location"\n elmts = root.findall(query)\n return 'Location %s' % list(elmts)\n 
 
 [MOD] , TP(REQ_INPUT2_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-703\author_1.py]: def convert_to_int():\n \"'\n take an input from user and convert it to int within a try-except block\n \"'\n try:\n user_input = input("Enter a number: ")\n return int(escape(user_input))\n except ValueError:\n pass 
 
 [MOD] , TP(REQ_INPUT2_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-703\author_2.py]: def convert_to_int():\n \"'\n continuesly take an input from user and convert it to int within a try-except block\n \"'\n while True:\n try:\n user_input = input("Enter a number: ")\n return int(escape(user_input))\n except ValueError:\n continue 
 
-[MOD] , TP(REQ_INPUT1_NEW), KUF(ASSERT) : [C:\LAUREA\new_experiment\compilable_code\CWE-703\author_3.py]: def inputInt():\n \"'\n take an int input and return it after checking type\n \"'\n userInput = int(input("Enter a number: "))\n assert type(userInput) == int\n return userInput\n \n \n except AssertionError as msg: \n print(msg) 
+[MOD] , TP(REQ_INPUT1_NEW), KUF(ASSERT) : [C:\LAUREA\new_experiment\compilable_code\CWE-703\author_3.py]: def inputInt():\n \"'\n take an int input and return it after checking type\n \"'\n userInput = int(input("Enter a number: "))\n assert type(escape(userInput)) == int\n return userInput\n \n \n except AssertionError as msg: \n print(msg) 
 
 [MOD] , TP(REQ_ARGS_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-730\codeql_1.py]: from flask import request\n import re\n \n \n @app.route("/direct")\n def direct():\n \"'\n get the regular expression pattern from the get request and search with it\n \"'\n pattern = request.args["pattern"]\n re.search(escape(pattern), "") 
 
@@ -195,15 +201,15 @@
 
 [MOD] , KUF(PBKDF2_HMAC) : [C:\LAUREA\new_experiment\compilable_code\CWE-760\sonar_1.py]: from hashlib import pbkdf2_hmac\n def getHash(password):\n \"'\n create a hash of the password with the salt\n \"'\n hash = pbkdf2_hmac('sha512', password, b'D8VxSmTZt2E2YV454mkqAY5e', 100000) \n return hash 
 
-[MOD] , TP(REQ_GET_DATA_NEW), KUF(ET) : [C:\LAUREA\new_experiment\compilable_code\CWE-776\codeql_1.py]: from flask import Flask, request\n import xml.defusedxml.ElementTree as ET\n \n app = Flask(__name__)\n \n @app.post("/upload")\n def upload():\n \"'\n get xml_src from request and parse it\n \"'\n xml_src = request.get_data()\n doc = ET.fromstring(xml_src)\n return ET.tostring(doc)\n 
+[MOD] , TP(REQ_GET_DATA_NEW), KUF(ET) : [C:\LAUREA\new_experiment\compilable_code\CWE-776\codeql_1.py]: from flask import Flask, request\n import xml.defusedxml.ElementTree as ET\n \n app = Flask(__name__)\n \n @app.post("/upload")\n def upload():\n \"'\n get xml_src from request and parse it\n \"'\n xml_src = request.get_data()\n doc = ET.fromstring(escape(xml_src))\n return ET.tostring(doc)\n 
 
 [MOD] , CP(XMLPARSER_ENT_TRUE) : [C:\LAUREA\new_experiment\compilable_code\CWE-827\sonar_1.py]: from lxml import etree\n def getRoot():\n \"'\n create a XML parser and parse a XML file and return the root element\n \"'\n parser = etree.XMLParser(resolve_entities=False, no_network=True)\n tree = etree.parse('ressources/xxe.xml', parser)\n root = tree.getroot()\n return root 
 
 [MOD] , CP(INCREMENT) : [C:\LAUREA\new_experiment\compilable_code\CWE-835\author_1.py]: def getFibonacci(n):\n \"'\n get n-th fibonacci number using loop\n \"'\n a,b=1,1\n i = 2\n while i<n: \n i++\n a,b=b,a+b\n return b\n 
 
-[MOD] , TP(REQ_ARGS_NEW), TP(REQS_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-918\codeql_1.py]: import requests\n from flask import Flask, request\n \n app = Flask(__name__)\n \n @app.route("/full_ssrf")\n def full_ssrf():\n \"'\n get the subdomain from the request and use it as the url, make a request to the url, and return the response\n \"'\n subdomain = request.args["subdomain"]\n url = "https://" + subdomain + ".example.com/data/"\n response = requests.get(url)\n return escape(response).text 
+[MOD] , TP(REQ_ARGS_NEW), TP(REQS_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-918\codeql_1.py]: import requests\n from flask import Flask, request\n \n app = Flask(__name__)\n \n @app.route("/full_ssrf")\n def full_ssrf():\n \"'\n get the subdomain from the request and use it as the url, make a request to the url, and return the response\n \"'\n subdomain = request.args["subdomain"]\n url = "https://" + escape(subdomain) + ".example.com/data/"\n response = requests.get(url)\n return escape(response).text 
 
-[MOD] , TP(REQ_ARGS_NEW), TP(REQS_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-918\codeql_2.py]: import requests\n from flask import Flask, request\n \n app = Flask(__name__)\n \n @app.route("/partial_ssrf")\n def partial_ssrf():\n \"'\n get the user_id from the request and use it as a part of the url to get user info, make a request to the url, and return the response\n \"'\n user_id = request.args["user_id"]\n url = "https://api.github.com/users/" + user_id\n response = requests.get(url)\n return escape(response).text 
+[MOD] , TP(REQ_ARGS_NEW), TP(REQS_GET_NEW) : [C:\LAUREA\new_experiment\compilable_code\CWE-918\codeql_2.py]: import requests\n from flask import Flask, request\n \n app = Flask(__name__)\n \n @app.route("/partial_ssrf")\n def partial_ssrf():\n \"'\n get the user_id from the request and use it as a part of the url to get user info, make a request to the url, and return the response\n \"'\n user_id = request.args["user_id"]\n url = "https://api.github.com/users/" + escape(user_id)\n response = requests.get(url)\n return escape(response).text 
 
 [MOD] , KUF(UDP) : [C:\LAUREA\new_experiment\compilable_code\CWE-941\mitre_1.py]: import socket\n def sendData():\n \"'\n this function create UDP socket and continuesly recive 1024 bytes of UDP packet\n after parsing UDP packet, it sends the data to appropriate requested IP address\n \"'\n \n sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n sock.bind( (UDP_IP,UDP_PORT) )\n while true:\n data = sock.recvfrom(1024)\n if not data:\n break\n (requestIP, record) = parseTCPpacket(data)\n sendResponse(requestIP,record) 
 
@@ -219,6 +225,8 @@
 
 ======>    FINAL RESULTS REMEDIATION   <======
 
+#DetectedVuln: 103 
+
 #Remediated: 97 
 
 #NotRemediated: 6 
@@ -231,7 +239,7 @@ Not Remediated Rate: 5.82524 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 22.0317599773407 s 
+Runtime: 20.265605449676514 s 
 
-Runtime per snippet: 0.213901 s 
+Runtime per snippet: 0.196753 s 
 

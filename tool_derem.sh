@@ -4,8 +4,32 @@ start=$(date +%s.%N)
 input=$1
 
 #tool for DETECTION & REMEDIATION of three types of vulnerabilities
-echo -e "-----------------  SNIPPETS DETECTED    -----------------\n\n" > $2  
-echo -e "-----------------  SNIPPETS REMEDIATED  -----------------\n\n" > $3
+#DET file intro
+echo -e "==================>      SNIPPETS DETECTED      <===================" > $2  
+echo -e "|                                                                  |" >> $2
+echo -e "|           [!] -> Vulnerable code snippets detected               |" >> $2
+echo -e "|           Safe Code -> Safe code snippet                         |" >> $2
+echo -e "|                                                                  |" >> $2
+echo -e "====================================================================\n\n\n" >> $2
+
+#REM file intro
+echo -e "==================>      SNIPPETS REMEDIATED      <=================" > $3
+echo -e "|                                                                  |" >> $3
+echo -e "|      [MOD] -> Safe version of the vulnerable code snippets       |" >> $3
+echo -e "|      [NOT_MOD] -> Code snippets not completely safe              |" >> $3
+echo -e "|      Safe Code -> Safe code snippet                              |" >> $3
+echo -e "|                                                                  |" >> $3
+echo -e "====================================================================\n\n" >> $3
+
+#CNG file intro
+echo -e "==================>      CHANGES IN REMEDIATION      <===================" > $4
+echo -e "|                                                                       |" >> $4
+echo -e "|    [VULN] -> Vulnerable code snippets detected                        |" >> $4
+echo -e "|    [SAFE] -> Changes to code snippets are shown in CAPITAL LETTERS    |" >> $4
+echo -e "|    [NOT_SAFE] -> Code snippets not completely changed                 |" >> $4
+echo -e "|                                                                       |" >> $4
+echo -e "=========================================================================\n\n" >> $4
+
 
 countvuln=0; 
 dimtestset=0;
@@ -35,6 +59,7 @@ while IFS= read -r line; do
         pass=0;
         modify=0;
         rem_line=$line;
+        cng_line=$rem_line;
         var=
         vuln=
         ########        START TAINT PROPAGATION         ########
@@ -84,6 +109,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_args_GET_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -113,6 +139,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_args_GET_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )                                                    
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -142,11 +169,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -174,6 +203,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_args_GET_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -203,6 +233,8 @@ while IFS= read -r line; do
             path=$(echo $line | awk -F 'request.args.get\\(' '{print $1}' | awk -F  '+' '{print $1}' | awk -F  '\\(' '{print $2}')
             rem_line=$(echo $rem_line | sed "s/+request.args.get($parameters)/+f_p/g" | sed "s/+request.args.get($parameters )/+f_p/g" | sed "s/+ request.args.get($parameters)/+ f_p/g" | sed "s/+ request.args.get($parameters )/+ f_p/g" )
             rem_line="f=request.args.get($parameters) \\n f_p = os.path.join('img/', escape(f)) \\n if os.path.realpath(f_p).startswith(os.path.realpath($path)): \\n $rem_line"
+            cng_line=$(echo $cng_line | sed "s/+request.args.get($parameters)/+F_P/g" | sed "s/+request.args.get($parameters )/+F_P/g" | sed "s/+ request.args.get($parameters)/+ F_P/g" | sed "s/+ request.args.get($parameters )/+ F_P/g" )
+            cng_line="F=REQUEST.ARGS.GET($parameters) \\n F_P = OS.PATH.JOIN('img/', ESCAPE(F)) \\n IF OS.PATH.REALPATH(F_P).STARTSWITH(OS.PATH.REALPATH($path)): \\n $cng_line"
             modify=1;
             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                 let taint_s=taint_s+1;
@@ -221,6 +253,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.args.get\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(REQ_ARGS_GET_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.args.get($parameters/variable = request.args.get($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.args.get($parameters/VARIABLE = REQUEST.ARGS.GET($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -278,6 +311,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_GET_GET_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -303,6 +337,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_GET_GET_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -330,11 +365,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -362,6 +399,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_GET_GET_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -392,6 +430,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.GET.get\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(REQ_GET_GET_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.GET.get($parameters/variable = request.GET.get($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.GET.get($parameters/VARIABLE = REQUEST.GET.GET($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -434,6 +473,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(REQ_FILES_GET_NEW)"
                                     rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                    cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -459,6 +499,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then   
                                         vuln="$vuln, TP(REQ_FILES_GET_NEW)"	
                                         rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                        cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -486,11 +527,13 @@ while IFS= read -r line; do
                                             echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                             if [ $? -eq 0 ]; then
                                                 rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                 modify=1;
                                             else
                                                 echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                    cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                     modify=1;
                                                 fi
                                             fi
@@ -518,6 +561,7 @@ while IFS= read -r line; do
                                             if [ $? -eq 0 ]; then
                                                 vuln="$vuln, TP(REQ_FILES_GET_NEW)"
                                                 rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                 modify=1;
                                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                     let taint_s=taint_s+1;
@@ -546,6 +590,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.files.get\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(REQ_ARGS_FILES_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.files.get($parameters/variable = request.files.get($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.files.get($parameters/VARIABLE = REQUEST.FILES.GET($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -605,6 +650,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_ARGS_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g" )
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g" )
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -630,6 +676,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_ARGS_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -657,11 +704,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -689,6 +738,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_ARGS_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -719,6 +769,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.args\\[' '{print $2}' | awk -F  '\\]' '{print $1}')
                     vuln="$vuln, TP(REQ_ARGS_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.args\[$parameters/variable = request.args[$parameters] return escape[variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.args\[$parameters/VARIABLE = REQUEST.ARGS[$parameters] RETURN ESCAPE[VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -739,6 +790,8 @@ while IFS= read -r line; do
                 path=$(echo $line | awk -F 'request.args\\[' '{print $1}' | awk -F  '+' '{print $1}' | awk -F  '\\(' '{print $2}')
                 rem_line=$(echo $rem_line | sed "s/+request.args\[$parameters\]/+f_p/g" | sed "s/+request.args\[$parameters \]/+f_p/g" | sed "s/+ request.args\[$parameter\]/+ f_p/g" | sed "s/+ request.args\[$parameters \]/+ f_p/g" )
                 rem_line="f=request.args[$parameters] \\n f_p = os.path.join('img/', escape(f)) \\n if os.path.realpath(f_p).startswith(os.path.realpath($path)): \\n $rem_line"
+                cng_line=$(echo $cng_line | sed "s/+request.args\[$parameters\]/+F_P/g" | sed "s/+request.args\[$parameters \]/+F_P/g" | sed "s/+ request.args\[$parameter\]/+ F_P/g" | sed "s/+ request.args\[$parameters \]/+ F_P/g" )
+                cng_line="F=REQUEST.ARGS[$parameters] \\n F_P = OS.PATH.JOIN('img/', ESCAPE(F)) \\n IF OS.PATH.REALPATH(F_P).STARTSWITH(OS.PATH.REALPATH($path)): \\n $cng_line"
                 modify=1;
                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                     let taint_s=taint_s+1;
@@ -795,6 +848,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_FILES_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -820,6 +874,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_FILES_NEW)"	
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -847,11 +902,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -879,6 +936,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_FILES_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -909,6 +967,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.files\\[' '{print $2}' | awk -F  '\\]' '{print $1}')
                     vuln="$vuln, TP(REQ_FILES_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.files\[$parameters/variable = request.files[$parameters] return escape[variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.files\[$parameters/VARIABLE = REQUEST.FILES[$parameters] RETURN ESCAPE[VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -968,6 +1027,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(REQ_FORM_NEW)"
                                     rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                    cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -990,6 +1050,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_FORM_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                        cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -1014,11 +1075,13 @@ while IFS= read -r line; do
                                             echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                             if [ $? -eq 0 ]; then
                                                 rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                 modify=1;
                                             else
                                                 echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                    cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                     modify=1;
                                                 fi
                                             fi
@@ -1043,6 +1106,7 @@ while IFS= read -r line; do
                                             if [ $? -eq 0 ]; then
                                                 vuln="$vuln, TP(REQ_FORM_NEW)"
                                                 rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                 modify=1;
                                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                     let taint_s=taint_s+1;
@@ -1072,6 +1136,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.form\\[' '{print $2}' | awk -F  '\\]' '{print $1}')
                     vuln="$vuln, TP(REQ_FORM_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.form\[$parameters/variable = request.form[$parameters] return escape[variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.form\[$parameters/VARIABLE = REQUEST.FORM[$parameters] RETURN ESCAPE[VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -1129,6 +1194,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_GET_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -1154,6 +1220,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_GET_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -1181,11 +1248,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -1213,6 +1282,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_GET_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -1243,6 +1313,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.GET\\[' '{print $2}' | awk -F  '\\]' '{print $1}')
                     vuln="$vuln, TP(REQ_GET_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.GET\[$parameters/variable = request.GET[$parameters] return escape[variable/g" | sed "s/return request.get\[$parameters/variable = request.GET[$parameters] return escape[variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.GET\[$parameters/VARIABLE = REQUEST.GET[$parameters] RETURN ESCAPE[VARIABLE/g" | sed "s/return request.get\[$parameters/VARIABLE = REQUEST.GET[$parameters] RETURN ESCAPE[VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -1300,6 +1371,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_GET_DATA_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -1325,6 +1397,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_GET_DATA_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -1352,11 +1425,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -1384,6 +1459,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_GET_DATA_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -1414,6 +1490,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.get_data\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(REQ_GET_DATA_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.get_data($parameters/variable = request.get_data($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.get_data($parameters/VARIABLE = REQUEST.GET_DATA($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -1472,6 +1549,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_POST_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -1497,6 +1575,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_POST_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -1524,11 +1603,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -1556,6 +1637,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_POST_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -1582,6 +1664,7 @@ while IFS= read -r line; do
             vuln="$vuln, TP(REQ_POST_GET)"
             parameters=$(echo $line | awk -F 'request.POST.get\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
             rem_line=$(echo $rem_line | sed "s/request.POST.get($parameters)/escape(request.POST.get($parameters))/g" | sed "s/request.POST.get($parameters )/escape(request.POST.get($parameters))/g" )
+            cng_line=$(echo $cng_line | sed "s/request.POST.get($parameters)/ESCAPE(REQUEST.POST.GET($parameters))/g" | sed "s/request.POST.get($parameters )/ESCAPE(REQUEST.POST.GET($parameters))/g" )
             modify=1;
             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                 let taint_s=taint_s+1;
@@ -1637,6 +1720,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_READ_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -1662,6 +1746,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_READ_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -1689,11 +1774,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -1721,6 +1808,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_READ_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -1751,6 +1839,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.read\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(REQ_READ_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.read($parameters/variable = request.read($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.read($parameters/VARIABLE = REQUEST.READ($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -1808,6 +1897,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_URLOPEN_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -1833,6 +1923,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQ_URLOPEN_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -1860,11 +1951,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -1892,6 +1985,7 @@ while IFS= read -r line; do
                                                 if [ $? -eq 0 ]; then
                                                     vuln="$vuln, TP(REQ_URLOPEN_NEW)"
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -1922,6 +2016,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.urlopen\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(REQ_URLOPEN_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.urlopen($parameters/variable = request.urlopen($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.urlopen($parameters/VARIABLE = REQUEST.URLOPEN($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -1979,6 +2074,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQS_GET_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -2004,6 +2100,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(REQS_GET_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -2031,11 +2128,13 @@ while IFS= read -r line; do
                                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                     modify=1;
                                                 else
                                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                     if [ $? -eq 0 ]; then
                                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                         modify=1;
                                                     fi
                                                 fi
@@ -2064,6 +2163,7 @@ while IFS= read -r line; do
                                                     vuln="$vuln, TP(REQS_GET_NEW)"
                                                     parameters=$(echo $line | awk -F 'return requests.get\\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/requests.get($var/escape(requests.get($var)/g" )
+                                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/requests.get($var/ESCAPE(REQUESTS.GET($var)/g" )
                                                     modify=1;
                                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                         let taint_s=taint_s+1;
@@ -2097,6 +2197,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return requests.get\\\(' '{print $2}' | awk -F  '\\\)' '{print $1}')
                     vuln="$vuln, TP(REQS_GET_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return requests.get($parameters/variable = requests.get($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return requests.get($parameters/VARIABLE = REQUESTS.GET($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -2135,6 +2236,7 @@ while IFS= read -r line; do
                         if [ $? -eq 0 ]; then
                             vuln="$vuln, TP(REQ_INPUT1_NEW)"
                             rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                            cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                             modify=1;
                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                 let taint_s=taint_s+1;
@@ -2154,6 +2256,7 @@ while IFS= read -r line; do
                             if [ $? -eq 0 ]; then
                                 vuln="$vuln, TP(REQ_INPUT1_NEW)"
                                 rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                 modify=1;
                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                     let taint_s=taint_s+1;
@@ -2175,11 +2278,13 @@ while IFS= read -r line; do
                                     echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                     if [ $? -eq 0 ]; then
                                         rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                        cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                         modify=1;
                                     else
                                         echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                         if [ $? -eq 0 ]; then
                                             rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                            cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                             modify=1;
                                         fi
                                     fi
@@ -2201,6 +2306,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_INPUT1_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                        cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -2257,6 +2363,7 @@ while IFS= read -r line; do
                         if [ $? -eq 0 ]; then
                             vuln="$vuln, TP(REQ_INPUT2_NEW)"
                             rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                            cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                             modify=1;
                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                 let taint_s=taint_s+1;
@@ -2276,6 +2383,7 @@ while IFS= read -r line; do
                             if [ $? -eq 0 ]; then
                                 vuln="$vuln, TP(REQ_INPUT2_NEW)"
                                 rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                 modify=1;
                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                     let taint_s=taint_s+1;
@@ -2299,14 +2407,17 @@ while IFS= read -r line; do
                                         echo $new_line | grep -E -q "int\(\b$var\b|int\( \b$var\b"
                                         if [ $? -eq 0 ]; then
                                             rem_line=$(echo $rem_line | sed "s/int($var/int(escape($var)/g" | sed "s/int( $var/int(escape($var)/g" )
+                                            cng_line=$(echo $cng_line | sed "s/int($var/INT(ESCAPE($var)/g" | sed "s/int( $var/INT(ESCAPE($var)/g" )
                                         else
                                             rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" | sed "s/\[$var/\[escape($var)/g" | sed "s/\[ $var/\[ escape($var)/g" )
+                                            cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" | sed "s/\[$var/\[ESCAPE($var)/g" | sed "s/\[ $var/\[ ESCAPE($var)/g" )
                                         fi
                                         modify=1;
                                     else
                                         echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)|\b$var\b\]|\b$var\b \]"
                                         if [ $? -eq 0 ]; then
                                             rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/$var]/escape($var)]/g" |sed "s/$var ]/escape($var) ]/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                            cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/$var]/ESCAPE($var)]/g" |sed "s/$var ]/ESCAPE($var) ]/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                             modify=1;
                                         fi
                                     fi
@@ -2328,6 +2439,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_INPUT2_NEW)"
                                         rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                        cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -2382,6 +2494,7 @@ while IFS= read -r line; do
                     if [ $? -eq 0 ]; then
                         vuln="$vuln, TP(LDAP1_NEW)"
                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                         modify=1;
                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                             let taint_s=taint_s+1;
@@ -2398,6 +2511,7 @@ while IFS= read -r line; do
                         if [ $? -eq 0 ]; then
                             vuln="$vuln, TP(LDAP1_NEW)"
                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                             modify=1;
                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                 let taint_s=taint_s+1;
@@ -2416,11 +2530,13 @@ while IFS= read -r line; do
                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                 if [ $? -eq 0 ]; then
                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                     modify=1;
                                 else
                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                     if [ $? -eq 0 ]; then
                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                         modify=1;
                                     fi
                                 fi
@@ -2439,6 +2555,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(LDAP1_NEW)"
                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -2492,6 +2609,7 @@ while IFS= read -r line; do
                     if [ $? -eq 0 ]; then
                         vuln="$vuln, TP(LDAP2_NEW)"
                         rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                        cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                         modify=1;
                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                             let taint_s=taint_s+1;
@@ -2508,6 +2626,7 @@ while IFS= read -r line; do
                         if [ $? -eq 0 ]; then
                             vuln="$vuln, TP(LDAP2_NEW)"
                             rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                            cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                             modify=1;
                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                 let taint_s=taint_s+1;
@@ -2526,11 +2645,13 @@ while IFS= read -r line; do
                                 echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                 if [ $? -eq 0 ]; then
                                     rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                    cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                     modify=1;
                                 else
                                     echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                     if [ $? -eq 0 ]; then
                                         rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                        cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                         modify=1;
                                     fi
                                 fi
@@ -2549,6 +2670,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(LDAP2_NEW)"
                                     rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                    cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -2575,6 +2697,7 @@ while IFS= read -r line; do
                     vuln="$vuln, TP(REQ_ARGS_GET)"
                     parameters=$(echo $line | awk -F 'request.args.get\\[' '{print $2}' | awk -F  '\\]' '{print $1}')
                     rem_line=$(echo $rem_line | sed "s/request.args.get\[$parameters\]/escape[request.args.get[$parameters]]/g" | sed "s/request.args.get\[$parameters \]/escape[request.args.get[$parameters]]/g" )
+                    cng_line=$(echo $cng_line | sed "s/request.args.get\[$parameters\]/ESCAPE[REQUEST.ARGS.GET[$parameters]]/g" | sed "s/request.args.get\[$parameters \]/ESCAPE[REQUEST.ARGS.GET[$parameters]]/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -2595,6 +2718,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return request.args.get\\[' '{print $2}' | awk -F  '\\]' '{print $1}')
                     vuln="$vuln, TP(REQ_ARGS_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return request.args.get\[$parameters/variable = request.args.get[$parameters] return escape[variable/g" | sed "s/return request.args.get\[$parameters/variable = request.args.get[$parameters] return escape[variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return request.args.get\[$parameters/VARIABLE = REQUEST.ARGS.GET[$parameters] RETURN ESCAPE[VARIABLE/g" | sed "s/return request.args.get\[$parameters/VARIABLE = REQUEST.ARGS.GET[$parameters] RETURN ESCAPE[VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -2648,6 +2772,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(REQ_ARGS_GET_QUADRA_NEW)"
                                     rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                    cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -2673,6 +2798,7 @@ while IFS= read -r line; do
                                     if [ $? -eq 0 ]; then
                                         vuln="$vuln, TP(REQ_ARGS_GET_QUADRA_NEW)"	
                                         rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                        cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                         modify=1;
                                         if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                             let taint_s=taint_s+1;
@@ -2700,11 +2826,13 @@ while IFS= read -r line; do
                                             echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                             if [ $? -eq 0 ]; then
                                                 rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                                cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                                 modify=1;
                                             else
                                                 echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                                 if [ $? -eq 0 ]; then
                                                     rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                    cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                     modify=1;
                                                 fi
                                             fi
@@ -2732,6 +2860,7 @@ while IFS= read -r line; do
                                             if [ $? -eq 0 ]; then
                                                 vuln="$vuln, TP(REQ_ARGS_GET_QUADRA_NEW)"
                                                 rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                                cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                                 modify=1;
                                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                     let taint_s=taint_s+1;
@@ -2792,6 +2921,7 @@ while IFS= read -r line; do
                             if [ $? -eq 0 ]; then
                                 vuln="$vuln, TP(URLPARSE_NEW)"
                                 rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                 modify=1;
                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                     let taint_s=taint_s+1;
@@ -2814,6 +2944,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(URLPARSE_NEW)"
                                     rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                    cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -2838,11 +2969,13 @@ while IFS= read -r line; do
                                         echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b"
                                         if [ $? -eq 0 ]; then
                                             rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" )
+                                            cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" )
                                             modify=1;
                                         else
                                             echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)"
                                             if [ $? -eq 0 ]; then
                                                 rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                 modify=1;
                                             fi
                                         fi
@@ -2867,6 +3000,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(URLPARSE_NEW)"
                                             rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                            cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -2894,6 +3028,7 @@ while IFS= read -r line; do
                     vuln="$vuln, TP(URLPARSE_DIRECTLY_USED)"
                     parameters=$(echo $line | awk -F 'urlparse\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     rem_line=$(echo $rem_line | sed "s/urlparse($parameters/escape(urlparse($parameters)/g")
+                    cng_line=$(echo $cng_line | sed "s/urlparse($parameters/ESCAPE(URLPARSE($parameters)/g")
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -2914,6 +3049,7 @@ while IFS= read -r line; do
                     parameters=$(echo $line | awk -F 'return urlparse\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                     vuln="$vuln, TP(URLPARSE_RETURN)"
                     rem_line=$(echo $rem_line | sed "s/return urlparse($parameters/variable = urlparse($parameters) return escape(variable/g" | sed "s/return urlparse($parameters/variable = urlparse($parameters) return escape(variable/g" )
+                    cng_line=$(echo $cng_line | sed "s/return urlparse($parameters/VARIABLE = URLPARSE($parameters) RETURN ESCAPE(VARIABLE/g" | sed "s/return urlparse($parameters/VARIABLE = URLPARSE($parameters) RETURN ESCAPE(VARIABLE/g" )
                     modify=1;
                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                         let taint_s=taint_s+1;
@@ -2965,6 +3101,7 @@ while IFS= read -r line; do
                             if [ $? -eq 0 ]; then
                                 vuln="$vuln, TP(SESSION)"
                                 rem_line=$(echo $rem_line | sed "s/+$var/+escape($var)/g" | sed "s/+ $var/+ escape($var)/g" | sed "s/=$var/=escape($var)/g" | sed "s/= $var/= escape($var)/g")
+                                cng_line=$(echo $cng_line | sed "s/+$var/+ESCAPE($var)/g" | sed "s/+ $var/+ ESCAPE($var)/g" | sed "s/=$var/=ESCAPE($var)/g" | sed "s/= $var/= ESCAPE($var)/g")
                                 modify=1;
                                 if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                     let taint_s=taint_s+1;
@@ -2987,6 +3124,7 @@ while IFS= read -r line; do
                                 if [ $? -eq 0 ]; then
                                     vuln="$vuln, TP(SESSION)"
                                     rem_line=$(echo $rem_line | sed "s/$var:/escape($var):/g" | sed "s/$var :/escape($var) :/g" )
+                                    cng_line=$(echo $cng_line | sed "s/$var:/ESCAPE($var):/g" | sed "s/$var :/ESCAPE($var) :/g" )
                                     modify=1;
                                     if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                         let taint_s=taint_s+1;
@@ -3011,11 +3149,13 @@ while IFS= read -r line; do
                                         echo $new_line | grep -E -q "\(\b$var\b|\( \b$var\b|\[\b$var\b|\[ \b$var\b"
                                         if [ $? -eq 0 ]; then
                                             rem_line=$(echo $rem_line | sed "s/($var/(escape($var)/g" | sed "s/( $var/( escape($var)/g" | sed "s/\[$var/\[escape($var)/g" | sed "s/\[ $var/\[ escape($var)/g" )
+                                            cng_line=$(echo $cng_line | sed "s/($var/(ESCAPE($var)/g" | sed "s/( $var/( ESCAPE($var)/g" | sed "s/\[$var/\[ESCAPE($var)/g" | sed "s/\[ $var/\[ ESCAPE($var)/g" )
                                             modify=1;
                                         else
                                             echo $new_line | grep -E -q "\b$var\b\)|\b$var\b \)|\b$var\b\]|\b$var\b \]"
                                             if [ $? -eq 0 ]; then
                                                 rem_line=$(echo $rem_line | sed "s/$var)/escape($var))/g" | sed "s/$var )/escape($var) )/g" | sed "s/$var]/escape($var)]/g" |sed "s/$var ]/escape($var) ]/g" | sed "s/% $var/% escape($var)/g" | sed "s/%$var/%escape($var)/g"  )
+                                                cng_line=$(echo $cng_line | sed "s/$var)/ESCAPE($var))/g" | sed "s/$var )/ESCAPE($var) )/g" | sed "s/$var]/ESCAPE($var)]/g" |sed "s/$var ]/ESCAPE($var) ]/g" | sed "s/% $var/% ESCAPE($var)/g" | sed "s/%$var/%ESCAPE($var)/g"  )
                                                 modify=1;
                                             fi
                                         fi
@@ -3040,6 +3180,7 @@ while IFS= read -r line; do
                                         if [ $? -eq 0 ]; then
                                             vuln="$vuln, TP(SESSION)"
                                             rem_line=$(echo $rem_line | sed "s/return $var/return escape($var)/g" | sed "s/$var./escape($var)./g" )
+                                            cng_line=$(echo $cng_line | sed "s/return $var/RETURN ESCAPE($var)/g" | sed "s/$var./ESCAPE($var)./g" )
                                             modify=1;
                                             if [ $taint_s -eq 0 ]; then #I count the single category occurence per snippet
                                                 let taint_s=taint_s+1;
@@ -3064,6 +3205,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(YAML_LOAD)"
             rem_line=$(echo $rem_line | sed "s/yaml.load(/yaml.safe_load(/g")
+            cng_line=$(echo $cng_line | sed "s/yaml.load(/YAML.SAFE_LOAD(/g")
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3086,6 +3228,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(EVAL)"
                 rem_line=$(echo $rem_line | sed "s/eval(/ast.literal_eval(/g")
+                cng_line=$(echo $cng_line | sed "s/eval(/AST.LITERAL_EVAL(/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3143,6 +3286,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(TRACEBACK)"
                 rem_line=$(echo $rem_line | sed "s/print($var)/ /g" | sed "s/print( $var)/ /g" | sed "s/print($var )/ /g" | sed "s/print( $var )/ /g" | sed "s/return traceback.format_exc/ trace_var = traceback.format_exc/g")
+                cng_line=$(echo $cng_line | sed "s/print($var)/ /g" | sed "s/print( $var)/ /g" | sed "s/print($var )/ /g" | sed "s/print( $var )/ /g" | sed "s/return traceback.format_exc/ TRACE_VAR = TRACEBACK.FORMAT_EXC/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3166,6 +3310,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(DEBUG_TRUE)"
                 rem_line=$(echo $rem_line | sed "s/(debug=True/(debug=True, use_debugger=False, use_reloader=False/g")
+                cng_line=$(echo $cng_line | sed "s/(debug=True/(DEBUG=TRUE, USE_DEBUGGER=FALSE, USE_RELOADER=FALSE/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3191,6 +3336,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(FTP)"
                     rem_line=$(echo $rem_line | sed "s/ftplib.FTP(/ftplib.FTP_TLS(/g")
+                    cng_line=$(echo $cng_line | sed "s/ftplib.FTP(/FTPLIB.FTP_TLS(/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3217,6 +3363,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(SMTP)"
                     rem_line=$(echo $rem_line | sed "s/smtplib.SMTP(/smtplib.SMTP_SSL(/g")
+                    cng_line=$(echo $cng_line | sed "s/smtplib.SMTP(/SMTPLIB.SMTP_SSL(/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3243,6 +3390,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(SHA256)"
                     rem_line=$(echo $rem_line | sed "s/hashlib.sha256(/hashlib.sha512(/g" | sed "s/sha256(/sha512(/g")
+                    cng_line=$(echo $cng_line | sed "s/hashlib.sha256(/HASHLIB.SHA512(/g" | sed "s/sha256(/SHA512(/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3266,6 +3414,7 @@ while IFS= read -r line; do
             value=$(echo $line | awk -F 'DSA.generate\\(' '{print $2}' | awk -F  ')' '{print $1}')
             vuln="$vuln, KUF(DSA)"
             rem_line=$(echo $rem_line | sed "s/DSA.generate($value/DSA.generate(2048/g" | sed "s/DSA.generate( $value/DSA.generate(2048/g")
+            cng_line=$(echo $cng_line | sed "s/DSA.generate($value/DSA.GENERATE(2048/g" | sed "s/DSA.generate( $value/DSA.GENERATE(2048/g")
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3286,6 +3435,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(DES)"
             rem_line=$(echo $rem_line | sed "s/DES.new(/sha512.new(/g" )
+            cng_line=$(echo $cng_line | sed "s/DES.new(/SHA512.NEW(/g" )
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3306,6 +3456,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(SSL_WRAP_SOCKET)"
             rem_line=$(echo $rem_line | sed "s/ssl.wrap_socket(/SSLContext.wrap_socket(/g")
+            cng_line=$(echo $cng_line | sed "s/ssl.wrap_socket(/SSLCONTEXT.WRAP_SOCKET(/g")
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3328,6 +3479,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(MD5)"
                 rem_line=$(echo $rem_line | sed "s/hashlib.md5(/hashlib.sha512(/g" | sed "s/md5(/sha512(/g")
+                cng_line=$(echo $cng_line | sed "s/hashlib.md5(/HASHLIB.SHA512(/g" | sed "s/md5(/SHA512(/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3351,6 +3503,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(SHA1)"
                 rem_line=$(echo $rem_line | sed "s/hashlib.sha1(/hashlib.sha512(/g" | sed "s/sha1(/sha512(/g")
+                cng_line=$(echo $cng_line | sed "s/hashlib.sha1(/HASHLIB.SHA512(/g" | sed "s/sha1(/SHA512(/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3375,6 +3528,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(AES_ALG)"
                 rem_line=$(echo $rem_line | sed "s/algorithms.AES/algorithms.sha512/g" | sed "s/AES(/sha512(/g" )
+                cng_line=$(echo $cng_line | sed "s/algorithms.AES/ALGORITHMS.SHA512/g" | sed "s/AES(/SHA512(/g" )
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3400,6 +3554,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(CBC)"
                     rem_line=$(echo $rem_line | sed "s/AES.MODE_CBC/AES.MODE_GCM/g" | sed "s/modes.CBC/modes.GCM/g" )
+                    cng_line=$(echo $cng_line | sed "s/AES.MODE_CBC/AES.MODE_GCM/g" | sed "s/modes.CBC/MODES.GCM/g" )
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3425,6 +3580,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(RANDINT)"
                 rem_line=$(echo $rem_line | sed "s/random.randint(/my_secure_rng = secrets.SystemRandom() \\\n my_secure_rng.randrange(/g")
+                cng_line=$(echo $cng_line | sed "s/random.randint(/MY_SECURE_RNG = SECRETS.SYSTEMRANDOM() \\\n MY_SECURE_RNG.RANDRANGE(/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3452,6 +3608,7 @@ while IFS= read -r line; do
                     if [ $? -eq 0 ]; then
                         vuln="$vuln, KUF(CHOICE)"
                         rem_line=$(echo $rem_line | sed "s/random.choice(/secrets.choice(/g")
+                        cng_line=$(echo $cng_line | sed "s/random.choice(/SECRETS.CHOICE(/g")
                         modify=1;
                         if [ $tp_kuf_s -eq 0 ]; then
                             if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3481,6 +3638,7 @@ while IFS= read -r line; do
                     token=$(echo $line | awk -F 'jwt.process_jwt\\(' '{print $2}' | awk -F  ')' '{print $1}')
                     vuln="$vuln, KUF(PROCESS_JWT)"
                     rem_line=$(echo $rem_line | sed "s/jwt.process_jwt($token/jwt.process_jwt($token, \"key\", algorithms=[\"HS512\"]/g" | sed "s/jwt.process_jwt( $token/jwt.process_jwt($token, \"key\", algorithms=[\"HS512\"]/g")
+                    cng_line=$(echo $cng_line | sed "s/jwt.process_jwt($token/JWT.PROCESS_JWT($token, \"KEY\", ALGORITHMS=[\"HS512\"]/g" | sed "s/jwt.process_jwt( $token/JWT.PROCESS_JWT($token, \"KEY\", ALGORITHMS=[\"HS512\"]/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3507,6 +3665,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(MKTMP)"
                     rem_line=$(echo $rem_line | sed "s/mktemp(/TemporaryFile(/g")
+                    cng_line=$(echo $cng_line | sed "s/mktemp(/TEMPORARYFILE(/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3533,6 +3692,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(CLOCK)"
                     rem_line=$(echo $rem_line | sed "s/clock(/perf_counter(/g")
+                    cng_line=$(echo $cng_line | sed "s/clock(/PERF_COUNTER(/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3560,6 +3720,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(PICKLE)"
                     rem_line=$(echo $rem_line | sed "s/pickle./pickle_secure./g" | sed "s/cPickle./pickle_secure./g" | sed "s/import pickle/import pickle_secure/g" | sed "s/import cPickle/import pickle_secure/g" )
+                    cng_line=$(echo $cng_line | sed "s/pickle./PICKLE_SECURE./g" | sed "s/cPickle./PICKLE_SECURE./g" | sed "s/import pickle/IMPORT PICKLE_SECURE/g" | sed "s/import cPickle/IMPORT PICKLE_SECURE/g" )
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3585,6 +3746,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(XML_SAX)"
                     rem_line=$(echo $rem_line | sed "s/xml.sax.make_parser/defusedxml.sax.make_parser/g" )
+                    cng_line=$(echo $cng_line | sed "s/xml.sax.make_parser/DEFUSEDXML.SAX.MAKE_PARSER/g" )
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3615,6 +3777,7 @@ while IFS= read -r line; do
                     #    rem_line=${line::-1}
                     #fi
                     rem_line="$rem_line \\n except AssertionError as msg: \\n print(msg)"
+                    cng_line="$cng_line \\n EXCEPT ASSERTIONERROR AS MSG: \\n PRINT(MSG)"
                     #rem_line="$rem_line $last_char"
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
@@ -3639,6 +3802,7 @@ while IFS= read -r line; do
             vuln="$vuln, KUF(HASHLIB_NEW_ONE_PARAM)"
             protocol=$(echo $line | awk -F 'hashlib.new\\(' '{print $2}' | awk -F '\\)' '{print $1}')
             rem_line=$(echo $rem_line | sed "s/hashlib.new( $protocol/hashlib.new('sha512', usedforsecurity=True/g" | sed "s/hashlib.new($protocol/hashlib.new('sha512', usedforsecurity=True/g" | sed "s/hashlib.new('$protocol/hashlib.new('sha512', usedforsecurity=True/g" | sed "s/hashlib.new(' $protocol/hashlib.new('sha512', usedforsecurity=True/g" | sed "s/hashlib.new( '$protocol/hashlib.new('sha512', usedforsecurity=True/g" | sed "s/hashlib.new( ' $protocol/hashlib.new('sha512', usedforsecurity=True/g")
+            cng_line=$(echo $cng_line | sed "s/hashlib.new( $protocol/HASHLIB.NEW('SHA512', USEDFORSECURITY=TRUE/g" | sed "s/hashlib.new($protocol/HASHLIB.NEW('SHA512', USEDFORSECURITY=TRUE/g" | sed "s/hashlib.new('$protocol/HASHLIB.NEW('SHA512', USEDFORSECURITY=TRUE/g" | sed "s/hashlib.new(' $protocol/HASHLIB.NEW('SHA512', USEDFORSECURITY=TRUE/g" | sed "s/hashlib.new( '$protocol/HASHLIB.NEW('SHA512', USEDFORSECURITY=TRUE/g" | sed "s/hashlib.new( ' $protocol/HASHLIB.NEW('SHA512', USEDFORSECURITY=TRUE/g")
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3664,6 +3828,7 @@ while IFS= read -r line; do
                 if [ $? -eq 1 ]; then #are used protocols different form the selected ones
                     vuln="$vuln, KUF(PBKDF2_HMAC)"
                     rem_line=$(echo $rem_line | sed "s/pbkdf2_hmac( $protocol/pbkdf2_hmac('sha512'/g" | sed "s/pbkdf2_hmac($protocol/pbkdf2_hmac('sha512'/g" | sed "s/pbkdf2_hmac('$protocol/pbkdf2_hmac('sha512/g" | sed "s/pbkdf2_hmac(' $protocol/pbkdf2_hmac('sha512/g" | sed "s/pbkdf2_hmac( '$protocol/pbkdf2_hmac('sha512/g" | sed "s/pbkdf2_hmac( ' $protocol/pbkdf2_hmac('sha512/g")
+                    cng_line=$(echo $cng_line | sed "s/pbkdf2_hmac( $protocol/PBKDF2_HMAC('SHA512'/g" | sed "s/pbkdf2_hmac($protocol/PBKDF2_HMAC('SHA512'/g" | sed "s/pbkdf2_hmac('$protocol/PBKDF2_HMAC('SHA512/g" | sed "s/pbkdf2_hmac(' $protocol/PBKDF2_HMAC('SHA512/g" | sed "s/pbkdf2_hmac( '$protocol/PBKDF2_HMAC('SHA512/g" | sed "s/pbkdf2_hmac( ' $protocol/PBKDF2_HMAC('SHA512/g")
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3688,6 +3853,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(UDP)"
                 rem_line=$(echo $rem_line | sed "s/parseUDPpacket(/parseTCPpacket(/g" | sed "s/parseUDPpacket(/parseTCPpacket(/g" )
+                cng_line=$(echo $cng_line | sed "s/parseUDPpacket(/PARSETCPPACKET(/g" | sed "s/parseUDPpacket(/PARSETCPPACKET(/g" )
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3711,6 +3877,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(SYSTEM_BIN)"
                 rem_line=$(echo $rem_line | sed "s/.bin/.txt/g" )
+                cng_line=$(echo $cng_line | sed "s/.bin/.TXT/g" )
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3751,6 +3918,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(ET)"
             rem_line=$(echo $rem_line | sed "s/etree.ElementTree/defusedxml.ElementTree/g" )
+            cng_line=$(echo $cng_line | sed "s/etree.ElementTree/DEFUSEDXML.ELEMENTTREE/g" )
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3771,6 +3939,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(PRIVILEGE)"
             rem_line=$(echo $rem_line | sed "s/raisePrivileges()/ /g" | sed "s/lowerPrivileges()/ /g" )
+            cng_line=$(echo $cng_line | sed "s/raisePrivileges()/ /g" | sed "s/lowerPrivileges()/ /g" )
             modify=1;
             if [ $tp_kuf_s -eq 0 ]; then
                 if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3793,6 +3962,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(VERIFY_FALSE)"
                 rem_line=$(echo $rem_line | sed "s/verify=False/verify=True/g" | sed "s/verify = False/verify=True/g" |sed "s/verify=false/verify=True/g" | sed "s/verify = false/verify=True/g")
+                cng_line=$(echo $cng_line | sed "s/verify=False/VERIFY=TRUE/g" | sed "s/verify = False/VERIFY=TRUE/g" |sed "s/verify=false/VERIFY=TRUE/g" | sed "s/verify = false/VERIFY=TRUE/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3818,6 +3988,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(OS.CHMOD)"
             rem_line=$(echo $rem_line | sed "s/0000/600/g" | sed "s/0o400/600/g" | sed "s/128/600/g" )
+            cng_line=$(echo $cng_line | sed "s/0000/600/g" | sed "s/0o400/600/g" | sed "s/128/600/g" )
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -3851,8 +4022,10 @@ while IFS= read -r line; do
                 split_token=$(echo $line | awk -F  ',' '{print $2}' | awk -F  ')' '{print $1}')
                 if [ -z "$split_token" ]; then
                     rem_line=$(echo $rem_line | sed "s/$token/$token, date/g" )
+                    cng_line=$(echo $cng_line | sed "s/$token/$token, DATE/g" )
                 else
                     rem_line=$(echo $rem_line | sed "s/$split_token/$split_token, date/g" )
+                    cng_line=$(echo $cng_line | sed "s/$split_token/$split_token, DATE/g" )
                 fi
                 vuln="$vuln, CP(SET_COOKIE)"
                 modify=1;
@@ -3886,6 +4059,7 @@ while IFS= read -r line; do
             cert=$(echo $line | awk -F 'verify_mode' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
             vuln="$vuln, CP(SSL_DEFAULT_CONTEXT)"
             rem_line=$(echo $rem_line | sed "s/check_hostname = $hostname/check_hostname = True/g" | sed "s/check_hostname=$hostname/check_hostname=True/g" |  sed "s/check_hostname= $hostname/check_hostname= True/g" |  sed "s/check_hostname =$hostname/check_hostname =True/g" | sed "s/verify_mode = $cert/verify_mode = ssl.CERT_REQUIRED/g" | sed "s/verify_mode=$cert/verify_mode=ssl.CERT_REQUIRED/g" | sed "s/verify_mode= $cert/verify_mode= ssl.CERT_REQUIRED/g" | sed "s/verify_mode =$cert/verify_mode =ssl.CERT_REQUIRED/g")
+            cng_line=$(echo $cng_line | sed "s/check_hostname = $hostname/CHECK_HOSTNAME = TRUE/g" | sed "s/check_hostname=$hostname/CHECK_HOSTNAME=TRUE/g" |  sed "s/check_hostname= $hostname/CHECK_HOSTNAME= TRUE/g" |  sed "s/check_hostname =$hostname/CHECK_HOSTNAME =TRUE/g" | sed "s/verify_mode = $cert/VERIFY_MODE = SSL.CERT_REQUIRED/g" | sed "s/verify_mode=$cert/VERIFY_MODE=SSL.CERT_REQUIRED/g" | sed "s/verify_mode= $cert/VERIFY_MODE= SSL.CERT_REQUIRED/g" | sed "s/verify_mode =$cert/VERIFY_MODE =SSL.CERT_REQUIRED/g")
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -3914,6 +4088,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(SSL_UNVERIFIED_CONTEXT)"
             rem_line=$(echo $rem_line | sed "s/ssl._create_unverified_context()/ssl._create_unverified_context() \\\n check_hostname = True \\\n verify_mode =ssl.CERT_REQUIRED/g" )
+            cng_line=$(echo $cng_line | sed "s/ssl._create_unverified_context()/SSL._CREATE_UNVERIFIED_CONTEXT() \\\n CHECK_HOSTNAME = TRUE \\\n VERIFY_MODE =SSL.CERT_REQUIRED/g" )
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -3942,6 +4117,7 @@ while IFS= read -r line; do
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(SSL_STDLIB_CONTEXT)"
             rem_line=$(echo $rem_line | sed "s/ssl._create_stdlib_context()/ssl._create_stdlib_context(ssl.PROTOCOL_TLS)/g")
+            cng_line=$(echo $cng_line | sed "s/ssl._create_stdlib_context()/SSL._CREATE_STDLIB_CONTEXT(SSL.PROTOCOL_TLS)/g")
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -3971,6 +4147,7 @@ while IFS= read -r line; do
             hostname=$(echo $line | awk -F 'check_hostname' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
             vuln="$vuln, CP(HOSTNAME_FALSE)"
             rem_line=$(echo $rem_line | sed "s/check_hostname = $hostname/check_hostname = True/g" | sed "s/check_hostname=$hostname/check_hostname=True/g" |  sed "s/check_hostname= $hostname/check_hostname= True/g" |  sed "s/check_hostname =$hostname/check_hostname =True/g" )
+            cng_line=$(echo $cng_line | sed "s/check_hostname = $hostname/CHECK_HOSTNAME = TRUE/g" | sed "s/check_hostname=$hostname/CHECK_HOSTNAME=TRUE/g" |  sed "s/check_hostname= $hostname/CHECK_HOSTNAME= TRUE/g" |  sed "s/check_hostname =$hostname/CHECK_HOSTNAME =TRUE/g" )
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4000,6 +4177,7 @@ while IFS= read -r line; do
             vuln="$vuln, CP(SSL.TLSv1_2_METHOD)"
             #select the higher version of SSL
             rem_line=$(echo $rem_line | sed "s/SSL.TLSv1_2_METHOD/ssl.PROTOCOL_TLS/g" | sed "s/ssl.TLSv1_2_METHOD/ssl.PROTOCOL_TLS/g")
+            cng_line=$(echo $cng_line | sed "s/SSL.TLSv1_2_METHOD/SSL.PROTOCOL_TLS/g" | sed "s/ssl.TLSv1_2_METHOD/SSL.PROTOCOL_TLS/g")
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4031,6 +4209,7 @@ while IFS= read -r line; do
                 value=$(echo $line | awk -F 'urandom\\(' '{print $2}' | awk -F '\\)' '{print $1}')
                 vuln="$vuln, CP(URANDOM)"
                 rem_line=$(echo $rem_line | sed "s/urandom($value)/urandom(64)/g" | sed "s/urandom( $value )/urandom(64)/g" | sed "s/urandom( $value)/urandom(64)/g" | sed "s/urandom($value )/urandom(64)/g")
+                cng_line=$(echo $cng_line | sed "s/urandom($value)/URANDOM(64)/g" | sed "s/urandom( $value )/URANDOM(64)/g" | sed "s/urandom( $value)/URANDOM(64)/g" | sed "s/urandom($value )/URANDOM(64)/g")
                 modify=1;
                 if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                     if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4061,6 +4240,7 @@ while IFS= read -r line; do
             value=$(echo $line | awk -F 'key_size' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
             vuln="$vuln, CP(KEY_SIZE)"
             rem_line=$(echo $rem_line | sed "s/key_size=$value/key_size=2048/g")
+            cng_line=$(echo $cng_line | sed "s/key_size=$value/KEY_SIZE=2048/g")
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4094,6 +4274,7 @@ while IFS= read -r line; do
                     token=$(echo $line | awk -F 'decode\\(' '{print $2}' | awk -F  ',' '{print $1}')
                     vuln="$vuln, CP(JWT_VERIFY_FALSE1)"
                     rem_line=$(echo $rem_line | sed "s/jwt.decode(.*verify = False)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g" | sed "s/jwt.decode(.*verify=False)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g" | sed "s/jwt.decode(.*verify=false)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g" | sed "s/jwt.decode(.*verify = false)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g")
+                    cng_line=$(echo $cng_line | sed "s/jwt.decode(.*verify = False)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g" | sed "s/jwt.decode(.*verify=False)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g" | sed "s/jwt.decode(.*verify=false)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g" | sed "s/jwt.decode(.*verify = false)/JWT.DECODE($token, \"KEY\", ALGORITMHS=[\"HS512\"])/g")
                     modify=1;
                     if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                         if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4127,6 +4308,7 @@ while IFS= read -r line; do
                 token=$(echo $line | awk -F 'decode\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                 vuln="$vuln, CP(JWT_VERIFY_FALSE21)"
                 rem_line=$(echo $rem_line | sed "s/jwt.decode(.*)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g" | sed "s/jwt.decode(.*)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g" | sed "s/jwt.decode(.*)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g" | sed "s/jwt.decode(.*)/jwt.decode($token, \"key\", algorithms=[\"HS512\"])/g")
+                cng_line=$(echo $cng_line | sed "s/jwt.decode(.*)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g" | sed "s/jwt.decode(.*)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g" | sed "s/jwt.decode(.*)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g" | sed "s/jwt.decode(.*)/JWT.DECODE($token, \"KEY\", ALGORITHMS=[\"HS512\"])/g")
                 modify=1;
                 if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                     if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4158,6 +4340,7 @@ while IFS= read -r line; do
             key=$(echo $line | awk -F 'decode\\(' '{print $2}' | awk -F  ',' '{print $2}' | awk -F  ',' '{print $1}')
             vuln="$vuln, CP(JWT_VERIFY_SIGNATURE_FALSE)"
             rem_line=$(echo $rem_line | sed "s/jwt.decode(.*options=.*: False})/jwt.decode($token, \"$key\", algorithms=[\"HS512\"])/g" )
+            cng_line=$(echo $cng_line | sed "s/jwt.decode(.*options=.*: False})/JWT.DECODE($token, \"$key\", ALGORITHMS=[\"HS512\"])/g" )
             modify=1;
             if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                 if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4190,6 +4373,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, CP(BIND_0000)"
                 rem_line=$(echo $rem_line | sed "s/0.0.0.0/84.68.10.12/g" )
+                cng_line=$(echo $cng_line | sed "s/0.0.0.0/84.68.10.12/g" )
                 modify=1;
                 if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                     if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4222,6 +4406,7 @@ while IFS= read -r line; do
                 entity=$(echo $line | awk -F 'XMLParser\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                 vuln="$vuln, CP(XMLPARSER_ENT_TRUE)"
                 rem_line=$(echo $rem_line | sed "s/XMLParser($entity)/XMLParser(resolve_entities=False, no_network=True)/g" | sed "s/XMLParser( $entity )/XMLParser(resolve_entities=False, no_network=True)/g" )
+                cng_line=$(echo $cng_line | sed "s/XMLParser($entity)/XMLPARSER(RESOLVE_ENTITIES=FALSE, NO_NETWORK=TRUE)/g" | sed "s/XMLParser( $entity )/XMLPARSER(RESOLVE_ENTITIES=FALSE, NO_NETWORK=TRUE)/g" )
                 modify=1;
                 if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                     if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4255,6 +4440,7 @@ while IFS= read -r line; do
                 parameters=$(echo $line | awk -F 'XSLTAccessControl\\(' '{print $2}' | awk -F  '\\)' '{print $1}')
                 vuln="$vuln, CP(XSLT_NETWORK_TRUE)"
                 rem_line=$(echo $rem_line | sed "s/$code_before"XSLTAccessControl"($parameters/parser = etree.XMLParser(resolve_entities=False/g" | sed "s/$code_before"XSLTAccessControl"( $parameters/parser = etree.XMLParser(resolve_entities=False/g" )
+                cng_line=$(echo $cng_line | sed "s/$code_before"XSLTAccessControl"($parameters/PARSER = ETREE.XMLPARSER(RESOLVE_ENTITIES=FALSE/g" | sed "s/$code_before"XSLTAccessControl"( $parameters/PARSER = ETREE.XMLPARSER(RESOLVE_ENTITIES=FALSE/g" )
                 echo $line | grep -E -q -i "access_control"
                 if [ $? -eq 0 ]; then
                     name_var=$(echo $line | awk -F 'access_control' '{print $2}'| awk -F  '\\)' '{print $1}')
@@ -4264,6 +4450,7 @@ while IFS= read -r line; do
                     fi
                 fi
                 rem_line=$(echo $rem_line | sed "s/XMLParser(resolve_entities=False)/XMLParser(resolve_entities=False) \\\n $name_var = etree.XSLTAccessControl.DENY_ALL/g" | sed "s/XMLParser(resolve_entities=False )/XMLParser(resolve_entities=False) \\\n $name_var = etree.XSLTAccessControl.DENY_ALL/g" )
+                cng_line=$(echo $cng_line | sed "s/XMLParser(resolve_entities=False)/XMLPARSER(RESOLVE_ENTITIES=FALSE) \\\n $name_var = ETREE.XSLTACCESSCONTROL.DENY_ALL/g" | sed "s/XMLParser(resolve_entities=False )/XMLPARSER(RESOLVE_ENTITIES=FALSE) \\\n $name_var = ETREE.XSLTACCESSCONTROL.DENY_ALL/g" )
                 modify=1;
                 if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                     if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4295,6 +4482,7 @@ while IFS= read -r line; do
             if [ $? -eq 0 ]; then
                 vuln="$vuln, CP(XSLT_NETWORK_TRUE)"
                 rem_line=$(echo $rem_line | sed "s/.bin/.txt/g" )
+                cng_line=$(echo $cng_line | sed "s/.bin/.TXT/g" )
                 modify=1;
                 if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                     if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4337,6 +4525,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, CP(INCREMENT)"
                     rem_line=$(echo $rem_line | sed "s/while $var<n:/while $var<n: \\\n $var++/g" )
+                    cng_line=$(echo $cng_line | sed "s/while $var<n:/WHILE $var<N: \\\n $var++/g" )
                     modify=1;
                     if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                         if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4386,6 +4575,7 @@ while IFS= read -r line; do
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, CP(LOCK)"
                     rem_line=$(echo $rem_line | sed "s/$var = Lock().*$var.acquire()/lock = Lock() \\\n if $var.locked(): \\\n $var.acquire()/g" )
+                    cng_line=$(echo $cng_line | sed "s/$var = Lock().*$var.acquire()/LOCK = LOCK() \\\n IF $var.LOCKED(): \\\n $var.ACQUIRE()/g" )
                     modify=1;
                     if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
                         if [ $tp_kuf_cp_s -eq 0 ]; then
@@ -4464,6 +4654,7 @@ while IFS= read -r line; do
         ##################          ADJUSTING DATA         #######################
         line=$(echo $line | sed "s/PRODUCT_SYMBOL/*/g")
         rem_line=$(echo $rem_line | sed "s/PRODUCT_SYMBOL/*/g")
+        cng_line=$(echo $cng_line | sed "s/PRODUCT_SYMBOL/*/g")
 
 
 
@@ -4473,6 +4664,8 @@ while IFS= read -r line; do
             echo -e "\n" >> $2;
             { echo "Safe Code"; echo ":"; echo "$line"; } | tr "\n" " " >> $3;
             echo -e "\n" >> $3;
+            #{ echo "Safe Code"; echo ":"; echo "$line"; } | tr "\n" " " >> $4;
+            #echo -e "\n" >> $4;
             let dimtestset=dimtestset+1;
         else
             if [ $modify -eq 1 ]; then #vuln AND rem
@@ -4480,6 +4673,10 @@ while IFS= read -r line; do
                 echo -e "\n" >> $2;
                 { echo "[MOD]"; echo $vuln; echo ":"; echo "$rem_line"; } | tr "\n" " " >> $3;
                 echo -e "\n" >> $3;
+                { echo "[VULN]"; echo $vuln; echo ":"; echo "$line"; } | tr "\n" " " >> $4;
+                echo -e "\n" >> $4;
+                { echo "[SAFE]"; echo $vuln; echo ":"; echo "$cng_line"; } | tr "\n" " " >> $4;
+                echo -e "\n\n\n" >> $4;
                 let countvuln=countvuln+1;
                 let dimtestset=dimtestset+1;
                 let contMod=contMod+1;
@@ -4488,6 +4685,10 @@ while IFS= read -r line; do
                 echo -e "\n" >> $2;
                 { echo "[NOT_MOD]"; echo $vuln; echo ":"; echo "$rem_line"; } | tr "\n" " " >> $3;
                 echo -e "\n" >> $3;
+                { echo "[VULN]"; echo $vuln; echo ":"; echo "$line"; } | tr "\n" " " >> $4;
+                echo -e "\n" >> $4;
+                { echo "[NOT_SAFE]"; echo $vuln; echo ":"; echo "$cng_line"; } | tr "\n" " " >> $4;
+                echo -e "\n\n\n" >> $4;
                 let countvuln=countvuln+1;
                 let dimtestset=dimtestset+1;
                 let contNoMod=contNoMod+1;
@@ -4529,6 +4730,7 @@ fi
 
 
 ##################          RESULTS ON FILE         ########################### 
+#DET file
 echo -e "\n\n\n" >> $2;
 echo -e "======>    DATASET SIZE   <======\n" >> $2;
 { echo "#DimTestSet:"; echo $dimtestset; } | tr "\n" " " >> $2;
@@ -4557,12 +4759,21 @@ echo -e "\n" >> $2;
 { echo "#TP_KUF_CP per snippet:"; echo $tp_kuf_cp; } | tr "\n" " " >> $2;
 echo -e "\n\n\n" >> $2;
 
+echo -e "======>    EXECUTION TIME   <======\n" >> $2;
+{ echo "Runtime:"; echo $runtime; echo "s"; } | tr "\n" " " >> $2;
+echo -e "\n" >> $2;
+{ echo "Runtime per snippet:"; awk -v var1=$runtime -v var2=$dimtestset 'BEGIN {  if(var2!=0) { print  ( var1 / var2 ) } else {print 0} }'; echo "s"; } | tr "\n" " " >> $2;
+echo -e "\n" >> $2;
+
+#REM file
 echo -e "\n\n\n" >> $3;
 echo -e "======>    DATASET SIZE   <======\n" >> $3;
 { echo "#DimTestSet:"; echo $dimtestset; } | tr "\n" " " >> $3;
 echo -e "\n\n\n" >> $3;
 
 echo -e "======>    FINAL RESULTS REMEDIATION   <======\n" >> $3;
+{ echo "#DetectedVuln:"; echo $countvuln; } | tr "\n" " " >> $3;
+echo -e "\n" >> $3;
 { echo "#Remediated:"; echo $contMod; } | tr "\n" " "  >> $3;
 echo -e "\n" >> $3;
 { echo "#NotRemediated:"; echo $contNoMod; } | tr "\n" " "  >> $3;
@@ -4572,17 +4783,21 @@ echo -e "\n" >> $3;
 { echo "Not Remediated Rate:"; awk -v var1=$contNoMod -v var2=$countvuln 'BEGIN { if(var2!=0) {  print  ( var1 / var2 ) * 100 } else {print 0} }'; echo "%"; } | tr "\n" " " >> $3;
 echo -e "\n\n\n" >> $3;
 
-echo -e "======>    EXECUTION TIME   <======\n" >> $2;
-{ echo "Runtime:"; echo $runtime; echo "s"; } | tr "\n" " " >> $2;
-echo -e "\n" >> $2;
-{ echo "Runtime per snippet:"; awk -v var1=$runtime -v var2=$dimtestset 'BEGIN {  if(var2!=0) { print  ( var1 / var2 ) } else {print 0} }'; echo "s"; } | tr "\n" " " >> $2;
-echo -e "\n" >> $2;
-
 echo -e "======>    EXECUTION TIME   <======\n" >> $3;
 { echo "Runtime:"; echo $runtime; echo "s"; } | tr "\n" " " >> $3;
 echo -e "\n" >> $3;
 { echo "Runtime per snippet:"; awk -v var1=$runtime -v var2=$dimtestset 'BEGIN {  if(var2!=0) { print  ( var1 / var2 ) } }'; echo "s"; } | tr "\n" " " >> $3;
 echo -e "\n" >> $3;
+
+#CNG file
+echo -e "\n\n\n" >> $4;
+echo -e "======>    SUMMARY   <======\n" >> $4;
+{ echo "#Vuln:"; echo $countvuln; } | tr "\n" " " >> $4;
+echo -e "\n" >> $4;
+{ echo "#Safe:"; echo $contMod; } | tr "\n" " " >> $4;
+echo -e "\n" >> $4;
+{ echo "#NotSafe:"; echo $contNoMod; } | tr "\n" " " >> $4;
+echo -e "\n" >> $4;
 
 
 ##################          RESULTS ON PROMPT         ########################### 

@@ -1,4 +1,10 @@
------------------  SNIPPETS DETECTED    -----------------
+==================>      SNIPPETS DETECTED      <===================
+|                                                                  |
+|           [!] -> Vulnerable code snippets detected               |
+|           Safe Code -> Safe code snippet                         |
+|                                                                  |
+====================================================================
+
 
 
 [!] , TP(URLPARSE_NEW) : def redirect_invalid_url(url): \n parsed_url = urlparse(url) \n return redirect(parsed_url) 
@@ -310,7 +316,7 @@ Vulnerability Rate: 100 %
 
 ======>    EXECUTION TIME   <======
 
-Runtime: 21.02639150619507 s 
+Runtime: 19.88243007659912 s 
 
-Runtime per snippet: 0.154606 s 
+Runtime per snippet: 0.146194 s 
 
