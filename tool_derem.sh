@@ -3598,7 +3598,7 @@ while IFS= read -r line; do
 
 
         #RULE 54: detection of random.choice() function
-        echo $line | grep -E -q -i "random.choice\(|choice\("
+        echo $line | grep -E -q -i "random.choice\(|choice\(|random.choices\("
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]choice("
             if [ $? -eq 0 ]; then
@@ -3607,8 +3607,8 @@ while IFS= read -r line; do
                     echo $line | grep -v -q "secrets\."
                     if [ $? -eq 0 ]; then
                         vuln="$vuln, KUF(CHOICE)"
-                        rem_line=$(echo $rem_line | sed "s/random.choice(/secrets.choice(/g")
-                        cng_line=$(echo $cng_line | sed "s/random.choice(/SECRETS.CHOICE(/g")
+                        rem_line=$(echo $rem_line | sed "s/random.choice(/secrets.choice(/g" | sed "s/random.choices(/secrets.choice(/g")
+                        cng_line=$(echo $cng_line | sed "s/random.choice(/SECRETS.CHOICE(/g" | sed "s/random.choices(/secrets.choice(/g")
                         modify=1;
                         if [ $tp_kuf_s -eq 0 ]; then
                             if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3711,16 +3711,16 @@ while IFS= read -r line; do
 
 
         #RULE 58: detection of pickle functions
-        new_line46=$(echo $line | sed "s/import cPickle/ /g" | sed "s/import pickle/ /g" | sed "s/import [a-zA-Z0-9]cPickle/ /g" | sed "s/import _pickle/ /g" | sed "s/pickle.this/ /g" )
-        echo $new_line46 | grep -E -q -i "pickle\.loads\(|pickle\.load\(|pickle\.dump\(|pickle\.dumps\(|pickle\.Unpickler\(|cPickle\.loads\(|cPickle\.load\(|cPickle\.dump\(|cPickle\.dumps\(|cPickle\.Unpickler\("
+        new_line=$(echo $line | sed "s/import cPickle/ /g" | sed "s/import pickle/ /g" | sed "s/import [a-zA-Z0-9]cPickle/ /g" | sed "s/import _pickle/ /g" | sed "s/pickle.this/ /g" )
+        echo $new_line | grep -E -q -i "pickle\.loads\(|pickle\.load\(|pickle\.dump\(|pickle\.dumps\(|pickle\.Unpickler\(|cPickle\.loads\(|cPickle\.load\(|cPickle\.dump\(|cPickle\.dumps\(|cPickle\.Unpickler\("
         if [ $? -eq 0 ]; then
-            echo $line | grep -v -q "[a-zA-Z0-9]pickle"
+            echo $new_line | grep -v -q "\b[a-zA-Z0-9]pickle\b"
             if [ $? -eq 0 ]; then
-                echo $line | grep -v -q "[a-zA-Z0-9]cPickle"
+                echo $new_line | grep -v -q "\b[a-zA-Z0-9]cPickle\b"
                 if [ $? -eq 0 ]; then
                     vuln="$vuln, KUF(PICKLE)"
-                    rem_line=$(echo $rem_line | sed "s/pickle./pickle_secure./g" | sed "s/cPickle./pickle_secure./g" | sed "s/import pickle/import pickle_secure/g" | sed "s/import cPickle/import pickle_secure/g" )
-                    cng_line=$(echo $cng_line | sed "s/pickle./PICKLE_SECURE./g" | sed "s/cPickle./PICKLE_SECURE./g" | sed "s/import pickle/IMPORT PICKLE_SECURE/g" | sed "s/import cPickle/IMPORT PICKLE_SECURE/g" )
+                    rem_line=$(echo $rem_line | sed "s/\bpickle\.\b/pickle_secure./g" | sed "s/\bcPickle\.\b/pickle_secure./g" | sed "s/import pickle/import pickle_secure/g" | sed "s/import cPickle/import pickle_secure/g" )
+                    cng_line=$(echo $cng_line | sed "s/\bpickle\.\b/PICKLE_SECURE./g" | sed "s/\bcPickle\.\b/PICKLE_SECURE./g" | sed "s/import pickle/IMPORT PICKLE_SECURE/g" | sed "s/import cPickle/IMPORT PICKLE_SECURE/g" )
                     modify=1;
                     if [ $tp_kuf_s -eq 0 ]; then
                         if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3735,6 +3735,7 @@ while IFS= read -r line; do
                 fi
             fi
         fi
+
 
 
         #RULE 59: detection of xml.sax.make_parser() function
@@ -4202,7 +4203,7 @@ while IFS= read -r line; do
 
 
         #RULE 76: detection of urandom() with value less than 64
-        echo $line | grep -E -q -i "urandom\(([0-9]\)|6[0-3]\))"
+        echo $line |  grep -E -i -q "urandom\((0|1|2|4|8|16|32)\)|urandom\( (0|1|2|4|8|16|32) \)|urandom\( (0|1|2|4|8|16|32)\)|urandom\((0|1|2|4|8|16|32) \)"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q -i "[a-zA-Z0-9]urandom"
             if [ $? -eq 0 ]; then
@@ -4229,6 +4230,36 @@ while IFS= read -r line; do
                 elif [ $confprob_s -eq 0 ]; then
                     let confprob_s=confprob_s+1;
                 fi
+            fi
+        fi
+
+
+
+        #RULE 77: detection of 'key_size' less than 2048
+        echo $line | grep -E -q -i "key_size=([1-9] |[1-1][0-9][0-9] |[1-1][0-9][0-9][0-9] |204[0-7] )|key_size=([1-9]\\\n |[1-1][0-9][0-9]\\\n |[1-1][0-9][0-9][0-9]\\\n |204[0-7]\\\n )"
+        if [ $? -eq 0 ]; then
+            value=$(echo $line | awk -F 'key_size' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
+            vuln="$vuln, CP(KEY_SIZE)"
+            rem_line=$(echo $rem_line | sed "s/key_size=$value/key_size=2048/g")
+            cng_line=$(echo $cng_line | sed "s/key_size=$value/KEY_SIZE=2048/g")
+            modify=1;
+            if [ $taint_s -ne 0 ] && [ $kufunc_s -ne 0 ]; then #If the snippet is TP_KUF_CP vulnerable
+                if [ $tp_kuf_cp_s -eq 0 ]; then
+                    let tp_kuf_cp_s=tp_kuf_cp_s+1;
+                    tp_kuf_s=0;
+                fi
+            elif [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
+                if [ $tp_cp_s -eq 0 ]; then
+                    let tp_cp_s=tp_cp_s+1;
+                    taint_s=0;
+                fi
+            elif [ $kufunc_s -ne 0 ]; then #If the snippet is also KUF vulnerable 
+                if [ $kuf_cp_s -eq 0 ]; then
+                    let kuf_cp_s=kuf_cp_s+1;
+                    kufunc_s=0;
+                fi
+            elif [ $confprob_s -eq 0 ]; then
+                let confprob_s=confprob_s+1;
             fi
         fi
 
