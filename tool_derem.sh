@@ -3579,8 +3579,8 @@ while IFS= read -r line; do
             echo $line | grep -v -q "[a-zA-Z0-9]randint("
             if [ $? -eq 0 ]; then
                 vuln="$vuln, KUF(RANDINT)"
-                rem_line=$(echo $rem_line | sed "s/random.randint(/my_secure_rng = secrets.SystemRandom() \\\n my_secure_rng.randrange(/g")
-                cng_line=$(echo $cng_line | sed "s/random.randint(/MY_SECURE_RNG = SECRETS.SYSTEMRANDOM() \\\n MY_SECURE_RNG.RANDRANGE(/g")
+                rem_line=$(echo $rem_line | sed "s/random.randint(/my_secure_rng = secrets.SystemRandom() \\\n my_secure_rng.randrange(/g" | sed "s/import random/import secrets/g")
+                cng_line=$(echo $cng_line | sed "s/random.randint(/MY_SECURE_RNG = SECRETS.SYSTEMRANDOM() \\\n MY_SECURE_RNG.RANDRANGE(/g" | sed "s/import random/IMPORT SECRETS/g")
                 modify=1;
                 if [ $tp_kuf_s -eq 0 ]; then
                     if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3607,8 +3607,8 @@ while IFS= read -r line; do
                     echo $line | grep -v -q "secrets\."
                     if [ $? -eq 0 ]; then
                         vuln="$vuln, KUF(CHOICE)"
-                        rem_line=$(echo $rem_line | sed "s/random.choice(/secrets.choice(/g" | sed "s/random.choices(/secrets.choice(/g")
-                        cng_line=$(echo $cng_line | sed "s/random.choice(/SECRETS.CHOICE(/g" | sed "s/random.choices(/secrets.choice(/g")
+                        rem_line=$(echo $rem_line | sed "s/random.choice(/secrets.choice(/g" | sed "s/random.choices(/secrets.choice(/g" | sed "s/import random/import secrets/g")
+                        cng_line=$(echo $cng_line | sed "s/random.choice(/SECRETS.CHOICE(/g" | sed "s/random.choices(/SECRETS.CHOICE(/g" | sed "s/import random/IMPORT SECRETS/g")
                         modify=1;
                         if [ $tp_kuf_s -eq 0 ]; then
                             if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
@@ -3628,7 +3628,34 @@ while IFS= read -r line; do
 
 
 
-        #RULE 55: detection of jwt.process_jwt() function
+        #RULE 55: detection of random.getrandbits() function
+        echo $line | grep -E -q -i "random.getrandbits\("
+        if [ $? -eq 0 ]; then
+            echo $line | grep -v -q "[a-zA-Z0-9]getrandbits("
+            if [ $? -eq 0 ]; then
+                echo $line | grep -v -q "secrets\."
+                if [ $? -eq 0 ]; then
+                    vuln="$vuln, KUF(GETRANDBITS)"
+                    rem_line=$(echo $rem_line | sed "s/random.getrandbits(/secrets.randbits(/g" | sed "s/import random/import secrets/g")
+                    cng_line=$(echo $cng_line | sed "s/random.getrandbits(/SECRETS.RANDBITS(/g" | sed "s/import random/IMPORT SECRETS/g")
+                    modify=1;
+                    if [ $tp_kuf_s -eq 0 ]; then
+                        if [ $taint_s -ne 0 ]; then #If the snippet is also TP vulnerable 
+                            let tp_kuf_s=tp_kuf_s+1;
+                            taint_s=0;
+                        else
+                            if [ $kufunc_s -eq 0 ]; then #I count the single category occurence per snippet
+                                let kufunc_s=kufunc_s+1;       
+                            fi
+                        fi
+                    fi
+                fi
+            fi
+        fi
+
+
+
+        #RULE 56: detection of jwt.process_jwt() function
         echo $line | grep -E -q -i "jwt.process_jwt\([a-zA-Z0-9]*[^,]\)"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]process_jwt("
@@ -3656,7 +3683,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 56: detection of mktmp() function
+        #RULE 57: detection of mktmp() function
         echo $line | grep -E -q -i "mktemp\(|\.mktemp\("
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]mktemp("
@@ -3683,7 +3710,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 57: detection of time.clock() function
+        #RULE 58: detection of time.clock() function
         echo $line | grep -E -q -i "time.clock\(|clock\("
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]clock("
@@ -3710,7 +3737,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 58: detection of pickle functions
+        #RULE 59: detection of pickle functions
         new_line=$(echo $line | sed "s/import cPickle/ /g" | sed "s/import pickle/ /g" | sed "s/import [a-zA-Z0-9]cPickle/ /g" | sed "s/import _pickle/ /g" | sed "s/pickle.this/ /g" )
         echo $new_line | grep -E -q -i "pickle\.loads\(|pickle\.load\(|pickle\.dump\(|pickle\.dumps\(|pickle\.Unpickler\(|cPickle\.loads\(|cPickle\.load\(|cPickle\.dump\(|cPickle\.dumps\(|cPickle\.Unpickler\("
         if [ $? -eq 0 ]; then
@@ -3738,7 +3765,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 59: detection of xml.sax.make_parser() function
+        #RULE 60: detection of xml.sax.make_parser() function
         echo $line | grep -E -q -i "xml.sax.make_parser\(|xml\.sax\."
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]xml\.sax\."
@@ -3763,7 +3790,7 @@ while IFS= read -r line; do
             fi
         fi
 
-        #RULE 60: detection of assert
+        #RULE 61: detection of assert
         echo $line | grep -E -q -i "\bassert\b| \bassert\b"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]assert"
@@ -3797,7 +3824,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 61: detection of hashlib.new() function with a single param
+        #RULE 62: detection of hashlib.new() function with a single param
         echo $line | grep -q -i "hashlib.new([^a-z]*[a-zA-Z0-9]*[^,][^a-Z]*)"
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(HASHLIB_NEW_ONE_PARAM)"
@@ -3819,7 +3846,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 62: detection of pbkdf2_hmac() function
+        #RULE 63: detection of pbkdf2_hmac() function
         echo $line | grep -E -q -i "pbkdf2_hmac\("
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]pbkdf2_hmac("
@@ -3847,7 +3874,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 63: detection of parseUDPpacket() function
+        #RULE 64: detection of parseUDPpacket() function
         echo $line | grep -E -q -i "parseUDPpacket\("
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]parseUDPpacket("
@@ -3871,7 +3898,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 64: detection of os.system(...file.bin...) function
+        #RULE 65: detection of os.system(...file.bin...) function
         echo $line | grep -E -q -i "os.system\([^a-z]*[a-z]*\.bin"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]os.system([^a-z]*[a-z]*\.bin"
@@ -3895,7 +3922,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 65: detection of exec() and os.system() function
+        #RULE 66: detection of exec() and os.system() function
         echo $line | grep -E -q -i "\(exec, \('import os;os.system\(|\(exec,\('import os;os.system\(|\(exec,\('import os ; os.system\(|\(exec, \('import os ; os.system\("
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(EXEC_SYSTEM)"
@@ -3914,7 +3941,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 66: detection of etree.ElementTree library
+        #RULE 67: detection of etree.ElementTree library
         echo $line | grep -q -i "etree.ElementTree as ET.*ET\."
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(ET)"
@@ -3935,7 +3962,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 67: detection of GENERIC 'raisePrivilege() function() lowPrivilege()'
+        #RULE 68: detection of GENERIC 'raisePrivilege() function() lowPrivilege()'
         echo $line | grep -q -i "raisePrivileges().*lowerPrivileges()"
         if [ $? -eq 0 ]; then
             vuln="$vuln, KUF(PRIVILEGE)"
@@ -3956,7 +3983,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 68: detection of GENERIC 'requests.get(..., verify=False)'
+        #RULE 69: detection of GENERIC 'requests.get(..., verify=False)'
         echo $line | grep -q "requests\..*(.*verify=False"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]requests\."
@@ -3984,7 +4011,7 @@ while IFS= read -r line; do
 
 
         ########            START CONFIGURATION PROBLEM        ########
-        #RULE 69: detection of os.chmod() function
+        #RULE 70: detection of os.chmod() function
         echo $line | grep -E -q -i "os.chmod\(.*, 0000\)|os.chmod\(.*, 0o400\)|os.chmod\(.*, 128\)"
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(OS.CHMOD)"
@@ -4013,7 +4040,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 70: detection of response.set_cookie() with plaintext password
+        #RULE 71: detection of response.set_cookie() with plaintext password
         new_line=$(echo $line | sed "s/def set_cookie()/ /g" | sed "s/set_cookie(__name__)/ /g" )
         echo $new_line | grep -E -q -i "\.set_cookie\(.*, [a-zA-Z0-9]*\)|set_cookie\(.*, [a-zA-Z0-9]*\)|\.set_cookie\([^a-z]*[a-zA-Z0-9]*[^a-z]*\)|set_cookie\([^a-z]*[a-zA-Z0-9]*[^a-z]*\)"
         if [ $? -eq 0 ]; then
@@ -4053,7 +4080,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 71: detection of 'ctx.check_hostname = False' AND 'ctx.verify_mode = ssl.CERT_NONE'
+        #RULE 72: detection of 'ctx.check_hostname = False' AND 'ctx.verify_mode = ssl.CERT_NONE'
         echo $line | grep -q -i "ssl.create_default_context() .* ctx.verify_mode = ssl.CERT_NONE"
         if [ $? -eq 0 ]; then
             hostname=$(echo $line | awk -F 'check_hostname' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
@@ -4084,7 +4111,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 72: detection of 'ssl._create_unverified_context()'
+        #RULE 73: detection of 'ssl._create_unverified_context()'
         echo $line | grep -q -i "ssl._create_unverified_context()"
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(SSL_UNVERIFIED_CONTEXT)"
@@ -4113,7 +4140,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 73: detection of 'ssl._create_stdlib_context()'
+        #RULE 74: detection of 'ssl._create_stdlib_context()'
         echo $line | grep -q -i "ssl._create_stdlib_context()"
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(SSL_STDLIB_CONTEXT)"
@@ -4142,7 +4169,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 74: detection of 'ssl.create_default_context()' AND'ctx.check_hostname = False'
+        #RULE 75: detection of 'ssl.create_default_context()' AND'ctx.check_hostname = False'
         echo $line | grep -q -i "check_hostname = false"
         if [ $? -eq 0 ]; then
             hostname=$(echo $line | awk -F 'check_hostname' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
@@ -4172,7 +4199,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 75: detection of SSL.TLSv1_2_METHOD
+        #RULE 76: detection of SSL.TLSv1_2_METHOD
         echo $line | grep -q -i "SSL.TLSv1_2_METHOD"
         if [ $? -eq 0 ]; then
             vuln="$vuln, CP(SSL.TLSv1_2_METHOD)"
@@ -4202,7 +4229,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 76: detection of urandom() with value less than 64
+        #RULE 77: detection of urandom() with value less than 64
         echo $line |  grep -E -i -q "urandom\((0|1|2|4|8|16|32)\)|urandom\( (0|1|2|4|8|16|32) \)|urandom\( (0|1|2|4|8|16|32)\)|urandom\((0|1|2|4|8|16|32) \)"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q -i "[a-zA-Z0-9]urandom"
@@ -4235,7 +4262,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 77: detection of 'key_size' less than 2048
+        #RULE 78: detection of 'key_size' less than 2048
         echo $line | grep -E -q -i "key_size=([1-9] |[1-1][0-9][0-9] |[1-1][0-9][0-9][0-9] |204[0-7] )|key_size=([1-9]\\\n |[1-1][0-9][0-9]\\\n |[1-1][0-9][0-9][0-9]\\\n |204[0-7]\\\n )"
         if [ $? -eq 0 ]; then
             value=$(echo $line | awk -F 'key_size' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
@@ -4265,7 +4292,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 77: detection of 'key_size' less than 2048
+        #RULE 79: detection of 'key_size' less than 2048
         echo $line | grep -E -q -i "key_size=([1-9] |[1-1][0-9][0-9] |[1-1][0-9][0-9][0-9] |204[0-7] )|key_size=([1-9]\\\n |[1-1][0-9][0-9]\\\n |[1-1][0-9][0-9][0-9]\\\n |204[0-7]\\\n )"
         if [ $? -eq 0 ]; then
             value=$(echo $line | awk -F 'key_size' '{print $2}' | awk -F '=' '{print $2}' | awk -F ' ' '{print $1}')
@@ -4295,7 +4322,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 78: detection of 'jwt.decode(..., verify = False)'
+        #RULE 80: detection of 'jwt.decode(..., verify = False)'
         echo $line | grep -E -q -i "jwt.decode\(.*verify = False|jwt.decode\(.*verify=False"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]decode("
@@ -4331,7 +4358,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 79: detection of 'jwt.decode(token)'
+        #RULE 81: detection of 'jwt.decode(token)'
         echo $line | grep -E -q -i "jwt.decode\([a-zA-Z0-9]*\)"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]decode("
@@ -4364,7 +4391,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 80: detection of 'jwt.decode(token, key, options={\"verify_signature\": False}..)'
+        #RULE 82: detection of 'jwt.decode(token, key, options={\"verify_signature\": False}..)'
         echo $line | grep -q -i "jwt.decode(.*, options={[^a-z]*verify_signature[^a-z]* False"
         if [ $? -eq 0 ]; then
             token=$(echo $line | awk -F 'decode\\(' '{print $2}' | awk -F  ',' '{print $1}')
@@ -4397,7 +4424,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 81: detection of 's.bind(('0.0.0.0', ...))'
+        #RULE 83: detection of 's.bind(('0.0.0.0', ...))'
         echo $line | grep -P -q -i "\.bind\(\(.*0.0.0.0.*?\)\)"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]bind\(\('0.0.0.0',.*\)\)"
@@ -4429,7 +4456,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 82: detection of 'etree.XMLParser(resolve_entities=True)' AND 'XMLParser(resolve_entities=True)' OR 'etree.XMLParser()' AND 'XMLParser()'
+        #RULE 84: detection of 'etree.XMLParser(resolve_entities=True)' AND 'XMLParser(resolve_entities=True)' OR 'etree.XMLParser()' AND 'XMLParser()'
         echo $line | grep -E -q -i "etree.XMLParser\(resolve_entities=True\)|XMLParser\(resolve_entities=True\)|XMLParser\(\)"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]XMLParser("
@@ -4462,7 +4489,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 83: detection of 'etree.XSLTAccessControl(read_network=True...)' AND 'XSLTAccessControl(read_network=True...)'
+        #RULE 85: detection of 'etree.XSLTAccessControl(read_network=True...)' AND 'XSLTAccessControl(read_network=True...)'
         echo $line | grep -E -q -i "etree.XSLTAccessControl\(.*read_network=True|XSLTAccessControl\(.*read_network=True|XSLTAccessControl\(.*write_network=True"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]XSLTAccessControl(.*read_network=True"
@@ -4506,7 +4533,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 84: detection of 'os.chmod(file.bin)'
+        #RULE 86: detection of 'os.chmod(file.bin)'
         echo $line | grep -E -q -i "os.chmod\([^a-z]*[a-z]*\.bin"
         if [ $? -eq 0 ]; then
             echo $line | grep -v -q "[a-zA-Z0-9]os.chmod([^a-z]*[a-z]*\.bin"
@@ -4538,7 +4565,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 85: detection of INCREMENT
+        #RULE 87: detection of INCREMENT
         echo $line | grep -q -i "while .<"
         if [ $? -eq 0 ]; then
             var=$(echo $line | awk -F "while" '{print $2}' | awk -F ":" '{print $1}'| awk -F "<" '{print $1}'| awk '{print $NF}')
@@ -4582,7 +4609,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 86: detection of lock
+        #RULE 88: detection of lock
         echo $line | grep -E -q -i "= Lock\(\).*\.acquire\(\)|=Lock\(\).*\.acquire\(\)"
         if [ $? -eq 0 ]; then
             var=$(echo $line | awk -F "Lock\\\(" '{print $1}' |  awk '{print $NF}')
@@ -4632,7 +4659,7 @@ while IFS= read -r line; do
 
 
 
-        #RULE 87: detection of with open ... as value: ... value.read()
+        #RULE 89: detection of with open ... as value: ... value.read()
         num_occ=$(echo $line | awk -F "with open\\\(" '{print NF-1}')
         i=1;
         split=0;
