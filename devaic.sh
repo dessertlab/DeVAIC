@@ -3,17 +3,20 @@
 echo -e "\n\n"
 
 
-echo "██████╗ ██████╗  █████╗ ██╗ ██████╗"
-echo "██╔══██╗██╔══██╗██╔══██╗██║██╔════╝"
-echo "██║  ██║██████╔╝███████║██║██║     "
-echo "██║  ██║██╔══██╗██╔══██║██║██║     "
-echo "██████╔╝██║  ██║██║  ██║██║╚██████╗"
-echo "╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝"
-                                   
+
+echo "██████╗ ███████╗██╗   ██╗ █████╗ ██╗ ██████╗"
+echo "██╔══██╗██╔════╝██║   ██║██╔══██╗██║██╔════╝"
+echo "██║  ██║█████╗  ██║   ██║███████║██║██║     "
+echo "██║  ██║██╔══╝  ╚██╗ ██╔╝██╔══██║██║██║     "
+echo "██████╔╝███████╗ ╚████╔╝ ██║  ██║██║╚██████╗"
+echo "╚═════╝ ╚══════╝  ╚═══╝  ╚═╝  ╚═╝╚═╝ ╚═════╝"
+                                            
+
+                                  
 
 echo -e "\n\n"
 
-#Detection and Remediation tool for AI-generated Code
+#Detection of Vulnerabilities in AI-generated Code
 
 SRC_DIR=$PWD
 INP_DIR=$SRC_DIR"/input"
@@ -46,15 +49,11 @@ fi
 
 #define the names of the generated files
 det_file="DET_$filename_res"
-rem_file="REM_$filename_res"
-cng_file="CNG_$filename_res"
 input_file="INPUT_$filename_res"
 tmp_file="MOD_INPUT_$filename_res"
 
 #define the paths of the generated files
 det_path=$RES_DIR/detection/$det_file
-rem_path=$RES_DIR/remediation/$rem_file
-cng_path=$RES_DIR/changes/$cng_file
 input_path=$GEN_DIR/$input_file
 tmp_path=$GEN_DIR/$tmp_file
 
@@ -63,9 +62,9 @@ tmp_path=$GEN_DIR/$tmp_file
 if [ $type == "json" ]; then
     cat $1 | grep -q "\"code\":"
     if [ $? -eq 0 ]; then
-        python $SCRIPT_DIR/convert_json_to_txt.py $1 $tmp_path
+        python3 $SCRIPT_DIR/convert_json_to_txt.py $1 $tmp_path
     else
-        python $SCRIPT_DIR/convert_json_wo_keys.py $1 $tmp_path
+        python3 $SCRIPT_DIR/convert_json_wo_keys.py $1 $tmp_path
     fi
 fi
 
@@ -88,23 +87,23 @@ if [ $name_os = "Darwin" ]; then  #MAC-OS system
         fi;
     fi
     if [ $type == "json" ]; then
-        python $SCRIPT_DIR/preprocessing_macos.py $tmp_path $input_path
+        python3 $SCRIPT_DIR/preprocessing_macos.py $tmp_path $input_path
         rm $tmp_path
     elif [ $type == "txt" ]; then
-        python $SCRIPT_DIR/preprocessing_macos.py $1 $input_path
+        python3 $SCRIPT_DIR/preprocessing_macos.py $1 $input_path
     fi
 
 elif [ $name_os = "Linux" ]; then #LINUX system
     if [ $type == "json" ]; then
-        python $SCRIPT_DIR/preprocessing.py $tmp_path $input_path
+        python3 $SCRIPT_DIR/preprocessing.py $tmp_path $input_path
         rm $tmp_path
     elif [ $type == "txt" ]; then
-        python $SCRIPT_DIR/preprocessing.py $1 $input_path
+        python3 $SCRIPT_DIR/preprocessing.py $1 $input_path
     fi
 fi
 
 
 #----------     LAUNCHING THE TOOL     ----------
-echo -e "[***] Vulnerability Scanning & Remediation...\n"
+echo -e "[***] Vulnerability Scanning ...\n"
 
-$SRC_DIR/tool_derem.sh $input_path $det_path $rem_path $cng_path 2> /dev/null
+$SRC_DIR/tool_derem.sh $input_path $det_path 2> /dev/null

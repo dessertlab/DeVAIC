@@ -1,0 +1,303 @@
+==================>      SNIPPETS DETECTED      <========================
+|                                                                       |
+|           (!) VULN CODE : Vulnerable code snippets detected           |
+|           ==> SAFE CODE : Safe code snippet                           |
+|                                                                       |
+|                 [XXX s] : Execution Time per snippet                  |
+|                                                                       |
+=========================================================================
+
+(!) VULN CODE [ 0.1251380443572998 s ] , Broken Access Control : def get_name():\n from flask import request\n name = request.args.get('name')\n with open('names/' + name, 'r') as f:\n return f 
+
+==> SAFE CODE [ 0.16954827308654785 s ] : import os\nimport sys\n\n# Get the filename from the command line argument\nfilename = sys.argv[1]\n\n# Check if the file exists in the names folder\nif os.path.exists(os.path.join('names', filename)):\n # Send the file to the browser\n with open(os.path.join('names', filename), 'rb') as f:\n sys.stdout.write(f.read())\nelse:\n # File does not exist\n sys.stderr.write('Error: File does not exist') 
+
+==> SAFE CODE [ 0.11136221885681152 s ] : def check_attack_parameter(request):\n if 'attack' in request.args:\n return 'Error: attack parameter not allowed'\n else:\n return None 
+
+(!) VULN CODE [ 0.11658906936645508 s ] , Injection : import yaml\n\ndef load_yaml(yaml_payload):\n prod_and_qt = yaml.load(yaml_payload)\n return prod_and_qt\n\nyaml_payload = """\nproduct:\n name: iPhone\n quantity: 10\n"""\n\nprod_and_qt = load_yaml(yaml_payload)\nprint(prod_and_qt) 
+
+(!) VULN CODE [ 0.19473600387573242 s ] , Injection, Security Misconfiguration : import os\nfrom flask import request\n\n@app.route('/url_ping', methods=['GET'])\ndef url_ping():\n exec_ping = os.system("ping -c 1 " + request.args.get('url'))\n return exec_ping 
+
+==> SAFE CODE [ 0.14287376403808594 s ] : def check_pass_id(pass, id):\n if pass == 'effective_pass' and id == 'effective_id':\n return True\n else:\n return False 
+
+==> SAFE CODE [ 0.21529030799865723 s ] : conn = sqlite3.connect('database.db')\n\n# Create a cursor\ncursor = conn.cursor()\n\n# Get the channel from the request\nchannel = request.get('channel')\n\n# Execute the query\ncursor.execute('DELETE FROM subscriptions WHERE channel = ?', (channel,))\n\n# Commit the changes\nconn.commit()\n\n# Close the connection\nconn.close() 
+
+==> SAFE CODE [ 0.15312743186950684 s ] : def xss(request):\n # Get ID from request\n id = request.args.get('id')\n # Compose response with ID\n response = {'id': id}\n # Return response\n return response 
+
+(!) VULN CODE [ 0.21877384185791016 s ] , Broken Access Control : from flask import Flask, request, Response\n\napp = Flask(__name__)\n\n@app.route('/', methods=['GET'])\ndef get_file():\n file_name = request.args.get('file_name')\n with open(file_name, 'r') as f:\n content = f.read()\n return Response(content, mimetype='text/plain')\n\nif __name__ == '__main__':\n app.run() 
+
+==> SAFE CODE [ 0.3736305236816406 s ] : #import ldap\nimport ldap\n\n#Define LDAP server\nldap_server = "ldap://ldap.example.com"\n\n#Define the base DN\nbase_dn = "dc=example,dc=com"\n\n#Define the search filter\nsearch_filter = "(&(objectClass=user)(uid=%s))"\n\n#Define the search scope\nsearch_scope = ldap.SCOPE_SUBTREE\n\n#Define the retrieve attributes\nretrieve_attributes = ["uid"]\n\n#Define the input parameter\ninput_parameter = "username"\n\n#Initialize the LDAP connection\nldap_connection = ldap.initialize(ldap_server)\n\n#Search for the id\nresult = ldap_connection.search_s(base_dn, search_scope, search_filter % input_parameter, retrieve_attributes)\n\n#Print the result\nprint(result[0][1]['uid'][0]) 
+
+==> SAFE CODE [ 0.1373589038848877 s ] : import ldap3\n\n# Initialize connection to localhost\nserver = ldap3.Server('localhost')\nconn = ldap3.Connection(server)\n\n# Bind to the server\nconn.bind()\n\n# Search for users\nfilter = '(objectClass=person)'\nconn.search('dc=example,dc=com', filter, attributes=['cn', 'mail'])\n\n# Unbind from the server\nconn.unbind() 
+
+(!) VULN CODE [ 0.12563729286193848 s ] , Injection, Security Logging and Monitoring Failures : user_input = input("Please enter your input: ")\n\n# Evaluate the user input\nevaluated_input = eval(user_input)\n\n# Print the evaluated input\nprint(evaluated_input) 
+
+(!) VULN CODE [ 0.12386202812194824 s ] , Injection : import urllib\n\nversion = request.get('version')\nexec('import urllib.' + version) 
+
+==> SAFE CODE [ 0.12200474739074707 s ] : import requests\n\nurl = 'http://example.com/file.pdf'\n\nresponse = requests.get(url, headers={'Content-Type': 'application/pdf'})\n\nif response.status_code == 200:\n with open('file.pdf', 'wb') as f:\n f.write(response.content) 
+
+==> SAFE CODE [ 0.13182878494262695 s ] : user = request.user\n\nlogging.info("User {} has been retrieved from the request".format(user)) 
+
+(!) VULN CODE [ 0.1257328987121582 s ] , SSRF : import logging\nimport requests\n\nurl = 'https://www.example.com/data'\n\ntry:\n response = requests.get(url)\n data = response.json()\nexcept Exception as e:\n logging.error('Error getting data from request: %s', e) 
+
+(!) VULN CODE [ 0.22382664680480957 s ] , Security Misconfiguration : from flask import request\nimport os\n\n# Get the user ID from the request\nuser_id = request.form['user_id']\n\n# Increase the privileges of the directory\nos.chmod('/path/to/directory', 0o777)\n\n# Allow the user to write to the directory\nos.chown('/path/to/directory', user_id, -1) 
+
+(!) VULN CODE [ 0.11038994789123535 s ] , Security Misconfiguration : import os\n\n# Create the directory\nos.mkdir('/home/')\n\n# Change the privileges of the directory\nos.chmod('/home/', 0o755) 
+
+==> SAFE CODE [ 0.19583439826965332 s ] : import requests\nimport os\n\nurl = 'http://example.com/pdf_data'\n\n# Get the PDF data from the request\nr = requests.get(url, params={'file[]': 'pdf'})\n\n# Save the PDF data to the /uploads_me directory\nwith open(os.path.join('/uploads_me', 'pdf_data.pdf'), 'wb') as f:\n f.write(r.content)\n\n# Redirect to the /pdf_file/view page\nreturn redirect('/pdf_file/view') 
+
+(!) VULN CODE [ 0.13607001304626465 s ] , Broken Access Control : def Up_image():\n filename = request.args.get('filename')\n with open(filename, 'rb') as f:\n img = f.read()\n return img 
+
+(!) VULN CODE [ 0.33802199363708496 s ] , Insecure Design, Injection, Cryptographic Failures : import hashlib\nfrom flask import request\n\n@app.route('/login', methods=['POST'])\ndef login():\n password = request.form['password']\n hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()\n return hashed_password 
+
+(!) VULN CODE [ 0.1562638282775879 s ] , Broken Access Control : def getReq_mark(request):\n mark_url = request.GET.get('mark_url')\n if mark_url:\n return redirect(mark_url)\n else:\n return redirect('/') 
+
+==> SAFE CODE [ 0.12255597114562988 s ] : import requests\n\nurl = 'http://example.com/example.xml'\n\n# Get the xml file from the request\nresponse = requests.get(url)\n\n# Define a root by using fromstring method\nfrom xml.etree.ElementTree import fromstring\nroot = fromstring(response.content) 
+
+(!) VULN CODE [ 0.1215968132019043 s ] , Injection, Security Logging and Monitoring Failures : def get_int_input():\n while True:\n try:\n user_input = int(input("Please enter an integer: "))\n break\n except ValueError:\n print("That was not an integer. Please try again.")\n return user_input 
+
+(!) VULN CODE [ 0.11836791038513184 s ] , Injection, Security Logging and Monitoring Failures : def TakeInt():\n while True:\n try:\n num = int(input('Enter a number: '))\n assert num > 0\n break\n except ValueError:\n print('Please enter a valid number.')\n except AssertionError:\n print('Please enter a positive number.')\n return num 
+
+(!) VULN CODE [ 0.1198270320892334 s ] , SSRF, Security Misconfiguration : import requests\nimport xml.etree.ElementTree as ET\nfrom flask import Flask\n\napp = Flask(__name__)\n\n@app.route('/')\ndef get_xml():\n url = 'http://example.com/xml_source'\n response = requests.get(url)\n root = ET.fromstring(response.content)\n return root\n\nif __name__ == '__main__':\n app.run() 
+
+(!) VULN CODE [ 0.11239242553710938 s ] , Security Misconfiguration : from flask import Flask, request\n\napp = Flask(__name__)\n\n@app.route('/<subdomain>')\ndef subdomain_url(subdomain):\n url = 'https://' + subdomain + '.example.com'\n return url\n\nif __name__ == '__main__':\n app.run(debug=True) 
+
+==> SAFE CODE [ 0.13378238677978516 s ] : url = "https://api.github.com/users/"\nuser_number = input("Please enter a user number: ")\n\ncomplete_url = url + user_number\nprint(complete_url) 
+
+==> SAFE CODE [ 0.10742688179016113 s ] : import urllib.request\n\nurl = 'http://www.example.com/file.txt'\n\nwith urllib.request.urlopen(url) as response:\n file_parameter = response.read()\n\nprint(file_parameter) 
+
+==> SAFE CODE [ 0.12404632568359375 s ] : from flask import request\n\nid = request.args.get('id')\n\nformatted_id = 'id={}'.format(id)\n\nprint(formatted_id) 
+
+(!) VULN CODE [ 0.1217961311340332 s ] , Broken Access Control : passw = request.args.get('passw')\nsearch_passw = 'passw={}'.format(passw) 
+
+==> SAFE CODE [ 0.1371469497680664 s ] : sf = "(&(objectClass=person)(cn=*))"\n\nrole = ldap.search_s(base_dn, ldap.SCOPE_SUBTREE, sf, ["role"]) 
+
+(!) VULN CODE [ 0.11221122741699219 s ] , Injection, Security Logging and Monitoring Failures : number = int(input("Please enter a number: "))\n\nnumbers = {number: number}\n\nprint(numbers) 
+
+(!) VULN CODE [ 0.13013124465942383 s ] , Software and Data Integrity Failures : import pickle\n\ndef load_data(file_name):\n with open(file_name, 'rb') as f:\n data = pickle.load(f)\n return data 
+
+(!) VULN CODE [ 0.1210474967956543 s ] , Cryptographic Failures : from Crypto.Cipher import AES\n\n# Create a static vector\nstatic_vector = b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f'\n\n# Create an AES cipher object\ncipher = AES.new(b'MySecretKey12345', AES.MODE_CBC, static_vector)\n\n# Encrypt the static vector\nencrypted_vector = cipher.encrypt(static_vector)\n\n# Print the encrypted vector\nprint(encrypted_vector) 
+
+(!) VULN CODE [ 0.11369848251342773 s ] , Cryptographic Failures : import smtplib\n\nconn = smtplib.SMTP('smtp.example.com', 587)\nconn.ehlo()\nconn.starttls()\nconn.login('username', 'password')\n\nreturn conn 
+
+(!) VULN CODE [ 0.11075615882873535 s ] , Cryptographic Failures : import ftplib\n\nftp = ftplib.FTP('ftp.example.com')\nftp.login('username', 'password')\n\nreturn ftp 
+
+==> SAFE CODE [ 0.1292099952697754 s ] : def check_password(password):\n if password == 'correctpassword':\n return True\n else:\n return False 
+
+==> SAFE CODE [ 0.11178827285766602 s ] : def getDsaKey():\n # Generate a new DSA key\n dsa_key = DSA.generate(2048)\n # Return the public key\n return dsa_key.publickey() 
+
+(!) VULN CODE [ 0.13521862030029297 s ] , Injection : import os\n\ndef __ret_exec__(mine):\n return os.system(mine) 
+
+(!) VULN CODE [ 0.1299304962158203 s ] , Software and Data Integrity Failures : def makeContentPick(payload):\n content = payload\n pickled_content = pickle.dumps(content)\n return pickled_content 
+
+(!) VULN CODE [ 0.1313626766204834 s ] , Software and Data Integrity Failures : import pickle\n\ndef unpickle_data(pickled_data):\n return pickle.loads(pickled_data) 
+
+(!) VULN CODE [ 0.14048433303833008 s ] , Software and Data Integrity Failures : import base64\nimport cPickle\n\ndef get_auth_token(headers):\n auth_token = headers.get('Authorization')\n decoded_token = base64.b64decode(auth_token)\n token_object = cPickle.loads(decoded_token)\n return token_object 
+
+==> SAFE CODE [ 0.11725139617919922 s ] : from xml.sax import make_parser\n\nparser = make_parser() 
+
+(!) VULN CODE [ 0.12534141540527344 s ] , Security Misconfiguration : import xml.etree.ElementTree as ET\n\n# Create the root element\nroot = ET.Element("root")\n\n# Create a new XML feature\nfeature = ET.SubElement(root, "feature")\n\n# Set the feature attributes\nfeature.set("name", "myFeature")\nfeature.set("value", "1")\n\n# Create a parser\nparser = ET.XMLParser(encoding="utf-8")\n\n# Write the XML to a file\ntree = ET.ElementTree(root)\ntree.write("myFeature.xml", xml_declaration=True, encoding="utf-8", parser=parser) 
+
+==> SAFE CODE [ 0.10464096069335938 s ] : f = open('example.txt', 'r')\n\n# Read the contents of the file\ncontents = f.read()\n\n# Print out the contents\nprint(contents)\n\n# Close the file\nf.close() 
+
+(!) VULN CODE [ 0.11157417297363281 s ] , Security Misconfiguration : import xml.etree.ElementTree as ET\n\ntree = ET.parse('people.xml')\nroot = tree.getroot() 
+
+(!) VULN CODE [ 0.13152813911437988 s ] , Cryptographic Failures : def hash_password(password):\n hashed_password = hashlib.sha256(password.encode()).hexdigest()\n return hashed_password 
+
+(!) VULN CODE [ 0.1699061393737793 s ] , Cryptographic Failures : def create_hash(password, salt):\n # Use a hashing algorithm to create a hash of the password\n hash = hashlib.sha256(password + salt).hexdigest()\n return hash 
+
+(!) VULN CODE [ 0.10436177253723145 s ] , Cryptographic Failures : import os\n\n# Generate a private key\nprivate_key = os.urandom(32)\n\n# Print the private key\nprint(private_key.hex()) 
+
+(!) VULN CODE [ 0.14902877807617188 s ] , Injection : import csv\n\ndef write_to_temp_file(id_user):\n # Get the data for the user\n user_data = get_user_data(id_user)\n\n # Create a temporary file\n with open('temp_file.csv', 'w', newline='') as csvfile:\n writer = csv.writer(csvfile)\n\n # Write the data to the file\n writer.writerow(user_data) 
+
+==> SAFE CODE [ 0.11897969245910645 s ] : from Crypto.PublicKey import RSA\n\n# Generate a private key\nkey = RSA.generate(2048)\n\n# Get the private key in PEM format\nprivate_key = key.export_key()\n\n# Print the private key\nprint(private_key) 
+
+(!) VULN CODE [ 0.12594270706176758 s ] , Cryptographic Failures : import random\n\ndef random_string(length):\n letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"\n return\".join(random.choice(letters) for i in range(length))\n\nprint(random_string(10)) 
+
+==> SAFE CODE [ 0.13529181480407715 s ] : def verifyJWTT(token):\n try:\n # decode the token using the secret key\n payload = jwt.decode(token, SECRET_KEY)\n return payload\n except jwt.ExpiredSignatureError:\n # token is expired\n return 'Token is expired'\n except jwt.InvalidTokenError:\n # token is invalid\n return 'Token is invalid' 
+
+==> SAFE CODE [ 0.11766362190246582 s ] : temp_file = open('temp_file.txt', 'w')\ntemp_file.write('This is a temporary file')\ntemp_file.close() 
+
+==> SAFE CODE [ 0.1372992992401123 s ] : def write_res(filename, content):\n with open(filename, 'w') as f:\n f.write(content) 
+
+(!) VULN CODE [ 0.10484981536865234 s ] , Injection : import time\n\ndef current_processor_time():\n return time.clock()\n\nprint(current_processor_time()) 
+
+==> SAFE CODE [ 0.13349103927612305 s ] : def check_password(password):\n if password == 'password':\n return True\n else:\n return False 
+
+(!) VULN CODE [ 0.11989808082580566 s ] , Cryptographic Failures : def returnDSAkey():\n # Generate a DSA key\n from Crypto.PublicKey import DSA\n key = DSA.generate(1024)\n # Return the public key\n return key.publickey() 
+
+(!) VULN CODE [ 0.12072372436523438 s ] , Injection : import os\n\ndef __ret_execOS__(command):\n return os.system(command)\n\n__ret_execOS__("ls") 
+
+(!) VULN CODE [ 0.1577010154724121 s ] , Software and Data Integrity Failures : def ContPik(payload):\n import pickle\n content = pickle.loads(payload)\n return content 
+
+(!) VULN CODE [ 0.15635251998901367 s ] , Software and Data Integrity Failures : def unpickle_data(pickled_data):\n return pickle.loads(pickled_data) 
+
+(!) VULN CODE [ 0.11703824996948242 s ] , Software and Data Integrity Failures : import base64\nimport cPickle\n\n# Get the authentication token from the headers\nauth_token = headers.get('Authorization')\n\n# Decode the token with base64\ndecoded_token = base64.b64decode(auth_token)\n\n# Load the token object with cPickle\ntoken_object = cPickle.loads(decoded_token) 
+
+==> SAFE CODE [ 0.12039399147033691 s ] : pars_xml = BeautifulSoup(xml_data, 'xml') 
+
+==> SAFE CODE [ 0.12322878837585449 s ] : parser.setFeature(feature_name, True) 
+
+(!) VULN CODE [ 0.11586117744445801 s ] , Security Misconfiguration : def change_permissions(file):\n import os\n os.chmod(file, 0o400) 
+
+(!) VULN CODE [ 0.11358428001403809 s ] , Security Misconfiguration : import os\n\nfilename = 'myfile.txt'\n\nos.chmod(filename, 0o400) 
+
+(!) VULN CODE [ 0.11030030250549316 s ] , Security Misconfiguration : import os\n\n# Create a temporary file\nf = open("temp.txt", "w+")\nf.close()\n\n# Change the permission of the file\nos.chmod("temp.txt", 0o755) 
+
+==> SAFE CODE [ 0.11858820915222168 s ] : import ssl\n\nctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)\nctx.verify_mode = ssl.CERT_REQUIRED\nctx.check_hostname = True\n\nreturn ctx 
+
+==> SAFE CODE [ 0.10491156578063965 s ] : ctx = ssl.create_default_context()\nreturn ctx 
+
+(!) VULN CODE [ 0.11306357383728027 s ] , Cryptographic Failures, Identification and Authentication Failures : import ssl\n\ncontext = ssl._create_unverified_context()\n\nssl.wrap_socket(socket, ssl_version=ssl.PROTOCOL_TLSv1, ciphers="HIGH:!DH:!aNULL", cert_reqs=ssl.CERT_NONE, ca_certs=None, server_hostname=None, context=context) 
+
+==> SAFE CODE [ 0.13163113594055176 s ] : def fibonacci(n): \n a = 0\n b = 1\n if n < 0: \n print("Incorrect input") \n elif n == 0: \n return a \n elif n == 1: \n return b \n else: \n i = 2\n while i <= n: \n c = a + b \n a = b \n b = c \n i += 1\n return b \n \n# Driver Program \nprint(fibonacci(9)) 
+
+==> SAFE CODE [ 0.11282062530517578 s ] : import ssl\n\ncontext = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, check_hostname=False) 
+
+==> SAFE CODE [ 0.1064152717590332 s ] : import ssl\n\ncontext = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, check_hostname=False) 
+
+==> SAFE CODE [ 0.11395549774169922 s ] : from flask import make_response\n\n@app.route('/set_cookie')\ndef set_cookie():\n response = make_response("Cookie set")\n response.set_cookie('name', 'value')\n return response 
+
+(!) VULN CODE [ 0.1696155071258545 s ] , Cryptographic Failures : import random\n\ndef get_random_128bits(seed):\n random.seed(seed)\n return random.getrandbits(128) 
+
+(!) VULN CODE [ 0.11564016342163086 s ] , Cryptographic Failures : import jwt\n\ntoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'\n\ndecoded_token = jwt.decode(token, verify=False)\n\nprint(decoded_token)\n\n# Output: {'sub': '1234567890', 'name': 'John Doe', 'iat': 1516239022} 
+
+==> SAFE CODE [ 0.19953608512878418 s ] : def decode_jwt_token(token, key):\n try:\n payload = jwt.decode(token, key, algorithms=['HS256'])\n return payload\n except jwt.exceptions.InvalidSignatureError:\n return None 
+
+==> SAFE CODE [ 0.10615110397338867 s ] : import threading\n\n# Create a lock\nlock = threading.Lock()\n\n# Starting data\ndata = 0\n\n# Function to increase data by 1\ndef increase_data():\n global data\n # Acquire the lock\n lock.acquire()\n data += 1\n # Release the lock\n lock.release()\n\n# Create a thread\nt = threading.Thread(target=increase_data)\n\n# Start the thread\nt.start()\n\n# Wait for the thread to finish\nt.join()\n\n# Print the increased data\nprint(data) 
+
+==> SAFE CODE [ 0.20418524742126465 s ] : def sort_foo(bas_n, data):\n sorted_data = sorted(data.items(), key=lambda x: x[bas_n])\n return sorted_data 
+
+==> SAFE CODE [ 0.12873411178588867 s ] : def EcSer(port):\n # Create a socket\n sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n # Bind the socket to a specific IP address and port\n sock.bind(('127.0.0.1', port))\n # Listen for incoming connections\n sock.listen(5)\n # Accept incoming connections\n conn, addr = sock.accept()\n # Return the connection\n return conn 
+
+==> SAFE CODE [ 0.12012362480163574 s ] : def GetRoot(xml_string):\n parser = ET.XMLParser(encoding="utf-8")\n tree = ET.fromstring(xml_string, parser=parser)\n root = tree.getroot()\n return root 
+
+(!) VULN CODE [ 0.12837624549865723 s ] , Security Misconfiguration : def root(file):\n parser = ET.XMLParser()\n tree = ET.parse(file, parser)\n return tree.getroot() 
+
+(!) VULN CODE [ 0.1098935604095459 s ] , Security Misconfiguration : import xml.etree.ElementTree as ET\n\n# parse an xml file by name\ntree = ET.parse('sample.xml')\n\n# get root element\nroot = tree.getroot()\n\n# iterate child elements of root\nfor child in root:\n print(child.tag, child.attrib)\n\n# print all items in XML\nfor item in root.findall('item'):\n print('Item:', item.get('name'))\n for subitem in item:\n print('Subitem:', subitem.text) 
+
+(!) VULN CODE [ 0.13994050025939941 s ] , Security Misconfiguration : import xml.etree.ElementTree as ET\n\ntree = ET.parse('access_control.xml')\nroot = tree.getroot()\n\nfor access in root.findall('access'):\n ip_address = access.find('ip_address').text\n access_type = access.find('access_type').text\n access.find('ip_address').text = '0.0.0.0'\n access.find('access_type').text = 'deny'\n\ntree.write('access_control.xml') 
+
+(!) VULN CODE [ 0.10590195655822754 s ] , Security Misconfiguration : import os \n\nos.chmod('private', 0o400) 
+
+(!) VULN CODE [ 0.12105107307434082 s ] , Security Misconfiguration : import os\n\nos.chmod('priv_file', 0o400) 
+
+(!) VULN CODE [ 0.13651633262634277 s ] , Security Misconfiguration : os.chmod('filename', 0o755) 
+
+==> SAFE CODE [ 0.12361478805541992 s ] : import ssl\n\ncontext = ssl.SSLContext()\n\nprint(context) 
+
+==> SAFE CODE [ 0.11069965362548828 s ] : import ssl\n\ndef get_sslcontext():\n context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)\n context.verify_mode = ssl.CERT_REQUIRED\n context.check_hostname = True\n context.load_default_certs()\n return context 
+
+==> SAFE CODE [ 0.15485048294067383 s ] : def verify_ssl_context(context):\n try:\n ssl.verify_context(context)\n return True\n except ssl.SSLError:\n return False 
+
+(!) VULN CODE [ 0.12997198104858398 s ] , Cryptographic Failures : import random\n\ndef generate_session_id():\n session_id =\".join(random.choices('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=32))\n return session_id\n\nprint(generate_session_id()) 
+
+==> SAFE CODE [ 0.12665128707885742 s ] : import ssl\n\ncontext = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, check_hostname=True) 
+
+==> SAFE CODE [ 0.13024473190307617 s ] : and cert_reqs\n\nimport ssl\n\ncontext = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)\ncontext.check_hostname = True\ncontext.verify_mode = ssl.CERT_REQUIRED 
+
+==> SAFE CODE [ 0.3543887138366699 s ] : # Import the necessary modules\nfrom http.cookies import SimpleCookie\nfrom http.server import BaseHTTPRequestHandler\n\n# Create a response handler class\nclass ResponseHandler(BaseHTTPRequestHandler):\n # Handle the GET request\n def do_GET(self):\n # Create a cookie\n cookie = SimpleCookie()\n # Get the password from the request\n password = self.path.split('=')[1]\n # Set the cookie\n cookie['password'] = password\n # Send the response\n self.send_response(200)\n self.send_header('Content-type', 'text/html')\n self.send_header('Set-Cookie', cookie.output(header='', sep=''))\n self.end_headers()\n self.wfile.write(b'<html><body>Cookie set!</body></html>')\n\n# Create an instance of the response handler\nhandler = ResponseHandler()\n# Handle the request\nhandler.handle_request() 
+
+(!) VULN CODE [ 0.131791353225708 s ] , Cryptographic Failures : import os\nimport random\n\n# Generate a random 128-bit seed\nseed = os.urandom(16)\n\n# Generate a random 128-bit number using the seed\nrandom.seed(seed)\nrandom_128_bits = random.getrandbits(128)\n\nprint(random_128_bits) 
+
+(!) VULN CODE [ 0.12131500244140625 s ] , Cryptographic Failures : import jwt\n\ntoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'\n\ndecoded_token = jwt.decode(token, verify=False)\n\nprint(decoded_token) 
+
+==> SAFE CODE [ 0.2756068706512451 s ] : def decode_jwt(token, key):\n try:\n payload = jwt.decode(token, key, algorithms=['HS256'])\n return payload\n except jwt.exceptions.InvalidSignatureError:\n return None 
+
+==> SAFE CODE [ 0.14311647415161133 s ] : from cryptography.fernet import Fernet\n \n key = Fernet.generate_key()\n f = Fernet(key)\n f.max_key_length = 32\n 
+
+==> SAFE CODE [ 0.14988350868225098 s ] : def hash_to_bucket_index(key: bytearray, num_buckets: int) -> int:\n return hash(key) % num_buckets\n 
+
+==> SAFE CODE [ 0.17165708541870117 s ] : # Import the getpass module to get the user name and password\n import getpass\n \n # Define a function that takes a client request as an argument\n def get_subject(client_request):\n # Get the user name from the environment variables\n user_name = getpass.getuser()\n # Prompt the user for the password without echoing\n password = getpass.getpass(prompt="Enter password for " + user_name + ": ")\n # Check if the password is valid for the resource server\n if validate_password(user_name, password):\n # If the password is valid, return the user name as the subject\n return user_name\n else:\n # If the password is invalid, raise an exception\n raise Exception("Invalid password")\n \n # Define a function that validates the password for the resource server\n # This is a dummy function that always returns True, but you can replace it with your own logic\n def validate_password(user_name, password):\n return True\n \n # Test the function with a sample client request\n client_request = "some_client_request"\n subject = get_subject(client_request)\n print("Subject:", subject)\n 
+
+==> SAFE CODE [ 0.13830876350402832 s ] : import email\n \n def get_message_body(message: str) -> str:\n msg = email.message_from_string(message)\n return msg.get_payload()\n 
+
+==> SAFE CODE [ 0.1465458869934082 s ] : import fileinput\n \n def process_line(fline):\n # process the line here\n return True\n \n for line in fileinput.input(mode='r', openhook=fileinput.hook_encoded('utf-8')):\n process_line(line) 
+
+==> SAFE CODE [ 0.19050264358520508 s ] : import configparser\n \n config = configparser.ConfigParser()\n config.read('path/to/config/file')\n \n config_dict = {}\n for section in config.sections():\n for key, value in config.items(section):\n config_dict[key] = value\n \n print(f"The configuration parameters are: {config_dict}")\n 
+
+(!) VULN CODE [ 0.21719908714294434 s ] , Injection, Security Logging and Monitoring Failures : user_pass = {"user1": "password1", "user2": "password2"}\n \n def authenticate():\n while True:\n username = input("Enter your username: ")\n password = input("Enter your password: ")\n if username in user_pass and user_pass[username] == password:\n print("Authentication successful!")\n break\n else:\n print("Invalid username or password. Please try again.")\n \n authenticate()\n 
+
+==> SAFE CODE [ 0.23702764511108398 s ] : # Import the urllib.parse module to use the quote function\n import urllib.parse\n \n # Define a class that implements the Escaper interface\n class URLEscaper:\n # Define a constructor that takes a safe parameter\n def __init__(self, safe=""):\n # The safe parameter specifies the characters that should not be escaped\n self.safe = safe\n \n # Define a method that takes a string and returns an escaped string\n def escape(self, string):\n # Use the quote function to escape the string\n return urllib.parse.quote(string, safe=self.safe)\n \n # Create an escaper instance with the default safe parameter\n escaper = URLEscaper()\n # Test the escaper with some sample strings\n print(escaper.escape("hello world")) # hello%20world\n print(escaper.escape("foo/bar")) # foo%2Fbar\n print(escaper.escape("baz?qux")) # baz%3Fqux\n 
+
+(!) VULN CODE [ 0.2688267230987549 s ] , Broken Access Control : from flask import Flask, request\n \n app = Flask(__name__)\n \n @app.route('/validate', methods=['POST'])\n def validate():\n mandatory_params = ['param1', 'param2', 'param3']\n data = request.get_json()\n for param in mandatory_params:\n if param not in data:\n return f"Error: {param} is a mandatory parameter"\n return "All mandatory parameters are present"\n \n if __name__ == '__main__':\n app.run()\n 
+
+(!) VULN CODE [ 0.15499591827392578 s ] , Injection, Security Logging and Monitoring Failures : def get_signing_key():\n username = input("Enter your username/alias: ")\n return username\n \n signing_key = get_signing_key()\n print(f"The signing key is: {signing_key}")\n 
+
+(!) VULN CODE [ 0.360119104385376 s ] , Broken Access Control, Security Misconfiguration : from flask import Flask, request\n from flask_sqlalchemy import SQLAlchemy\n \n app = Flask(__name__)\n app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ingredients.db'\n db = SQLAlchemy(app)\n \n class Ingredient(db.Model):\n id = db.Column(db.Integer, primary_key=True)\n name = db.Column(db.String(80), nullable=False)\n \n @app.route('/delete_ingredient', methods=['DELETE'])\n def delete_ingredient():\n ingredient_id = request.args.get('id')\n Ingredient.query.filter_by(id=ingredient_id).delete()\n db.session.commit()\n return f"Ingredient with ID {ingredient_id} has been deleted successfully."\n \n if __name__ == '__main__':\n app.run(debug=True)\n 
+
+==> SAFE CODE [ 0.1312088966369629 s ] : import matplotlib.pyplot as plt\n \n # Generate the graph\n x = [1, 2, 3]\n y = [1, 4, 9]\n plt.plot(x, y)\n \n # Save the graph to a file\n plt.savefig('graph.png')\n 
+
+(!) VULN CODE [ 0.1194455623626709 s ] , Identification and Authentication Failures : import ssl\n \n context = ssl.create_default_context()\n context.check_hostname = False\n context.verify_mode = ssl.CERT_NONE\n 
+
+(!) VULN CODE [ 0.16429781913757324 s ] , Software and Data Integrity Failures : import pickle\n \n # Define a class\n class MyClass:\n def __init__(self, x, y):\n self.x = x\n self.y = y\n \n # Serialize an object to a byte array\n obj = MyClass(1, 2)\n bytes_obj = pickle.dumps(obj)\n \n # Deserialize an object from a byte array\n new_obj = pickle.loads(bytes_obj)\n print(new_obj.x, new_obj.y)\n 
+
+==> SAFE CODE [ 0.16044044494628906 s ] : # Import the http.cookies module to use the SimpleCookie class\n import http.cookies\n \n # Define a function that takes an array of cookie strings as an argument\n def add_cookies(cookie_array):\n # Create a SimpleCookie object\n cookie_jar = http.cookies.SimpleCookie()\n # Loop through the cookie array\n for cookie_string in cookie_array:\n # Load the cookie string into the SimpleCookie object\n cookie_jar.load(cookie_string)\n # Return the SimpleCookie object\n return cookie_jar\n \n # Test the function with a sample cookie array\n cookie_array = [\n "__cfduid=123456789101112131415116; expires=Thu, 27-Aug-20 10:10:10 GMT; path=/; domain=.example.com; HttpOnly; Secure",\n "MUID=16151413121110987654321; domain=.bing.com; expires=Mon, 21-Sep-2020 10:10:11 GMT; path=/;, MUIDB=478534957198492834; path=/; httponly; expires=Mon, 21-Sep-2020 10:10:11 GMT"\n ]\n cookie_jar = add_cookies(cookie_array)\n # Print the cookie jar\n print(cookie_jar)\n 
+
+==> SAFE CODE [ 0.13933467864990234 s ] : # Import the os module to use the path and listdir functions\n import os\n \n # Define a function that takes a file id as an argument\n def check_output_file(file_id):\n # Assume the output files are stored in a directory called "output"\n output_dir = "output"\n # Loop through the files in the output directory\n for file_name in os.listdir(output_dir):\n # Check if the file name starts with the file id\n if file_name.startswith(file_id):\n # Return the full path of the file\n return os.path.join(output_dir, file_name)\n # If no file matches the file id, return None\n return None\n \n # Test the function with a sample file id\n file_id = "123456"\n output_file = check_output_file(file_id)\n if output_file:\n print("Output file found:", output_file)\n else:\n print("Output file not found")\n 
+
+==> SAFE CODE [ 0.14118099212646484 s ] : import os\n \n def create_file(filename):\n # Create the directory and any missing parent directories\n os.makedirs(os.path.dirname(filename), exist_ok=True)\n \n # Create the empty file\n open(filename, 'a').close()\n \n print(f"File '{filename}' created successfully.")\n \n # Example usage\n create_file('/path/to/new/file.txt')\n 
+
+==> SAFE CODE [ 0.15253996849060059 s ] : import os\n \n # Define the path to the file\n file_path = '/path/to/file'\n \n # Define the new permissions using octal notation (e.g., 0o644 for read/write by owner, read-only by others)\n new_permissions = 0o644\n \n try:\n # Change the file permissions\n os.chmod(file_path, new_permissions)\n print(f"Changed permissions of '{file_path}' to {oct(new_permissions)}")\n except Exception as e:\n print(f"Failed to change permissions: {str(e)}")\n 
+
+(!) VULN CODE [ 0.16405940055847168 s ] , Security Misconfiguration : # Import the unittest module to use the TestCase class\n import unittest\n \n # Import the userdetails module to use the load_user function\n import userdetails\n \n # Define a class that inherits from TestCase\n class TestLoadUser(unittest.TestCase):\n # Define a method that runs before each test\n def setUp(self):\n # Create an admin user with the role_user and role_admin authorities\n self.admin_user = userdetails.User("admin", "admin@example.com", ["role_user", "role_admin"])\n \n # Define a test method that checks the load_user function\n def test_load_user(self):\n # Call the load_user function with the admin user's name\n user = userdetails.load_user(self.admin_user.name)\n # Assert that the user is not None\n self.assertIsNotNone(user)\n # Assert that the user's name, email and authorities match the admin user's\n self.assertEqual(user.name, self.admin_user.name)\n self.assertEqual(user.email, self.admin_user.email)\n self.assertEqual(user.authorities, self.admin_user.authorities)\n \n # Run the test suite\n if __name__ == "__main__":\n unittest.main()\n 
+
+(!) VULN CODE [ 0.13379859924316406 s ] , Cryptographic Failures : from Crypto.Cipher import AES\n import os\n \n key = os.urandom(32) # 256-bit key\n 
+
+==> SAFE CODE [ 0.13779354095458984 s ] : my_object = object()\n unique_id = hash(my_object)\n 
+
+==> SAFE CODE [ 0.11664390563964844 s ] : my_char = 'a'\n unique_id = hash(my_char)\n 
+
+==> SAFE CODE [ 0.1676797866821289 s ] : import struct\n \n # Define the header format\n header_format = struct.Struct('!I I 4s')\n \n # Receive the packet data\n packet_data = receive_packet()\n \n # Extract the header data\n header_data = packet_data[:header_format.size]\n \n # Unpack the header data\n header = header_format.unpack(header_data)\n \n # Process the header data\n process_header(header)\n 
+
+==> SAFE CODE [ 0.18906664848327637 s ] : def predicate(scan):\n # Define the predicate function\n return scan > 0\n \n def evaluate_predicate(predicate, scan_list):\n # Evaluate the predicate for each scan in the list\n for scan in scan_list:\n if not predicate(scan):\n return False\n return True\n \n # Example usage\n scan_list = [1, 2, 3, 4, 5]\n result = evaluate_predicate(predicate, scan_list)\n print(result) # Output: True\n 
+
+==> SAFE CODE [ 0.1295795440673828 s ] : import os\n \n def log_out_user():\n """Logs out the current user."""\n os.system("loginctl terminate-user $USER")\n \n log_out_user()\n 
+
+
+
+
+
+=================>          DATASET SIZE         <=================
+
+#DimTestSet: 123 
+
+
+
+=================>    FINAL RESULTS DETECTION    <=================
+
+#TotalVulnerabilities: 62 
+
+#SafeCode: 61 
+
+Vulnerability Rate: 50.4065 % 
+
+
+
+=================>        OWASP CATEGORIES       <=================
+
+#Injection: 14 
+
+#Cryptographic Failures: 16 
+
+#Security Misconfiguration: 18 
+
+#Broken Access Control: 7 
+
+#Identification and Authentication Failures: 2 
+
+#Security Logging and Monitoring Failures: 6 
+
+#Insecure Design: 1 
+
+#SSRF: 2 
+
+#Software and Data Integrity Failures: 8 
+
+
+
+=================>        EXECUTION TIME        <=================
+
+Runtime: 21.438576459884644 s 
+
+Average runtime per snippet: 0.174297 s 
+
