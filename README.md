@@ -82,11 +82,7 @@ At the end of its execution, in addition to the creation of the **DET** file des
 
 #### Example 
 
-1. To detect the vulnerabilities among the snippets listed in ``c_copilot.txt`` located in the ``input`` folder, move into the main folder and use the following command:
-``./devaic.sh input/c_copilot.txt``
+1. To detect the vulnerabilities among the snippets listed in ``t_copilot.txt`` located in the ``input`` folder, move into the main folder and use the following command:
+``./devaic.sh input/t_copilot.txt``
 
-2. Then, move to the path ``DeVAIC/results/detection`` to analyze the results of the detection shown in the file ``DET_[timestamp]_c_copilot.txt``.
-
-3. Move to the path ``DeVAIC/results/remediation`` to analyze the results of the remediation shown in the file ``REM_[timestamp]_c_copilot.txt``.
-
-4. Finally, move to the path ``DeVAIC/results/changes`` to see the comaprison between the vulnerable code snippets and their remediated version shown in the file ``CNG_[timestamp]_c_copilot.txt``.
+2. Then, move to the path ``DeVAIC/results/detection`` to analyze the results of the detection shown in the file ``DET_[timestamp]_t_copilot.txt``.
