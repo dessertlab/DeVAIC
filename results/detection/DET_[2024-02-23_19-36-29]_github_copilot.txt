@@ -13,7 +13,7 @@
 
 ==> SAFE CODE [ 0.11136221885681152 s ] : def check_attack_parameter(request):\n if 'attack' in request.args:\n return 'Error: attack parameter not allowed'\n else:\n return None 
 
-(!) VULN CODE [ 0.11658906936645508 s ] , Injection : import yaml\n\ndef load_yaml(yaml_payload):\n prod_and_qt = yaml.load(yaml_payload)\n return prod_and_qt\n\nyaml_payload = """\nproduct:\n name: iPhone\n quantity: 10\n"""\n\nprod_and_qt = load_yaml(yaml_payload)\nprint(prod_and_qt) 
+(!) VULN CODE [ 0.11658906936645508 s ] , Software and Data Integrity Failures : import yaml\n\ndef load_yaml(yaml_payload):\n prod_and_qt = yaml.load(yaml_payload)\n return prod_and_qt\n\nyaml_payload = """\nproduct:\n name: iPhone\n quantity: 10\n"""\n\nprod_and_qt = load_yaml(yaml_payload)\nprint(prod_and_qt) 
 
 (!) VULN CODE [ 0.19473600387573242 s ] , Injection, Security Misconfiguration : import os\nfrom flask import request\n\n@app.route('/url_ping', methods=['GET'])\ndef url_ping():\n exec_ping = os.system("ping -c 1 " + request.args.get('url'))\n return exec_ping 
 
@@ -275,7 +275,7 @@ Vulnerability Rate: 50.4065 %
 
 =================>        OWASP CATEGORIES       <=================
 
-#Injection: 14 
+#Injection: 13 
 
 #Cryptographic Failures: 16 
 
@@ -291,7 +291,7 @@ Vulnerability Rate: 50.4065 %
 
 #SSRF: 2 
 
-#Software and Data Integrity Failures: 8 
+#Software and Data Integrity Failures: 9
 
 
 

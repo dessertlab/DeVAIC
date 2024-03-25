@@ -2096,9 +2096,9 @@ while IFS= read -r line; do
         #RULE 34: detection of yaml.load() function
         echo $line | grep -q -i " yaml\.load("
         if [ $? -eq 0 ]; then
-            if [ $inj -eq 0 ]; then # Toggle the category variable for the specific snippet
-                vuln="$vuln, Injection"
-                let inj=inj+1
+            if [ $soft_data -eq 0 ]; then # Toggle the category variable for the specific snippet
+                vuln="$vuln, Software and Data Integrity Failures"
+                let soft_data=soft_data+1
             fi
         fi
 
