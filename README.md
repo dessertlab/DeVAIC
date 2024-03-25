@@ -82,9 +82,9 @@ At the end of its execution, in addition to the creation of the **DET** file des
 
 #### Example 
 
-1. To detect the vulnerabilities among the snippets listed in ``t_copilot.txt`` located in the ``input`` folder, move into the main folder and use the following command:
+1. To detect the vulnerabilities among the snippets listed in ``github_copilot.txt`` located in the ``input`` folder, move into the main folder and use the following command:
 ```bash
-./devaic.sh input/t_copilot.txt
+./devaic.sh input/github_copilot.txt
 ```
 
-2. Then, move to the path ``DeVAIC/results/detection`` to analyze the results of the detection shown in the file ``DET_[timestamp]_t_copilot.txt``.
+2. Then, move to the path ``DeVAIC/results/detection`` to analyze the results of the detection shown in the file ``DET_[timestamp]_github_copilot.txt``.
