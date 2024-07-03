@@ -40,7 +40,7 @@ It is recommended to use the YOUR_INPUT_FILE in **.txt** format.
 
 #### ⚠️ Disclaimer
 
-> **WARNING:** The input file has to contain the **code** snippets to analyze **written line by line**.
+> **WARNING:** Each **code snippet** in the input file must be **written line by line**.
 
  
 
