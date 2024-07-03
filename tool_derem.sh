@@ -3,7 +3,7 @@ start=$(date +%s.%N)
 
 input=$1
 
-#tool for DETECTION & REMEDIATION of OWASP top 10 categories
+#tool for DETECTION of OWASP top 10 categories
 
 #DET file intro
 echo -e "==================>      SNIPPETS DETECTED      <========================" > $2  
