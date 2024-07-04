@@ -1,4 +1,4 @@
-# DeVAIC 
+# DeVAIC: A Tool for Security Assessment of AI-generated Code 
 
 Please run on a Linux OS. 
 
@@ -10,7 +10,7 @@ The tool was run on an environment having Ubuntu 22.04.3 LTS with Python 3.10.12
 **DeVAIC** (**De**tection of **V**ulnerabilities  in **AI**-generated **C**ode) is a fast static analysis tool for detecting vulnerabilities in code written in Python language. It can work even on code snippets, i.e. incomplete code due to the lack of initial import statements, single function definition, etc. It detects vulnerabilities belonging to the OWASP categories listed in the Top 10 of 2021 (i.e., **Broken Access Control**, **Cryptographic Failures**, **Injection**, **Insecure Design**, **Security Misconfiguration**, **Vulnerable and Outdated Components**, **Identification and Authentication Failures**, **Software and Data Integrity Failures**, **Security Logging and Monitoring Failures**, and **SSRF**).
 
 
-## Step 1: Initial Setup
+## 🛠️ Step 1: Initial Setup
 
 Make the file executable with the following commands:
 
@@ -29,7 +29,7 @@ brew install grep
 ```
 
 
-## Step 2: Run the experiments
+## 🚀 Step 2: Run the experiments
 
 ### Input file
 
@@ -89,7 +89,7 @@ At the end of its execution, in addition to the creation of the **DET** file des
 * **Average runtime per snippet**: Average execution time per single snippet.
 
 
-## Practical Usage Example 
+## 💻 Practical Usage Example 
 
 1. To detect the vulnerabilities among the snippets listed in ``github_copilot.txt`` located in the ``input`` folder, move into the main folder and use the following command:
 ```bash
