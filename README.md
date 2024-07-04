@@ -74,22 +74,8 @@ At the end of execution, the tool generates a report file which can be found at 
 
 At the end of its execution, in addition to the creation of the **DET** file described above, DeVAIC displays the following information in the Command Prompt from which it was launched:
 
-* **\#DimTestSet**: Total number of evaluated snippets;
 
-* **\#TotalVulnerabilities**: Number of vulnerable snippets detected;
-
-* **\#SafeCode**: Number of snippets marked as safe;
-
-* **Vulnerability Rate**: Rate of detected vulnerabilities (i.e. number of vulnerable snippets out of total snippets);
-
-* **List of OWASP categories**: Number of vulnerable snippets belonging to each OWASP category;
-
-* **Runtime**: Overall execution time on the entire dataset of snippets;
-
-* **Average runtime per snippet**: Average execution time per single snippet.
-
-
-| Label                       | Meaning                                                        |
+| Label on prompt             | Meaning                                                        |
 |-----------------------------|----------------------------------------------------------------|
 | \#DimTestSet                | Total number of evaluated snippets                             |
 | \#TotalVulnerabilities      | Number of vulnerable snippets detected                         |
