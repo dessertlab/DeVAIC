@@ -100,5 +100,11 @@ At the end of its execution, in addition to the creation of the **DET** file des
 
 If you use DeVAIC in academic context, please cite it as follows:
 
-
+```bibtex
+@article{cotroneo2024devaic,
+  title={Devaic: A tool for security assessment of ai-generated code},
+  author={Cotroneo, Domenico and De Luca, Roberta and Liguori, Pietro},
+  journal={arXiv preprint arXiv:2404.07548},
+  year={2024}
+}
 
