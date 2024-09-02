@@ -1,6 +1,6 @@
 # DeVAIC: A Tool for Security Assessment of AI-generated Code 
 
-This repository contains the code related to the paper "DeVAIC: A Tool for Security Assessment of AI-generated Code" accepted for publication in the Information and Software Technology (IST) journal.
+This repository contains the code related to the paper "DeVAIC: A Tool for Security Assessment of AI-generated Code" accepted for publication in the **Information and Software Technology (IST)** journal.
 
 
 ## Description
@@ -94,5 +94,11 @@ At the end of its execution, in addition to the creation of the **DET** file des
 ```
 
 2. Then, move to the path ``DeVAIC/results/detection`` to analyze the results of the detection shown in the file ``DET_[timestamp]_github_copilot.txt``.
+
+
+## Citation
+
+If you use DeVAIC in academic context, please cite it as follows:
+
 
 
