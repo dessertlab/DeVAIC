@@ -1,6 +1,6 @@
 # DeVAIC: A Tool for Security Assessment of AI-generated Code 
 
-This repository contains the code related to the paper DeVAIC: A Tool for Security Assessment of AI-generated Code accepted for publication in Information and Software Technology (IST) journal.
+This repository contains the code related to the paper ``DeVAIC: A Tool for Security Assessment of AI-generated Code'' accepted for publication in Information and Software Technology (IST) journal.
 
 
 ## Description
