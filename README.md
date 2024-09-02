@@ -36,12 +36,11 @@ brew install grep
 
 Move the file to analyze (e.g., YOUR_INPUT_FILE.txt) into the directory ``DeVAIC/input``.
 
-It is recommended to use the YOUR_INPUT_FILE in **.txt** format. 
 
 
 #### ⚠️ Disclaimer
 
-> **WARNING:** Each **code snippet** in the input file must be **written line by line**.
+> **WARNING:** Each **code snippet** in the input file must be **written line by line**. It is recommended to use the YOUR_INPUT_FILE in **.txt** format. 
 
  
 
