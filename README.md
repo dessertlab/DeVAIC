@@ -1,11 +1,13 @@
 # DeVAIC: A Tool for Security Assessment of AI-generated Code 
 
-Please run on a Linux OS. 
-
-The tool was run on an environment having Ubuntu 22.04.3 LTS with Python 3.10.12
+This repository contains the code related to the paper DeVAIC: A Tool for Security Assessment of AI-generated Code accepted for publication in Information and Software Technology (IST) journal.
 
 
 ## Description
+
+Please run on a Linux OS. 
+
+The tool was run on an environment having Ubuntu 22.04.3 LTS with Python 3.10.12
 
 **DeVAIC** (**De**tection of **V**ulnerabilities  in **AI**-generated **C**ode) is a fast static analysis tool for detecting vulnerabilities in code written in Python language. It can work even on code snippets, i.e. incomplete code due to the lack of initial import statements, single function definition, etc. It detects vulnerabilities belonging to the OWASP categories listed in the Top 10 of 2021 (i.e., **Broken Access Control**, **Cryptographic Failures**, **Injection**, **Insecure Design**, **Security Misconfiguration**, **Vulnerable and Outdated Components**, **Identification and Authentication Failures**, **Software and Data Integrity Failures**, **Security Logging and Monitoring Failures**, and **SSRF**).
 
