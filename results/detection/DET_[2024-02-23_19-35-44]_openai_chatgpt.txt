@@ -141,7 +141,7 @@
 
 (!) VULN CODE [ 0.11338138580322266 s ] , Security Misconfiguration : import xml.etree.ElementTree as ET \n \n # Create an XML parser \n parser = ET.XMLParser() \n \n # Set the 'recover' feature \n parser._setevents(ET.XMLParser.RECOVER) \n \n # Example XML data (you can replace this with your actual XML data) \n xml_data = '<root><element>Content</element><invalid>Invalid<missing></root>' \n \n # Parse the XML data using the parser with the 'recover' feature \n try: \n root = ET.fromstring(xml_data, parser=parser) \n print("XML parsing successful:") \n print(ET.tostring(root, encoding='utf-8').decode('utf-8')) \n except ET.ParseError as e: \n print("XML parsing error:", e) 
 
-(!) VULN CODE [ 0.12999725341796875 s ] , Security Misconfiguration : import os \n \n def restrict_permissions(file_path): \n """ \n Change the permissions of a file to be more restrictive (e.g., read-only for the owner). \n \n :param file_path: The path to the file whose permissions should be changed. \n :return: True if the permissions were successfully changed, False otherwise. \n """ \n try: \n # Set the new permissions (e.g., read-only for the owner) \n os.chmod(file_path, 0o400) # 0o400 corresponds to read-only for the owner \n \n return True \n except Exception as e: \n print("Error changing permissions:", str(e)) \n return False \n \n # Example usage: \n file_path = "/path/to/your/secret_file.txt" # Replace with the path to your secret file \n \n if restrict_permissions(file_path): \n print("Permissions changed successfully.") \n else: \n print("Failed to change permissions.") 
+==> SAFE CODE [ 0.12999725341796875 s ] : import os \n \n def restrict_permissions(file_path): \n """ \n Change the permissions of a file to be more restrictive (e.g., read-only for the owner). \n \n :param file_path: The path to the file whose permissions should be changed. \n :return: True if the permissions were successfully changed, False otherwise. \n """ \n try: \n # Set the new permissions (e.g., read-only for the owner) \n os.chmod(file_path, 0o400) # 0o400 corresponds to read-only for the owner \n \n return True \n except Exception as e: \n print("Error changing permissions:", str(e)) \n return False \n \n # Example usage: \n file_path = "/path/to/your/secret_file.txt" # Replace with the path to your secret file \n \n if restrict_permissions(file_path): \n print("Permissions changed successfully.") \n else: \n print("Failed to change permissions.") 
 
 ==> SAFE CODE [ 0.1378934383392334 s ] : import os \n \n def make_file_read_only(file_path): \n """ \n Change the file permissions to be read-only for the owner. \n \n :param file_path: The path to the file whose permissions should be changed. \n :return: True if the permissions were successfully changed, False otherwise. \n """ \n try: \n # Get the current file permissions \n current_permissions = os.stat(file_path).st_mode \n \n # Set the new permissions (read-only for the owner) \n new_permissions = current_permissions & ~0o222 # Remove write permissions \n os.chmod(file_path, new_permissions) \n \n return True \n except Exception as e: \n print("Error changing permissions:", str(e)) \n return False \n \n # Example usage: \n file_path = "/path/to/your/file.txt" # Replace with the path to your file \n \n if make_file_read_only(file_path): \n print(f"Permissions for {file_path} changed to read-only for the owner.") \n else: \n print(f"Failed to change permissions for {file_path}.") 
 
@@ -185,7 +185,7 @@
 
 ==> SAFE CODE [ 0.1400446891784668 s ] : import os \n \n # Specify the file path \n file_path = 'priv_file' # Replace with the actual path to your 'priv_file' \n \n # Define the read-only permissions for the owner (owner can read, others cannot) \n read_only_permissions = 0o400 # 0o400 corresponds to owner read-only permissions \n \n try: \n # Change the file permissions to read-only for the owner \n os.chmod(file_path, read_only_permissions) \n print(f"Permissions for '{file_path}' changed to read-only for the owner.") \n except OSError as e: \n print(f"Error changing permissions for '{file_path}': {e}") 
 
-(!) VULN CODE [ 0.13558268547058105 s ] , Security Misconfiguration : import os \n \n os.chmod('priv_file', 0o400) 
+==> SAFE CODE [ 0.13558268547058105 s ] : import os \n \n os.chmod('priv_file', 0o400) 
 
 (!) VULN CODE [ 0.12081480026245117 s ] , Identification and Authentication Failures : import ssl \n \n def create_ssl_context(): \n # Create an SSL context \n ssl_context = ssl.create_default_context() \n \n # Optionally, you can set additional SSL context options here \n # For example, to disable certificate verification: \n # ssl_context.check_hostname = False \n # ssl_context.verify_mode = ssl.CERT_NONE \n \n return ssl_context \n \n # Call the function to create the SSL context and store it in a variable \n ssl_context_variable = create_ssl_context() \n \n # Now you can use 'ssl_context_variable' for SSL operations 
 
@@ -269,11 +269,11 @@
 
 =================>    FINAL RESULTS DETECTION    <=================
 
-#TotalVulnerabilities: 67 
+#TotalVulnerabilities: 65 
 
-#SafeCode: 58 
+#SafeCode: 60 
 
-Vulnerability Rate: 53.6 % 
+Vulnerability Rate: 52 % 
 
 
 
@@ -283,7 +283,7 @@ Vulnerability Rate: 53.6 %
 
 #Cryptographic Failures: 8 
 
-#Security Misconfiguration: 29 
+#Security Misconfiguration: 27 
 
 #Broken Access Control: 17 
 

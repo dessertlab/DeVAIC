@@ -13,7 +13,7 @@
 
 ==> SAFE CODE [ 0.11136221885681152 s ] : def check_attack_parameter(request):\n if 'attack' in request.args:\n return 'Error: attack parameter not allowed'\n else:\n return None 
 
-(!) VULN CODE [ 0.11658906936645508 s ] , Software and Data Integrity Failures : import yaml\n\ndef load_yaml(yaml_payload):\n prod_and_qt = yaml.load(yaml_payload)\n return prod_and_qt\n\nyaml_payload = """\nproduct:\n name: iPhone\n quantity: 10\n"""\n\nprod_and_qt = load_yaml(yaml_payload)\nprint(prod_and_qt) 
+(!) VULN CODE [ 0.11658906936645508 s ] , Injection, Software and Data Integrity Failures : import yaml\n\ndef load_yaml(yaml_payload):\n prod_and_qt = yaml.load(yaml_payload)\n return prod_and_qt\n\nyaml_payload = """\nproduct:\n name: iPhone\n quantity: 10\n"""\n\nprod_and_qt = load_yaml(yaml_payload)\nprint(prod_and_qt) 
 
 (!) VULN CODE [ 0.19473600387573242 s ] , Injection, Security Misconfiguration : import os\nfrom flask import request\n\n@app.route('/url_ping', methods=['GET'])\ndef url_ping():\n exec_ping = os.system("ping -c 1 " + request.args.get('url'))\n return exec_ping 
 
@@ -137,9 +137,9 @@
 
 ==> SAFE CODE [ 0.12322878837585449 s ] : parser.setFeature(feature_name, True) 
 
-(!) VULN CODE [ 0.11586117744445801 s ] , Security Misconfiguration : def change_permissions(file):\n import os\n os.chmod(file, 0o400) 
+==> SAFE CODE [ 0.11586117744445801 s ] : def change_permissions(file):\n import os\n os.chmod(file, 0o400) 
 
-(!) VULN CODE [ 0.11358428001403809 s ] , Security Misconfiguration : import os\n\nfilename = 'myfile.txt'\n\nos.chmod(filename, 0o400) 
+==> SAFE CODE [ 0.11358428001403809 s ] : import os\n\nfilename = 'myfile.txt'\n\nos.chmod(filename, 0o400) 
 
 (!) VULN CODE [ 0.11030030250549316 s ] , Security Misconfiguration : import os\n\n# Create a temporary file\nf = open("temp.txt", "w+")\nf.close()\n\n# Change the permission of the file\nos.chmod("temp.txt", 0o755) 
 
@@ -177,9 +177,9 @@
 
 (!) VULN CODE [ 0.13994050025939941 s ] , Security Misconfiguration : import xml.etree.ElementTree as ET\n\ntree = ET.parse('access_control.xml')\nroot = tree.getroot()\n\nfor access in root.findall('access'):\n ip_address = access.find('ip_address').text\n access_type = access.find('access_type').text\n access.find('ip_address').text = '0.0.0.0'\n access.find('access_type').text = 'deny'\n\ntree.write('access_control.xml') 
 
-(!) VULN CODE [ 0.10590195655822754 s ] , Security Misconfiguration : import os \n\nos.chmod('private', 0o400) 
+==> SAFE CODE [ 0.10590195655822754 s ] : import os \n\nos.chmod('private', 0o400) 
 
-(!) VULN CODE [ 0.12105107307434082 s ] , Security Misconfiguration : import os\n\nos.chmod('priv_file', 0o400) 
+==> SAFE CODE [ 0.12105107307434082 s ]  : import os\n\nos.chmod('priv_file', 0o400) 
 
 (!) VULN CODE [ 0.13651633262634277 s ] , Security Misconfiguration : os.chmod('filename', 0o755) 
 
@@ -265,21 +265,21 @@
 
 =================>    FINAL RESULTS DETECTION    <=================
 
-#TotalVulnerabilities: 62 
+#TotalVulnerabilities: 58 
 
-#SafeCode: 61 
+#SafeCode: 65 
 
-Vulnerability Rate: 50.4065 % 
+Vulnerability Rate: 47.1545 % 
 
 
 
 =================>        OWASP CATEGORIES       <=================
 
-#Injection: 13 
+#Injection: 14 
 
 #Cryptographic Failures: 16 
 
-#Security Misconfiguration: 18 
+#Security Misconfiguration: 14 
 
 #Broken Access Control: 7 
 

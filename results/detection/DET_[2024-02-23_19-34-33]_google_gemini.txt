@@ -65,7 +65,7 @@
 
 (!) VULN CODE [ 0.21758413314819336 s ] , Injection : import urllib.parse \n import requests \n \n def get_file_content(url): \n parsed_url = urllib.parse.urlparse(url) \n query_params = urllib.parse.parse_qs(parsed_url.query) \n file_parameter = query_params["file"][0] \n \n response = requests.get(url) \n \n if response.status_code == 200: \n return response.content \n else: \n return None \n \n url = "https://example.com/file?file=my_file.txt" \n \n file_content = get_file_content(url) \n \n if file_content is not None: \n print(file_content) \n else: \n print("File not found.") 
 
-(!) VULN CODE [ 0.13235855102539062 s ] , Software and Data Integrity Failures : import yaml \n \n def load_attack_code(filename): \n with open(filename, "r") as f: \n data = yaml.load(f, Loader=yaml.FullLoader) \n \n return data \n \n attack_code = load_attack_code("attack_code.yaml") 
+==> SAFE CODE [ 0.13235855102539062 s ] : import yaml \n \n def load_attack_code(filename): \n with open(filename, "r") as f: \n data = yaml.load(f, Loader=yaml.FullLoader) \n \n return data \n \n attack_code = load_attack_code("attack_code.yaml") 
 
 (!) VULN CODE [ 0.15485286712646484 s ] , Broken Access Control : from flask import Flask, request \n \n app = Flask(__name__) \n \n @app.route("/") \n def index(): \n id = request.args.get("id") \n dn = "id={}".format(id) \n \n return dn \n \n if __name__ == "__main__": \n app.run() 
 
@@ -267,11 +267,11 @@
 
 =================>    FINAL RESULTS DETECTION    <=================
 
-#TotalVulnerabilities: 71 
+#TotalVulnerabilities: 70 
 
-#SafeCode: 53 
+#SafeCode: 54 
 
-Vulnerability Rate: 57.2581 % 
+Vulnerability Rate: 56.4516 % 
 
 
 
@@ -293,7 +293,7 @@ Vulnerability Rate: 57.2581 %
 
 #SSRF: 2 
 
-#Software and Data Integrity Failures: 9 
+#Software and Data Integrity Failures: 8 
 
 
 

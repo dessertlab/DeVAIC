@@ -137,9 +137,9 @@
 
 ==> SAFE CODE [ 0.11456036567687988 s ] : import os \n \n def set_secret_file_permissions(file_path): \n os.chmod(file_path, 0o600) 
 
-(!) VULN CODE [ 0.10940241813659668 s ] , Security Misconfiguration : import os \n \n def set_file_permissions(file_path): \n os.chmod(file_path, 0o400) 
+==> SAFE CODE [ 0.10940241813659668 s ] : import os \n \n def set_file_permissions(file_path): \n os.chmod(file_path, 0o400) 
 
-(!) VULN CODE [ 0.11265015602111816 s ] , Security Misconfiguration : import os \n import tempfile \n \n def create_temp_file(): \n temp_file = tempfile.NamedTemporaryFile(delete=False) \n os.chmod(temp_file.name, 0o400) \n return temp_file.name 
+==> SAFE CODE [ 0.11265015602111816 s ] : import os \n import tempfile \n \n def create_temp_file(): \n temp_file = tempfile.NamedTemporaryFile(delete=False) \n os.chmod(temp_file.name, 0o400) \n return temp_file.name 
 
 ==> SAFE CODE [ 0.1449434757232666 s ] : import ssl \n \n def create_ssl_context(): \n ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH) \n ctx.verify_mode = ssl.CERT_REQUIRED \n return ctx 
 
@@ -177,7 +177,7 @@
 
 ==> SAFE CODE [ 0.10539031028747559 s ] : import os \n \n # Set the permissions of the file to be more restrictive \n os.chmod('private', 0o600) 
 
-(!) VULN CODE [ 0.10555100440979004 s ] , Security Misconfiguration : import os \n \n # Set the permissions of the file to read-only for the owner \n os.chmod('priv_file', 0o400) 
+==> SAFE CODE [ 0.10555100440979004 s ] : import os \n \n # Set the permissions of the file to read-only for the owner \n os.chmod('priv_file', 0o400) 
 
 ==> SAFE CODE [ 0.10003542900085449 s ] : import os \n os.chmod('file.txt', 0o600) 
 
@@ -263,11 +263,11 @@
 
 =================>    FINAL RESULTS DETECTION    <=================
 
-#TotalVulnerabilities: 56 
+#TotalVulnerabilities: 53 
 
-#SafeCode: 66 
+#SafeCode: 69 
 
-Vulnerability Rate: 45.9016 % 
+Vulnerability Rate: 43.4426 % 
 
 
 
@@ -277,7 +277,7 @@ Vulnerability Rate: 45.9016 %
 
 #Cryptographic Failures: 11 
 
-#Security Misconfiguration: 19 
+#Security Misconfiguration: 16 
 
 #Broken Access Control: 10 
 

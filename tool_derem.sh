@@ -2094,11 +2094,21 @@ while IFS= read -r line; do
 
         ########        START KNOWN UNSAFE FUNCTIONS            ########
         #RULE 34: detection of yaml.load() function
-        echo $line | grep -q -i " yaml\.load("
+        echo $line | grep -E -q -i "yaml\.load\("
         if [ $? -eq 0 ]; then
-            if [ $soft_data -eq 0 ]; then # Toggle the category variable for the specific snippet
-                vuln="$vuln, Software and Data Integrity Failures"
-                let soft_data=soft_data+1
+            echo $line | grep -E -v -q "yaml\.load\([^,]+,[ ]*Loader=yaml\.SafeLoader\)"
+            if [ $? -eq 0 ]; then
+                echo $line | grep -E -v -q "yaml\.load\([^,]+,[ ]*Loader=yaml\.FullLoader\)"
+                if [ $? -eq 0 ]; then
+                    if [ $inj -eq 0 ]; then # Toggle the category variable for the specific snippet
+                        vuln="$vuln, Injection"
+                        let inj=inj+1
+                    fi
+                    if [ $soft_data -eq 0 ]; then # Toggle the category variable for the specific snippet
+                        vuln="$vuln, Injection, Software and Data Integrity Failures"
+                        let soft_data=soft_data+1
+                    fi
+                fi
             fi
         fi
 
@@ -2592,7 +2602,8 @@ while IFS= read -r line; do
 
         ########            START CONFIGURATION PROBLEM        ########
         #RULE 67: detection of os.chmod() function
-        echo $line | grep -E -q -i "os.chmod\(.*, 0000\)|os.chmod\(.*, 0o400\)|os.chmod\(.*, 128\)|os.chmod\(.*, 755)|os.chmod\(.*, 0o755\)|os.chmod\(.*, 777)|os.chmod\(.*, 0o777\)"
+        #echo $line | grep -E -q -i "os.chmod\(.*, 0000\)|os.chmod\(.*, 0o400\)|os.chmod\(.*, 128\)|os.chmod\(.*, 755)|os.chmod\(.*, 0o755\)|os.chmod\(.*, 777)|os.chmod\(.*, 0o777\)"
+        echo $line | grep -E -q -i "os.chmod\(.*, 0000\)|os.chmod\(.*, 755)|os.chmod\(.*, 0o755\)|os.chmod\(.*, 777)|os.chmod\(.*, 0o777\)"
         if [ $? -eq 0 ]; then
             if [ $sec_mis -eq 0 ]; then # Toggle the category variable for the specific snippet
                 vuln="$vuln, Security Misconfiguration"
