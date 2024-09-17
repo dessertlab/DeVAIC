@@ -23,13 +23,17 @@ chmod +x devaic.sh
 chmod +x tool_derem.sh
 ```
 
-### For MacOS:
+### For MacOS users:
 
 In the case of MacOS, type the following command from the shell to use the GNU-like version of grep by ensuring compatibility with the grep command:
 
 ```bash
 brew install grep
 ```
+
+### For Windows users:
+
+The Windows users can utilize the Windows Subsystem for Linux (WSL); in this case, please ensure to have the WSL installed before proceeding. 
 
 
 ## 🚀 Step 2: Run the experiments
