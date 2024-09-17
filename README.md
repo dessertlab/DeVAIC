@@ -13,6 +13,9 @@ The tool was run on an environment having Ubuntu 22.04.3 LTS with Python 3.10.12
 
 ## 🛠️ Step 1: Initial Setup
 
+> **🚨 Caution:**
+> - You must have Python 3.9 or later installed on the environment where you launch DeVAIC
+
 Make the file executable with the following commands:
 
 ```bash
