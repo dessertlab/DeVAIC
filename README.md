@@ -1,19 +1,13 @@
-# DeVAIC: A Tool for Security Assessment of AI-generated Code 
-
-This repository contains the code related to the paper "DeVAIC: A Tool for Security Assessment of AI-generated Code" accepted for publication in the **Information and Software Technology (IST)** journal.
-
-
 ## Description
-
-> Please run on a Linux OS. 
-The tool was run on an environment having Ubuntu 22.04.3 LTS with Python 3.10.12
 
 **DeVAIC** (**De**tection of **V**ulnerabilities  in **AI**-generated **C**ode) is a fast static analysis tool for detecting vulnerabilities in code written in Python language. It can work even on code snippets, i.e. incomplete code due to the lack of initial import statements, single function definition, etc. It detects vulnerabilities belonging to the OWASP categories listed in the Top 10 of 2021 (i.e., **Broken Access Control**, **Cryptographic Failures**, **Injection**, **Insecure Design**, **Security Misconfiguration**, **Vulnerable and Outdated Components**, **Identification and Authentication Failures**, **Software and Data Integrity Failures**, **Security Logging and Monitoring Failures**, and **SSRF**).
 
 
 ## 🛠️ Step 1: Initial Setup
 
-> **🚨 Caution:** You must have Python 3.9 or later installed on the environment where you launch DeVAIC
+> **🚨 Prerequisites:** 
+> - Please run on a Linux OS or macOS. For Windows users, please utilize the Windows Subsystem for Linux (WSL); in this case, please ensure to have the WSL installed before proceeding.
+> - You must have Python 3.9 or later installed on the environment where you launch DeVAIC.
 
 Make the file executable with the following commands:
 
@@ -23,17 +17,14 @@ chmod +x devaic.sh
 chmod +x tool_derem.sh
 ```
 
-### For MacOS users:
+### For macOS users:
 
-In the case of MacOS, type the following command from the shell to use the GNU-like version of grep by ensuring compatibility with the grep command:
+In the case of macOS, type the following command from the shell to use the GNU-like version of grep by ensuring compatibility with the grep command:
 
 ```bash
 brew install grep
 ```
 
-### For Windows users:
-
-The Windows users can utilize the Windows Subsystem for Linux (WSL); in this case, please ensure to have the WSL installed before proceeding. 
 
 
 ## 🚀 Step 2: Run the experiments
