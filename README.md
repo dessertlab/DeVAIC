@@ -6,7 +6,7 @@
 ## 🛠️ Step 1: Initial Setup
 
 > **🚨 Prerequisites:** 
-> - Please run on a Linux OS or macOS. For Windows users, please utilize the Windows Subsystem for Linux (WSL); in this case, please ensure to have the WSL installed before proceeding.
+> - Please run on a Linux OS or macOS. For Windows users, you can utilize the Windows Subsystem for Linux (WSL); in this case, please ensure to have the WSL installed before proceeding.
 > - You must have Python 3.8 or later installed on the environment where you launch DeVAIC.
 
 Make the file executable with the following commands:
