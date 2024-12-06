@@ -106,11 +106,12 @@ Each row in a sheet contains the manual analysis of the corresponding line in th
 If you use DeVAIC in academic context, please cite it as follows:
 
 ```bibtex
-@article{COTRONEO2024107572,
+@article{COTRONEO2025107572,
 title = {DeVAIC: A tool for security assessment of AI-generated code},
 journal = {Information and Software Technology},
+volume = {177},
 pages = {107572},
-year = {2024},
+year = {2025},
 issn = {0950-5849},
 doi = {https://doi.org/10.1016/j.infsof.2024.107572},
 url = {https://www.sciencedirect.com/science/article/pii/S0950584924001770},
