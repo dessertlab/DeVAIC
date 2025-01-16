@@ -1,0 +1,2 @@
+import yaml\n \n def load_yaml(yaml_payload):\n 	prod_and_qt = yaml.load(yaml_payload)\n 	return prod_and_qt\n \n yaml_payload = "" \n prod_and_qt = load_yaml(yaml_payload)\n print(prod_and_qt)\n 
+from flask import Flask, request, make_response\n app = Flask(__name__)\n \n @app.route("/profile")\n def profile():\n     username = request.args.get('username')\n     response = make_response(f"Hello {username}")\n     return response\n 
