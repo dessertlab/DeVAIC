@@ -1,0 +1,1482 @@
+[
+    {
+        "id": "PROXY-URL-001",
+        "description": "proxy url vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "proxy_url[ ]*=[ ]*\"http\\://user\\:pass@proxy\\.example\\.com\\:8080\"",
+        "pattern_not": [
+            "urllib\\.request\\.build_opener\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "GLOBAL-LOCK-001",
+        "description": "Lock vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "VAR_PLACEHOLDER\\.acquire\\(",
+        "pattern_not": [
+            "global[ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "threading.Lock\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "RE-MATCH-BOOL-001",
+        "description": "return re match vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "return[ ]*VAR_PLACEHOLDER\\.match\\(",
+        "pattern_not": [
+            "return[ ]*bool\\([ ]*VAR_PLACEHOLDER\\.match\\("
+        ],
+        "find_var": "re\\\\.compile\\\\('.*.example\\\\.com/'\\\\)",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "RETURN-001",
+        "description": "return vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "return[ ]*target_url\\.endswith\\(\"example.com/\"\\)",
+        "pattern_not": [
+            "re\\.compile\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "QUERY-STRING-001",
+        "description": "query string vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "if[ ]*search_pattern\\.search\\([ ]*query[ ]*\\)",
+        "pattern_not": [
+            "if[ ]*isinstance\\([ ]*query[ ]*,[ ]*str\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CREDENTIALS-001",
+        "description": "Hard coded credentials",
+        "vulnerabilities": "IDAF",
+        "pattern": "(password|psw|pass|pswd)[ ]*(=|==)[ ]*(\"|')|if[ ]*(password|psw|pass|pswd)[ ]*==[ ]*(\"|')",
+        "pattern_not": [
+            "os\\.environ\\.get\\([ ]*[A-Z0-9_]*",
+            "hmac\\.compare_digest\\(",
+            "os\\.getenv\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },{
+        "id": "COMMAND-001",
+        "description": "command vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "if[ ]*(command|cmd)[ ]*==[ ]*'",
+        "pattern_not": [
+            "if[ ]*(command|cmd)[ ]*not[ ]*in[ ]*\\["
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PARSE-001",
+        "description": "Url parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\+\\bVAR_PLACEHOLDER\\b|\\+ \\bVAR_PLACEHOLDER\\b|=\\bVAR_PLACEHOLDER\\b|= \\bVAR_PLACEHOLDER\\b|=\\bVAR_PLACEHOLDER\\b\\\\\\n|= \\bVAR_PLACEHOLDER\\b\\\\\\n|\\+\\bVAR_PLACEHOLDER\\b\\\\\\n|\\+ \\bVAR_PLACEHOLDER\\b\\\\\\n",
+        "pattern_not": [
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in \\{.*https.*if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER.*if.*\\.netloc in"
+        ],
+        "find_var": "urlparse\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PARSE-002",
+        "description": "Url parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\bVAR_PLACEHOLDER\\b:|\\bVAR_PLACEHOLDER\\b :",
+        "pattern_not": [
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in \\{.*https.*if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER.*if.*\\.netloc in"
+        ],
+        "find_var": "urlparse\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PARSE-003",
+        "description": "Url parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\(\\s*.*?\\bVAR_PLACEHOLDER\\b.*?\\s*\\)",
+        "pattern_not": [
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in \\{.*https.*if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER\\.scheme[ ]*!=[ ]*'https'",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in"
+        ],
+        "find_var": "urlparse\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PARSE-004",
+        "description": "Url parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "return \\bVAR_PLACEHOLDER\\b| \\bVAR_PLACEHOLDER\\b\\.[a-zA-Z]*\\(",
+        "pattern_not": [
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in \\{.*https.*if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER.*if.*\\.netloc in",
+            "VAR_PLACEHOLDER\\.netloc[ ]*in|VAR_PLACEHOLDER\\.netloc[ ]*not[ ]*in"
+        ],
+        "find_var": "urlparse\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PARSE-005",
+        "description": "Url parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "urlparse\\(.*?\\)\\.[a-zA-Z]*",
+        "pattern_not": [
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in \\{.*https.*if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER.*if.*\\.netloc in"
+        ],
+        "find_var": "urlparse\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PARSE-006",
+        "description": "Url parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "return[ ]*urlparse\\(",
+        "pattern_not": [
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER\\.scheme not in \\{.*https.*if[ ]*VAR_PLACEHOLDER\\.netloc in|if[ ]*VAR_PLACEHOLDER.*if.*\\.netloc in"
+        ],
+        "find_var": "urlparse\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "JSON-LOADS-001",
+        "description": "Json loads vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\+\\bVAR_PLACEHOLDER\\b|\\+ \\bVAR_PLACEHOLDER\\b|=\\bVAR_PLACEHOLDER\\b|= \\bVAR_PLACEHOLDER\\b|=\\bVAR_PLACEHOLDER\\b\\\\\\n|= \\bVAR_PLACEHOLDER\\b\\\\\\n|\\+\\bVAR_PLACEHOLDER\\b\\\\\\n|\\+ \\bVAR_PLACEHOLDER\\b\\\\\\n",
+        "pattern_not": [
+            "jsonify\\(\\{.*[ ]*\\:[ ]*VAR_PLACEHOLDER",
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "VAR_PLACEHOLDER\\.get\\(",
+            "json2xml\\.Json2xml\\([ ]*json[ ]*=[ ]*VAR_PLACEHOLDER[ ]*\\)\\.to_xml\\("
+        ],
+        "find_var": "json\\\\.loads\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "JSON-LOADS-002",
+        "description": "Json loads vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\bVAR_PLACEHOLDER\\b:|\\bVAR_PLACEHOLDER\\b :",
+        "pattern_not": [
+            "jsonify\\(\\{.*[ ]*\\:[ ]*VAR_PLACEHOLDER",
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*not[ ]*isinstance\\([ ]*VAR_PLACEHOLDER[ ]*,[ ]*list[ ]*\\)|if[ ]*isinstance\\([ ]*VAR_PLACEHOLDER[ ]*,[ ]*list[ ]*\\)"
+        ],
+        "find_var": "json\\\\.loads\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "JSON-LOADS-003",
+        "description": "Json loads vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(([^()]*\\bVAR_PLACEHOLDER\\b[^()]*)\\)",
+        "pattern_not": [
+            "jsonify\\(.*VAR_PLACEHOLDER",
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "json2xml\\.Json2xml\\([ ]*json[ ]*=[ ]*VAR_PLACEHOLDER[ ]*\\)\\.to_xml\\(",
+            "DataModel\\([ ]*VAR_PLACEHOLDER[ ]*\\)",
+            "if[ ]*not[ ]*isinstance\\([ ]*VAR_PLACEHOLDER[ ]*,[ ]*list[ ]*\\)|if[ ]*isinstance\\([ ]*VAR_PLACEHOLDER[ ]*,[ ]*list[ ]*\\)"
+        ],
+        "find_var": "json\\\\.loads\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "JSON-LOADS-004",
+        "description": "Json loads vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "return[ ]*\\bVAR_PLACEHOLDER\\b| \\bVAR_PLACEHOLDER\\b\\.[a-zA-Z]*\\(",
+        "pattern_not": [
+            "jsonify\\(\\{.*[ ]*\\:[ ]*VAR_PLACEHOLDER",
+            "if.*\\.match\\(|if obj_match\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|escape_rdn\\([ ]*VAR_PLACEHOLDER",
+            "VAR_PLACEHOLDER\\.get\\(",
+            "isinstance\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "json\\\\.loads\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "MARKUP-001",
+        "description": "Markup unescape",
+        "vulnerabilities": "INJC",
+        "pattern": "Markup\\(|Markup\\.unescape\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "EMAIL-REGEX-001",
+        "description": "email regex vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "email_regex[ ]*=[ ]*re\\.compile\\(r\"^\\(\\.\\*\\)@\\(\\.\\*\\)\\.\\(\\.\\*\\)$\"\\)",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URL-PATTERN-001",
+        "description": "url pattern vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "url_pattern[ ]*=[ ]*re\\.compile\\(.*\\(\\[a-zA-Z0-9-\\]+.*\\[a-zA-Z\\]\\{2,6\\}\\(.*\\).*\\)",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CSV-WRITER-001",
+        "description": "Csv writer vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "(import csv|csv\\.writer)",
+        "pattern_not": [
+            "os\\.path\\.exists\\(",
+            "os\\.path\\.isfile\\(",
+            "os\\.path\\.join\\(.*if[ ]*os\\.path\\.commonprefix\\(",
+            "os\\.path\\.abspath\\(.*os\\.path\\.abspath\\(.*os\\.path\\.commonpath\\(",
+            "os\\.path\\.abspath\\(.*\\.startswith\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "YAML-LOAD-001",
+        "description": "Yaml load vulnerability",
+        "vulnerabilities": "INJC, SDIF",
+        "pattern": "yaml\\.load\\(|yaml\\.full_load\\(|jw\\.util\\.FromString\\(",
+        "pattern_not": [
+            "yaml\\.load\\([^,]+,[ ]*Loader[ ]*=[ ]*yaml\\.SafeLoader[ ]*\\)",
+            "yaml\\.load\\([^,]+,[ ]*Loader[ ]*=[ ]*yaml\\.FullLoader[ ]*\\)",
+            "yaml\\.safe_load\\(",
+            "class[ ]*Loader\\(.*yaml\\.load\\([^,]+,[ ]*Loader[ ]*=[ ]*Loader[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "YAML-DUMP-001",
+        "description": "Yaml load vulnerability",
+        "vulnerabilities": "INJC, SDIF",
+        "pattern": "yaml\\.dump\\(",
+        "pattern_not": [
+            "yaml\\.safe_dump\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TRACEBACK-FORMAT-EXEC-001",
+        "description": "traceback formtat_exec vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "traceback.format_exc\\(\\)|print\\(VAR_PLACEHOLDER\\)|print\\(VAR_PLACEHOLDER\\)|print\\( VAR_PLACEHOLDER\\)|print\\(VAR_PLACEHOLDER \\)|print\\( VAR_PLACEHOLDER \\)",
+        "pattern_not": [
+        ],
+        "find_var": "traceback.format_exc\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TIME-CLOCK-001",
+        "description": "Time clock vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "time.clock\\(|clock\\(",
+        "pattern_not": [
+            "[a-zA-Z0-9]clock\\(",
+            "def clock\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "FUNCTION-001",
+        "description": "function vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*function\\([ ]*x[ ]*\\).*return[ ]*x[ ]*\\*[ ]*x",
+        "pattern_not": [
+            "if[ ]*not[ ]*isinstance\\([ ]*x[ ]*,[ ]*int[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "ARG-TYPE-001",
+        "description": "argument type vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def [ ]*\\w+\\(VAR_PLACEHOLDER[ ]*:[ ]*int",
+        "pattern_not": [
+            "isinstance\\(VAR_PLACEHOLDER"
+        ],
+        "find_var": "[ ]*:[ ]*int",
+        "remediation": []
+    },
+    {
+        "id": "LOAD-USER-001",
+        "description": "load user parameter vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*load_user\\(",
+        "pattern_not": [
+            "if.*is[ ]*not[ ]*None[ ]*and[ ]*not[ ]*isinstance\\(.*list[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ARGPARSE-001",
+        "description": "load user parameter vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER\\.add_argument\\(.*required[ ]*=[ ]*True",
+        "pattern_not": [
+        ],
+        "find_var": "argparse\\\\.ArgumentParser\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "MINIRACER-EVAL-001",
+        "description": "miniracer eval vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER\\.eval\\(",
+        "pattern_not": [
+            "if[ ]*isinstance\\([ ]*[a-zA-Z0-9_]*[ ]*,[ ]*str[ ]*\\)[ ]*and[ ]*len\\([ ]*[a-zA-Z0-9_]*[ ]*\\)[ ]*<"
+        ],
+        "find_var": "py_mini_racer\\\\.MiniRacer\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "MINIRACER-EVAL-001",
+        "description": "miniracer eval vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "librelogo\\.execute\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CREATE-OBJECT-001",
+        "description": "create object vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "context\\.portal_skins\\.custom\\.createObject\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ID-TOKEN-ALG-001",
+        "description": "ID token alg vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "if[ ]*id_token\\[[ ]*'alg'[ ]*\\][ ]*==[ ]*'none'",
+        "pattern_not": [
+            "raise[ ]*ValueError\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "FILTER-READ-001",
+        "description": " vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "if[ ]*VAR_PLACEHOLDER[ ]*is[ ]*None"
+        ],
+        "find_var": "filter\\\\.read\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "CLIENT-001",
+        "description": "client vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*dask\\.distributed[ ]*import[ ]*Client",
+        "pattern_not": [
+            "LocalCluster\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SCHEMA-PARSER-001",
+        "description": "schema parser vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "SchemaParser\\(",
+        "pattern_not": [
+            " re\\.match\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "USERID-001",
+        "description": "userID vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "\\.sanitize_user_id\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "environ\\\\.get\\\\([ ]*'HTTP_X_USER_ID'[ ]*\\\\)",
+        "remediation": []
+    },
+    {
+        "id": "NONCE-001",
+        "description": "nonce vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "request\\.get\\([ ]*'nonce'[ ]*\\)",
+        "pattern_not": [
+            "re\\.fullmatch\\(|isinstance\\(.*str\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "REQUEST-GET-DATA-SERVER-001",
+        "description": "request get data vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "self\\.request\\.get\\([ ]*'data'[ ]*,[ ]*None\\)",
+        "pattern_not": [
+            "self\\.sanitize_input\\([ ]*data[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PERMISSION-001",
+        "description": "permission vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.context\\.restrictedTraverse\\(",
+        "pattern_not": [
+            "if[ ]*not[ ]*getSecurityManager\\(.*\\)\\.checkPermission\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "VAULT_CLIENT-001",
+        "description": "vault client vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "get_client\\(.*render[ ]*=[ ]*True",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "COOKIE-LOAD-001",
+        "description": "coockie load vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\bVAR_PLACEHOLDER\\b\\.load\\(",
+        "pattern_not": [
+            "try\\:.*VAR_PLACEHOLDER\\.load\\(.*except|VAR_PLACEHOLDER\\.load\\(.*except"
+        ],
+        "find_var": "http\\\\.cookies\\\\.SimpleCookie\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "RAW-CALL-001",
+        "description": "raw_call vulnerability: missing safety checks",
+        "vulnerabilities": "SDIF",
+        "pattern": "raw_call\\(",
+        "pattern_not": [
+            "raw_call\\([^)]*(revert_on_failure\\s*=\\s*True)[^)]*(max_outsize\\s*=\\s*0)[^)]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "DEMOCRITUS-001",
+        "description": "fake library vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "democritus",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ENCODE-DECODE-001",
+        "description": "encode decode vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.encode\\(|\\.decode\\(",
+        "pattern_not": [
+            "def[ ]*encode\\(|def[ ]*decode\\(|jwt\\.decode\\(",
+            "try\\:.*.encode\\(.*except|try\\:.*.decode\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "REPR-001",
+        "description": "repr vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "repr\\(",
+        "pattern_not": [
+            "[a-zA-Z0-9_]repr\\(",
+            "try\\:.*repr\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "MARKDOWN2-001",
+        "description": "markdown2 vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "markdown2.markdown\\(",
+        "pattern_not": [
+            "re\\.match\\(",
+            "markdown2\\.markdown\\([^)]*extras\\s*=\\s*\\[\\s*\"escape\""
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "BUGZILLA-001",
+        "description": "bugzilla vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "import[ ]*bugzilla",
+        "pattern_not": [
+            "bugzilla\\.Bugzilla\\([^)]*ssl_context\\s*="
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "UJSON-LOADS-001",
+        "description": "ujson loads vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "ujson\\.loads\\(",
+        "pattern_not": [
+            "try\\:.*ujson\\.loads\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "UJSON-DUMPS-001",
+        "description": "ujson loads vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "ujson\\.dumps\\(",
+        "pattern_not": [
+            "if[ ]*indent[ ]*is[ ]*not[ ]*None[ ]*and[ ]*\\([ ]*indent[ ]*<[ ]*0[ ]*or[ ]*indent[ ]*>[ ]*100[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "VALIDATE-001",
+        "description": "validate function vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*validate\\([ ]*self[ ]*,[ ]*value[ ]*\\)",
+        "pattern_not": [
+            "is_accessible\\([ ]*value[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SHELL-SANITIZE-001",
+        "description": "shell input snitize vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "shell_quote\\(",
+        "pattern_not": [
+            "shlex\\.quote\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "BSON-DECODE-001",
+        "description": "bson decode vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "bson\\.decode_all\\(",
+        "pattern_not": [
+            "try\\:.*bson\\.decode_all\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "BSON-ENCODE-001",
+        "description": "bson encode vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "bson\\.BSON\\.encode\\(",
+        "pattern_not": [
+            "try\\:.*bson\\.BSON\\.encode\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "NONREENTRANT-001",
+        "description": "nonreentrant vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "@nonreentrant\\(\\s*\\\"\\s*\\\"\\s*\\)",
+        "pattern_not": [
+            "@nonreentrant\\(\\s*\\\"\\s*lock\\s*\\\"\\s*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ETH-ABI-DECODE-001",
+        "description": "eth abi decode single vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "_abi_decode\\(",
+        "pattern_not": [
+            "try\\:.*decode_single\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "EXCEL-INJC-001",
+        "description": "exel injection vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "to_csv\\(",
+        "pattern_not": [
+            "f\\\"'\\{str\\([^}]*\\)\\}\"\\s*if\\s*isinstance\\([^,]*,\\s*str\\)\\s*and\\s*[^.]*\\.startswith\\('\\='\\)\\s*else\\s*[^\\s]+\\s*for\\s*[^\\s]+\\s*in\\s*[^\\s]+\\]",
+            "html\\.unescape\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HTTPX-URL-001",
+        "description": "httpx url vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "httpx\\.URL\\(",
+        "pattern_not": [
+            "try\\:.*httpx\\.URL\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PSUTIL-001",
+        "description": "psutil vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.cpu_times\\(",
+        "pattern_not": [
+            "try\\:.*\\.cpu_times\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HTML-EXPORTER-001",
+        "description": "html exporter vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "HTMLExporter\\(",
+        "pattern_not": [
+            "\\.register_preprocessor\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PKITOKEN-001",
+        "description": "token expired vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "datetime\\.now\\(\\)\\s*[+-]\\s*timedelta\\(\\s*seconds\\s*=\\s*\\d+\\s*\\)",
+        "pattern_not": [
+            "from[ ]*keystoneclient\\.exceptions[ ]*import[ ]*Unauthorized"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CVXOPT-001",
+        "description": "cvxopt vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "cvxopt\\.cholmod\\.get_factor\\(|cvxopt\\.cholmod\\.solve\\(|cvxopt\\.cholmod\\.spsolve\\(",
+        "pattern_not": [
+            "isinstance\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "BOTBUILDER-CORE-TURNCONTEXT-001",
+        "description": "botbuilder core turncontext vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*botbuilder\\.core[ ]*import[^}]*TurnContext",
+        "pattern_not": [
+            "type=ActivityTypes\\.message"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HTTP-MIDDLEWARE-001",
+        "description": "http middlware vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "from\\s+fastapi\\s+import\\s+([^#\\n]*\\bFastAPI\\b[^#\\n]*\\bResponse\\b|[^#\\n]*\\bResponse\\b[^#\\n]*\\bFastAPI\\b)|VAR_PLACEHOLDER",
+        "pattern_not": [
+            "VAR_PLACEHOLDER\\.middleware\\("
+        ],
+        "find_var": "FastAPI\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "FEEDPARSER-001",
+        "description": "zipfile extract all vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*feedparser",
+        "pattern_not": [
+            "allow_doctype[ ]*=[ ]*False"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CODE-001",
+        "description": "zipfile extract all vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "code\\.interact\\([ ]*local[ ]*=[ ]*locals\\(\\)\\)",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "DEBUG-001",
+        "description": "Debug true vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "from[ ]*werkzeug\\.serving[ ]*import[ ]*run_simple",
+        "pattern_not": [
+            "run_simple\\([^)]*(use_reloader\\s*=\\s*False).*?(use_debugger\\s*=\\s*False)|run_simple\\([^)]*(use_debugger\\s*=\\s*False).*?(use_reloader\\s*=\\s*False)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "DEBUG-002",
+        "description": "Debug true vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "Starlette\\(.*debug[ ]*=[ ]*True",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "FETCH-DATA-001",
+        "description": "fetch data vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "def[ ]*fetch_data\\([ ]*url",
+        "pattern_not": [
+            "if[ ]*not[ ]*url\\.startswith\\(|if[ ]*url\\.startswith\\(|assert[ ]*url\\.startswith\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HTTPLIB2-HTTP-001",
+        "description": "fetch data vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "httplib2\\.Http\\(",
+        "pattern_not": [
+            "httplib2\\.Http\\(.*disable_ssl_certificate_validation[ ]*=[ ]*False"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ASYNCUA-SERVER-001",
+        "description": "fetch data vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "from[ ]*asyncua[ ]*import[ ]*Server",
+        "pattern_not": [
+            "\\.set_security_policy\\(.*ua\\.SecurityPolicyType\\.Basic256Sha512_SignAndEncrypt.*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ASYNC-RESULT-001",
+        "description": "async result vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "json\\.loads\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "AsyncResult\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "AWSIOT-DEVICE-001",
+        "description": "awsiot device vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "VAR_PLACEHOLDER\\.append_default_trust_store\\(",
+        "pattern_not": [
+        ],
+        "find_var": "aws_iot\\\\.device_sdk\\\\.TLSContextOptions\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "AWSIOT-DEVICE-002",
+        "description": "awsiot device vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "awsiot\\.device\\.Device\\(",
+        "pattern_not": [
+            "awsiot\\.device\\.Device\\(.*cert[ ]*=.*key[ ]*=.*ca[ ]*=.*clean_session[ ]*=False.*keep_alive[ ]*="
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "GNUPG-GPG-001",
+        "description": "Gnupg gpg vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "gnupg\\.GPG\\(",
+        "pattern_not": [
+            "gnupg\\.GPG\\(.*passphrase[ ]*="
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "GNUPG-GPG-002",
+        "description": "Gnupg gpg vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "gnupg\\.GPG\\(.*passphrase[ ]*=",
+        "pattern_not": [
+            "os\\.getenv\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PYDASH-INVOKE-001",
+        "description": "pydash invoke vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "pydash\\.objects\\.invoke\\(",
+        "pattern_not": [
+            "path\\.startswith\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "NBDIMEWIDGET-001",
+        "description": "nbdimewidget vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "NbdimeWidget\\(",
+        "pattern_not": [
+            "html\\.escape\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "BLOB-SERVICE-CLIENT-001",
+        "description": "blog service client connection vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "BlobServiceClient\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ECRECOVER-001",
+        "description": "ecrecover vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "ecrecover\\(",
+        "pattern_not": [
+            "assert.*!=[ ]*ZERO_ADDRESS"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PYBIND11-001",
+        "description": "pybind11 vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "pybind11\\.cast\\(",
+        "pattern_not": [
+            "isinstance\\([^)]*\\.Tensor"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TENSORFLOW-CONSTANT-001",
+        "description": "tensorflow constant vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.constant\\(",
+        "pattern_not": [
+            "\\.constant\\([^)]*dtype[ ]*=[^)]\\.int8|\\.constant\\([^)]*dtype[ ]*=[^)]\\.int16|\\.constant\\([^)]*dtype[ ]*=[^)]\\.int32|\\.constant\\([^)]*dtype[ ]*=[^)]\\.int64|\\.constant\\([^)]*dtype[ ]*=[^)]\\.float16|\\.constant\\([^)]*dtype[ ]*=[^)]\\.float32|\\.constant\\([^)]*dtype[ ]*=[^)]\\.float64"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TENSORFLOW-QUANTIZE-001",
+        "description": "tensorflow quantize vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.quantize\\(",
+        "pattern_not": [
+            "\\.disable_eager_execution\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TENSORFLOW-CONVERTER-001",
+        "description": "tensorflow converter vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "VAR_PLACEHOLDER\\.target_spec\\.supported_ops[ ]*=[ ]*\\[\\w+\\.lite\\.OpsSet\\.TFLITE_BUILTINS\\]"
+        ],
+        "find_var": "\\\\w+\\\\.lite\\\\.TFLiteConverter\\\\.from_keras_model\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "TENSORFLOW-MODEL-LOAD-001",
+        "description": "tensorflow model load vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "saved_model\\.load\\(",
+        "pattern_not": [
+            "os\\.path\\.exists\\(|os\\.path\\.isdir\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TENSORFLOW-RAGGED-COSTANT-001",
+        "description": "tensorflow ragged costant vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "ragged\\.constant\\(",
+        "pattern_not": [
+            "if[ ]*len\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TENSORFLOW-IMMUTABLE-CONST-001",
+        "description": "tensorflow immutable const vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.raw_ops\\.ImmutableConst\\(",
+        "pattern_not": [
+            "if[ ]*\\w+[ ]*in[ ]*\\["
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TENSORFLOW-QUATIZE-BATCH-NORM-001",
+        "description": "tensorflow quantize vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "raw_ops\\.QuantizedBatchNormWithGlobalNormalization\\(",
+        "pattern_not": [
+            "\\.reduce_any\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TENSORFLOW-SDCA-OPTIMIZER-001",
+        "description": "tensorflow sdca optimizer vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.raw_ops\\.SdcaOptimizer\\(",
+        "pattern_not": [
+            "\\.raw_ops\\.SdcaOptimizer\\(.*dual_coefficients[ ]*=[ ]*\\[[ ]*\\].*primal_loss[ ]*=[ ]*\\[[ ]*\\]|\\.raw_ops\\.SdcaOptimizer\\(.*primal_loss[ ]*=[ ]*\\[[ ]*\\].*dual_coefficients[ ]*=[ ]*\\[[ ]*\\]"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "PYARROW-ARRAY-001",
+        "description": "pyarrow array vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*pyarrow[ ]*as[ ]*pa",
+        "pattern_not": [
+            "if[ ]*\\w+[ ]*is[ ]*not[ ]*None[ ]*else"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "INSTALL-WHEEL-001",
+        "description": "install wheel vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*install_wheel\\(",
+        "pattern_not": [
+            "if[ ]*not[ ]*isinstance\\([ ]*wheel_name[ ]*,[ ]*str[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HANDLE-APM-DATA-001",
+        "description": "handle apm data function vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*handle_apm_data\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "ASYNCIO-001",
+        "description": "asyncio vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "asyncio\\.get_event_loop\\(\\)\\.run_forever\\(\\)",
+        "pattern_not": [
+            "if[ ]*len\\([ ]*chunk[ ]*\\)[ ]*>|if[ ]*len\\([ ]*chunk[ ]*\\)[ ]*<"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PYARROW-TABLE-001",
+        "description": "pyarrow table vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.read_table\\(",
+        "pattern_not": [
+            "\\.to_numpy\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TUF-REPOSITORYTOOL-001",
+        "description": "tuf repository tool vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*tuf[ ]*import[ ]*repository_tool",
+        "pattern_not": [
+            "\\.verify_root\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "COMMANDS-BOT-001",
+        "description": "commands Bot vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "commands\\.Bot\\(",
+        "pattern_not": [
+            "if[ ]*\\w+\\.author\\.id[ ]*not[ ]*in|if[ ]*\\w+\\.author\\.id[ ]*in"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SCAPY-001",
+        "description": "scapy vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "RADIUSAttrPacketListField",
+        "pattern_not": [
+            "try\\:.*super\\(\\).*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PEEK-001",
+        "description": "peek vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "if[ ]*VAR_PLACEHOLDER[ ]*not[ ]*in[ ]*\\(.*b[ ]*\\\"\\\""
+        ],
+        "find_var": "\\\\w+\\\\.peek\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "VALIDATORS-URL-001",
+        "description": "validators url vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "validators\\.url\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "FRAPPE-GETLIST-001",
+        "description": "frappe get list vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "frappe\\.get_list\\(",
+        "pattern_not": [
+            "frappe\\.get_meta\\(|frappe\\.get_fieldnames\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TUPLE-DIM-001",
+        "description": "tuple dim vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "tuple\\(",
+        "pattern_not": [
+            "if[ ]*len\\(",
+            "assert",
+            "[a-zA-Z0-9_]tuple\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "REQUESTS-SESSION-001",
+        "description": "requests session vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER\\.get\\(",
+        "pattern_not": [
+            "VAR_PLACEHOLDER\\.trust_env[ ]*=[ ]*False"
+        ],
+        "find_var": "requests\\\\.Session\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "XMLRPC-SERVER-001",
+        "description": "requests session vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "SimpleXMLRPCServer\\(",
+        "pattern_not": [
+            "import[ ]*defusedxml\\.xmlrpc",
+            "from[ ]*xmlrpc\\.server[ ]*import[ ]*SimpleXMLRPCServer",
+            "import[ ]*xmlrpc\\.server"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "FILE-TRANSFER-TYPE-001",
+        "description": "file transfer type vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*get_file_transfer_type\\(",
+        "pattern_not": [
+            "if[ ]*len\\([ ]*input_string[ ]*\\)[ ]*>[ ]*100"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "URL-AUTENTICATION-001",
+        "description": "url autentication vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*authenticate\\([ ]*self[ ]*,[ ]*sso_url[ ]*\\)",
+        "pattern_not": [
+            "urlparse\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "REQUEST-META-GET-001",
+        "description": "requests session vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "if[ ]*VAR_PLACEHOLDER[ ]*in|if[ ]*VAR_PLACEHOLDER[ ]*not[ ]*in",
+            "if.*in|if.*not[ ]*in"
+        ],
+        "find_var": "request\\\\.META\\\\.get\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "IDNA-DECODE-001",
+        "description": "idna decode vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "idna\\.decode\\(",
+        "pattern_not": [
+            "[a-zA-Z0-9_.]idna\\.decode\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HOSTNAME-CHECK-001",
+        "description": "hostname check vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*hostname_check\\([ ]*cert[ ]*,[ ]*hostname[ ]*\\)",
+        "pattern_not": [
+            "ssl\\.match_hostname\\([ ]*cert[ ]*,[ ]*hostname[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CHUNK-SIZE-001",
+        "description": "chunk size vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "chunk_size[ ]*=[ ]*int\\([ ]*chunk_size[ ]*,[ ]*16[ ]*\\)",
+        "pattern_not": [
+            "if[ ]*chunk_size[ ]*>[ ]*MAX_CHUNK_SIZE"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "MBC-DECODE-001",
+        "description": "mbc decode vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "mbc_support\\.test_decode_refex\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TYPEDAST-AST3-001",
+        "description": "typed_ast ast3 vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*typed_ast[ ]*import[ ]*ast3",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "GLOBE-001",
+        "description": "globe vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "glob\\.glob\\(",
+        "pattern_not": [
+            "os\\.path\\.isfile\\(|os\\.access\\(.*os\\.R_OK"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SHUTIL-001",
+        "description": "shutil vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "shutil\\.make_archive\\(|shutil\\.unpack_archive\\(",
+        "pattern_not": [
+            "os\\.path\\.basename\\(|os\\.path\\.isfile\\(|os\\.path\\.abspath\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HTTP-COOKIEJAR-001",
+        "description": "http cookiejar vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "http\\.cookiejar\\.CookieJar\\(",
+        "pattern_not": [
+            "Cookie\\(.*secure[ ]*=[ ]*True.*expires[ ]*=[ ]*None.*discard[ ]*=[ ]*False.*rest=\\{[ ]*'HttpOnly'[ ]*:[ ]*None[^}]*'SameSite'[ ]*:[ ]*'Strict'[ ]*\\}"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SYS-PATH-INSERT-001",
+        "description": "sys path insert vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "sys\\.path\\.insert\\(",
+        "pattern_not": [
+            "os\\.path\\.abspath\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CGI-HANDLER-001",
+        "description": "cgi handler vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "if[ ]*\\\"\\w+\\\"[ ]*in[ ]*os\\.environ"
+        ],
+        "find_var": "cgi\\\\.CGIHandler\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "REQUEST-001",
+        "description": "request GET get vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "escape\\([ ]*VAR_PLACEHOLDER",
+            "os\\.path\\.join\\(.*VAR_PLACEHOLDER"
+        ],
+        "find_var": "request\\\\.GET\\\\.get\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "REQUEST-002",
+        "description": "request GET get vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "escape\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "request\\\\.read\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "REQUEST-003",
+        "description": "request files vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "lxml\\.etree\\.fromstring\\([ ]*VAR_PLACEHOLDER",
+        "pattern_not": [
+        ],
+        "find_var": "request\\\\.files\\\\[",
+        "remediation": []
+    },
+    {
+        "id": "REQUEST-003",
+        "description": "request files vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "lxml\\.etree\\.fromstring\\([ ]*VAR_PLACEHOLDER",
+        "pattern_not": [
+        ],
+        "find_var": "request\\\\.args\\\\[",
+        "remediation": []
+    },
+    {
+        "id": "LXML-ETREE-003",
+        "description": "lxml etree vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*lxml[ ]*import[ ]*etree",
+        "pattern_not": [
+            "etree\\.XMLParser\\(.*dtd_validation[ ]*=[ ]*True.*resolve_entities[ ]*=[ ]*False.*no_network[ ]*=[ ]*True"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "MAIN-DIRECTORY-001",
+        "description": "main directory vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*rdflib\\.tools\\.rdf2dot[ ]*import[ ]*main",
+        "pattern_not": [
+            "os\\.chdir\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SHELLCRAFT-001",
+        "description": "shellcraft vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "shellcraft\\.sh\\([ ]*\\)",
+        "pattern_not": [
+            "Environment\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HANDLE-ACCEPT-001",
+        "description": "lxml etree vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*handle_accept\\([ ]*self[ ]*\\)",
+        "pattern_not": [
+            "if[ ]*conn[ ]*is[ ]*not[ ]*None"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "EXPAND-TABS-001",
+        "description": "expand tabs vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "input_string\\.expandtabs\\(",
+        "pattern_not": [
+            "if[ ]*not[ ]*isinstance\\([ ]*tabsize[ ]*,[ ]*int[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CBOR2-001",
+        "description": "cbor2 vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "if[ ]*len\\(.*VAR_PLACEHOLDER"
+        ],
+        "find_var": "cbor2\\\\.loads\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "DIVISION-ZERO-001",
+        "description": "division by zero",
+        "vulnerabilities": "SDIF",
+        "pattern": "total_score[ ]*/[ ]*total_count",
+        "pattern_not": [
+            "if[ ]*total_count[ ]*==[ ]*0",
+            "if[ ]*total_count[ ]*!=[ ]*0"
+        ],
+        "find_var": "",
+        "remediation": []
+    }
+         
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "id": "WEBSOCKET-SERVE-001",
+        "description": "websocket serve vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "websockets\\.serve\\(",
+        "pattern_not": [
+            "websockets\\.serve\\([^)]*compression[ ]*=[ ]*None"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "WEBSOCKET-CLOSE-001",
+        "description": "websocket close vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "websocket\\.WebSocketWSGI",
+        "pattern_not": [
+            "\\.close\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    }
+]

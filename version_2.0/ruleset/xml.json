@@ -1,0 +1,68 @@
+[
+    {
+        "id": "PICKLE-FAILURE-001",
+        "description": "Failures",
+        "vulnerabilities": "SDIF",
+        "pattern": "pickle\\.loads\\(|pickle\\.load\\(|pickle\\.dump\\(|pickle\\.dumps\\(|pickle\\.Unpickler\\(|cPickle\\.loads\\(|cPickle\\.load\\(|cPickle\\.dump\\(|cPickle\\.dumps\\(|cPickle\\.Unpickler\\(",
+        "pattern_not": [
+            "^(?!cPickle)[a-zA-Z0-9_]pickle",
+            "[a-zA-Z0-9_]cPickle",
+            "assert[ ]*isinstance\\([ ]*obj[ ]*,[ ]*\\([ ]*dict[ ]*,[ ]*list[ ]*,[ ]*tuple[ ]*,[ ]*set[ ]*,[ ]*str[ ]*,[ ]*int[ ]*,[ ]*float[ ]*,[ ]*type\\([ ]*None[ ]*\\)[ ]*\\)\\)",
+            "os\\.path\\.join\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TABLIB-DATABOOK-LOAD-001",
+        "description": "Failures",
+        "vulnerabilities": "SDIF",
+        "pattern": "tablib\\.Databook\\(\\)\\.load\\(",
+        "pattern_not": [
+            "tablib\\.Databook\\(\\)\\.load\\(.*loader[ ]*=[ ]*yaml\\.SafeLoader"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "BIND-FUNCTION-001",
+        "description": "Bind function",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\.bind\\(\\(('0\\.0\\.0\\.0'|'').*?\\)\\)",
+        "pattern_not": [
+            "[a-zA-Z0-9_]bind\\(\\(('0.0.0.0'|''),.*\\)\\)",
+            "\\.bind\\(\\([ ]*'0\\.0\\.0\\.0'[ ]*,[ ]*4433[ ]*\\)\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "XML-PARSER-001",
+        "description": "Parser vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "etree\\.XMLParser\\(",
+        "pattern_not": [
+            "resolve_entities[ ]*=[ ]*False",
+            "no_network[ ]*=[ ]*True",
+            "dtd_validation[ ]*=[ ]*True"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "LXML-CLEANER-001",
+        "description": "lxml cleaner vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "from[ ]*lxml\\.html\\.clean[ ]*import[ ]*Cleaner",
+        "pattern_not": [
+            "scripts[ ]*=[ ]*True[^)]*javascript[ ]*=[ ]*True|javascript[ ]*=[ ]*True[^)]*scripts[ ]*=[ ]*True"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    }
+]

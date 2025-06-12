@@ -1,0 +1,62 @@
+[
+    {
+        "id": "LOGORU-LOGGER-001",
+        "description": "loguru logger vulnerability",
+        "vulnerabilities": "SLMF",
+        "pattern": "from loguru import logger",
+        "pattern_not": [    
+            "logger\\.add\\([^)]*level[ ]*=[ ]*\"INFO\""
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "LOGGING-INFO-001",
+        "description": "logging vulnerability",
+        "vulnerabilities": "SLMF",
+        "pattern": "logging\\.info\\(",
+        "pattern_not": [    
+            "logging\\.info\\([\"'].*%s[\"'][ ]*,.*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "LOGGING-PASSWORD-001",
+        "description": "logging password vulnerability",
+        "vulnerabilities": "SLMF",
+        "pattern": "logging\\.debug\\([^)]*password|logging\\.debug\\([^)]*Password",
+        "pattern_not": [    
+            "'*'[ ]*[ ]*len\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "LOGGING-WARNING-001",
+        "description": "logging warning vulnerability",
+        "vulnerabilities": "SLMF",
+        "pattern": "logger\\.warning\\(",
+        "pattern_not": [    
+            "re\\.sub\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "LOGGING-REQUEST-001",
+        "description": "logging request vulnerability",
+        "vulnerabilities": "SLMF",
+        "pattern": "async[ ]*def[ ]*log_requests\\(",
+        "pattern_not": [    
+            "logging\\.Filter"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    }
+]

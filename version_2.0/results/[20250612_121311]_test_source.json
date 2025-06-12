@@ -1,0 +1,28 @@
+[
+    {
+        "snippet_number": 1,
+        "original_code": "from flask import Flask, request, make_response\\n \\n app = Flask(__name__)\\n \\n @app.route('/')\\n def greet():\\n     name = request.args.get('name',\\\")\\n     response = make_response(f'<h1>Hello {name}</h1>')\\n     return response\\n \\n if __name__ == '__main__':\\n     app.run(debug=True)",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Broken Access Control", "Security Misconfiguration"],
+        "comments": [],
+        "execution_time": "2.0608",
+        "details": [
+            {
+                "rule_id": "REQUEST-ARGS_GET-005",
+                "vulnerabilities": ["Security Misconfiguration"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "REQUEST-ARGS_GET-008",
+                "vulnerabilities": ["Security Misconfiguration"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "DEBUG-TRUE-001",
+                "vulnerabilities": ["Security Misconfiguration"],
+                "comment": "NULL"
+            }
+        ]
+
+    }
+]

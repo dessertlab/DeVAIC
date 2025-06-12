@@ -1,0 +1,72 @@
+[
+    {
+        "id": "IMG-001",
+        "description": "img load vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\bVAR_PLACEHOLDER\\b\\.load\\(",
+        "pattern_not": [
+            "try\\:.*VAR_PLACEHOLDER\\.load\\(.*except"
+        ],
+        "find_var": "Image.open\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "IMG-OPEN-001",
+        "description": "img load vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "Image.open\\(",
+        "pattern_not": [
+            "try.*Image.open\\(",
+            "Image.open\\([^\\)]*limit\\s*="
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "BYTE-IMG-001",
+        "description": "byte img vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "image_buffer[ ]*=[ ]*bytearray\\([ ]*image_buffer_size[ ]*\\)",
+        "pattern_not": [
+            "if[ ]*image_buffer_size[ ]*<[ ]*0[ ]*or[ ]*image_buffer_size[ ]*>"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PROCESS-IMG-001",
+        "description": "process img vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "processed_image[ ]*=[ ]*image_data\\[[ ]*:[ ]*zsize[ ]*\\]",
+        "pattern_not": [
+            "if[ ]*zsize[ ]*<=[ ]*0[ ]*or[ ]*zsize[ ]*>[ ]*len\\([ ]*image_data[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "IMAGEOP-001",
+        "description": "imageop vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "imageop\\.some_image_operation\\([ ]*image_data[ ]*\\)",
+        "pattern_not": [
+            "if[ ]*len\\([ ]*image_data[ ]*\\)[ ]*<=[ ]*0[ ]*or[ ]*len\\([ ]*image_data[ ]*\\)[ ]*>[ ]*MAX_IMAGE_SIZE"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "IMAGEOP-002",
+        "description": "imageop vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "imageop\\.tovideo\\(",
+        "pattern_not": [
+            "if[ ]*not[ ]*isinstance\\([ ]*args[ ]*,[ ]*tuple[ ]*\\)[ ]*or[ ]*len\\([ ]*args[ ]*\\)[ ]*<[ ]*3"
+        ],
+        "find_var": "",
+        "remediation": []
+    }
+    
+]
+  

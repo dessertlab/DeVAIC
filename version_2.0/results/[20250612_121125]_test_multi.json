@@ -1,0 +1,134 @@
+[
+    {
+        "snippet_number": 1,
+        "original_code": "password = request.form['password'] \\n  hashed_password = hashlib.md5(password.encode()).hexdigest()",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Cryptographic Failures", "Software and Data Integrity Failures"],
+        "comments": [],
+        "execution_time": "2.0020",
+        "details": [
+            {
+                "rule_id": "MD5-001",
+                "vulnerabilities": ["Software and Data Integrity Failures"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "ENCODE-DECODE-001",
+                "vulnerabilities": ["Software and Data Integrity Failures"],
+                "comment": "NULL"
+            }
+        ]
+
+    },
+    {
+        "snippet_number": 2,
+        "original_code": "password = request.form['password'] \\n  hashed_password = hashlib.md5(password.encode()).hexdigest()",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Cryptographic Failures", "Software and Data Integrity Failures"],
+        "comments": [],
+        "execution_time": "2.0433",
+        "details": [
+            {
+                "rule_id": "MD5-001",
+                "vulnerabilities": ["Software and Data Integrity Failures"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "ENCODE-DECODE-001",
+                "vulnerabilities": ["Software and Data Integrity Failures"],
+                "comment": "NULL"
+            }
+        ]
+
+    },
+    {
+        "snippet_number": 3,
+        "original_code": "param = request.args.get('param ', \") \\n  response = make_response(param) \\n  return response",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Broken Access Control"],
+        "comments": [],
+        "execution_time": "2.0946",
+        "details": [
+            {
+                "rule_id": "REQUEST-ARGS_GET-008",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            }
+        ]
+
+    },
+    {
+        "snippet_number": 4,
+        "original_code": "name = request.args.get('name ', \") \\n  response = make_response('<h1>Hello ' + name + '</h1>') \\n  return response",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Broken Access Control"],
+        "comments": [],
+        "execution_time": "2.0719",
+        "details": [
+            {
+                "rule_id": "REQUEST-ARGS_GET-005",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "REQUEST-ARGS_GET-008",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            }
+        ]
+
+    },
+    {
+        "snippet_number": 5,
+        "original_code": "def hello(): \\n  target = request.args.get(\" target\\\") \\n  return redirect(target, code=302)",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Broken Access Control"],
+        "comments": [],
+        "execution_time": "2.2026",
+        "details": [
+            {
+                "rule_id": "REQUEST-ARGS_GET-008",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            }
+        ]
+
+    },
+    {
+        "snippet_number": 6,
+        "original_code": "userInput = input(\" Enter a number: \") \\n  userInput = int(userInput)",
+        "vulnerable": false,
+        "vulnerabilities_summary": [],
+        "comments": [],
+        "execution_time": "1.9961",
+        "details": [
+        ]
+
+    },
+    {
+        "snippet_number": 7,
+        "original_code": "name = request.args.get('name ') \\n  app.logger.info('User name: ' + name)",
+        "vulnerable": true,
+        "vulnerabilities_summary": ["Broken Access Control"],
+        "comments": [],
+        "execution_time": "2.1570",
+        "details": [
+            {
+                "rule_id": "REQUEST-ARGS_GET-005",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "REQUEST-ARGS_GET-006",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            },
+            {
+                "rule_id": "REQUEST-ARGS_GET-008",
+                "vulnerabilities": ["Broken Access Control"],
+                "comment": "NULL"
+            }
+        ]
+
+    }
+]

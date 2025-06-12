@@ -1,0 +1,79 @@
+[
+    {
+        "id": "SQL-001",
+        "description": "sql vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "(SELECT|DELETE|UPDATE|INSERT).*\\=|.*\\([ ]*\\%s[ ]\\).* \\%[ ]*VAR_PLACEHOLDER",
+        "pattern_not": [  
+            "(SELECT|DELETE|UPDATE|INSERT).* \\?, \\([ ]*VAR_PLACEHOLDER[ ]*\\)",
+            "(SELECT|DELETE|UPDATE|INSERT).* \\?\".*cur\\.execute\\(.*\\([ ]*\\w+[ ]*\\,[ ]*\\)\\)",
+            "cur\\.\\execute\\(\\w+,[ ]*\\(VAR_PLACEHOLDER|cursor\\.\\execute\\(\\w+,[ ]*\\(VAR_PLACEHOLDER"
+        ],
+        "find_var":"input\\\\(|(flask\\\\.)?request\\\\.(args\\\\.get|args\\\\.POST)\\\\(|(flask\\\\.)?request\\\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SQL-002",
+        "description": "sql vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "sql\\.parse\\(",
+        "pattern_not": [    
+            "re\\.sub\\(|escape\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SQL-PARAMETRIZED-QUERY-002",
+        "description": "sql vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\.execute\\([ ]*[\"'](SELECT|DELETE|UPDATE|INSERT)|=[ ]*(\"|'|f\")(SELECT|DELETE|UPDATE|INSERT)",
+        "pattern_not": [    
+            "\\.execute\\([ ]*[\"'](SELECT|DELETE|UPDATE|INSERT).*(%s|\\?).*?[\"'][ ]*,[ ]*\\([^)]*?\\)[ ]*\\)",
+            "\\.execute\\([ ]*[a-zA-Z0-9_]*[ ]*,[ ]*\\([ ]*[a-zA-Z0-9_]*[ ]*,",
+            "=[ ]*(\"|'|f\")(SELECT|DELETE|UPDATE|INSERT).*escape\\(",
+            "\\.replace\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SQL-PARSE-FORMAT-002",
+        "description": "sql parse vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "sqlparse\\.format\\(",
+        "pattern_not": [    
+            "sqlparse\\.format\\(.*strip_comments[ ]*=[ ]*False"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "MYSQL-DB-003",
+        "description": "mysql db connect vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "MySQLdb\\.connect\\(",
+        "pattern_not": [
+            "os\\.getenv\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SQL-CONNECTOR-003",
+        "description": "sql connector vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "mysql\\.connector\\.connect\\(",
+        "pattern_not": [
+            "ssl_disabled[ ]*=[ ]*False"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    }
+]

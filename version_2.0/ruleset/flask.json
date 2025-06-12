@@ -1,0 +1,798 @@
+[
+    {
+        "id": "REQUEST-ARGS-GET-002",
+        "description": "Request args get vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "VAR_PLACEHOLDER\\.endswith\\(\"\\.com/\"\\)",
+        "pattern_not": [
+            "if[ ]*not[ ]*isinstance\\([ ]*VAR_PLACEHOLDER[ ]*,[ ]*str\\)[ ]*or[ ]*not[ ]*VAR_PLACEHOLDER\\.startswith\\(\"http\"\\)"
+        ],
+        "find_var": "request\\\\.args\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-003",
+        "description": "Request args get vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "return[ ]*re\\.sub\\(r'<script\\.\\*?>.*?</script>',[ ]*''[ ]*,[ ]*VAR_PLACEHOLDER[ ]*,[ ]*flags[ ]*=[ ]*re\\.DOTALL\\)",
+        "pattern_not": [
+            "if[ ]*not[ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "request\\\\.args\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-004",
+        "description": "Request args get vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "\\w+\\(request\\.args\\.get\\(",
+        "pattern_not": [
+            "request\\.args\\.get\\(.*type[ ]*=",
+            "escape\\([ ]*request\\.args\\.get\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SET-COOKIE-001",
+        "description": "Param set cookie",
+        "vulnerabilities": "CRYF",
+        "pattern": "\\.set_cookie\\(",
+        "pattern_not": [
+            "\\.set_cookie\\(.*samesite[ ]*=[ ]*(True|true),[ ]*secure[ ]*=[ ]*(True|true),[ ]*httponly[ ]*=[ ]*(True|true),[ ]*max_age[ ]*=[ ]*[0-9]*\\)",
+            "cj\\.set_cookie\\(",
+            "cookie\\[\\s*['\"]\\w+['\"]\\s*\\]\\s*\\[\\s*['\"]samesite['\"]\\s*\\]\\s*=\\s*['\"]Strict['\"].*cookie\\[\\s*['\"]\\w+['\"]\\s*\\]\\s*\\[\\s*['\"]secure['\"]\\s*\\]\\s*=\\s*True"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SEND-FILE-001",
+        "description": "set foile vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "send_file\\(",
+        "pattern_not": [
+            "\\.startswith\\(",
+            "os\\.path\\.isfile\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-001",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "escape\\([ ]*VAR_PLACEHOLDER|escape_filter_chars\\([ ]*VAR_PLACEHOLDER|html\\.escape\\([ ]*VAR_PLACEHOLDER",
+            "ast\\.literal_eval\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "request\\\\.args\\\\[|request\\\\.get_data\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-002",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\.search\\(.*request\\.args\\[.*\\)|\\.search\\(.*request\\.get_data\\(.*\\)|\\.compile\\(.*request\\.args\\[.*\\)|\\.compile\\(.*request\\.get_data\\(.*\\)",
+        "pattern_not": [
+            "\\.search\\(.*escape\\(.*request\\.args\\[|\\.search\\(.*escape\\(.*request\\.get_data\\(|\\.compile\\(.*escape\\(.*request\\.args\\[|\\.compile\\(.*escape\\(.*request\\.get_data\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-001",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\+[ ]*request\\.args\\.get\\(",
+        "pattern_not": [
+            "\\+[ ]*escape\\([ ]*request\\.args\\.get\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-002",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(.*\\+[ ]*request\\.args\\[",
+        "pattern_not": [
+            "if.*\\.match\\(|if[ ]*obj_match\\(|if[ ]*os\\.path\\.isfile\\(|args\\.send_static_file\\(",
+            "\\(.*\\+[ ]*escape\\([ ]*request\\.args\\["
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-003",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "([ ]*request\\.POST\\.get\\(.*%",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-004",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INJC, BRAC",
+        "pattern": "request\\.args\\.get\\[.*==[^a-z]*[a-z]*[^a-z]",
+        "pattern_not": [
+            "escape\\([ ]*request\\.args\\.get\\[|escape_filter_chars\\([ ]*request\\.args\\.get\\[|escape_rdn\\([ ]*request\\.args\\.get\\[",
+            "if.*\\.match\\(|if[ ]*obj_match\\(",
+            "escape\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SESSION-001",
+        "description": "Session vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "[+=]\\s*VAR_PLACEHOLDER",
+        "pattern_not": [      
+            "[+=]\\s*[a-zA-Z0-9_]VAR_PLACEHOLDER",  
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*([ ]*VAR_PLACEHOLDER[ ]*).*?\\], *check *= *True",
+            "os.path.isfile\\(.*([ ]*VAR_PLACEHOLDER[ ]*).*?\\)|try:.*([ ]*VAR_PLACEHOLDER[ ]*).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER|escape_filter_chars\\(\\s*VAR_PLACEHOLDER|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*"
+        ],
+        "find_var": "session\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SESSION-002",
+        "description": "Session vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "VAR_PLACEHOLDER[ ]*:",
+        "pattern_not": [ 
+            "\\[a-zA-Z0-9_]VAR_PLACEHOLDER[ ]*:",       
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*([a-zA-Z0-9_]VAR_PLACEHOLDER).*?\\], *check *= *True",
+            "os.path.isfile\\(.*([a-zA-Z0-9_]VAR_PLACEHOLDER).*?\\)|try:.*([a-zA-Z0-9_]VAR_PLACEHOLDER).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var": "session\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SESSION-003",
+        "description": "Session vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|\\bVAR_PLACEHOLDER\\b\\s?[])]",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var": "session\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SESSION-004",
+        "description": "Session vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "return[ ]*VAR_PLACEHOLDER|VAR_PLACEHOLDER\\.[a-zA-Z]*\\(",
+        "pattern_not": [      
+            "return[ ]*[a-zA-Z0-9_]VAR_PLACEHOLDER|[a-zA-Z0-9_]VAR_PLACEHOLDER\\.[a-zA-Z]*\\(",  
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var": "session\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-005",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "[+=%]{1}\\s*\\bVAR_PLACEHOLDER\\b(?:\\\\n)?|[^{}]{\\s*\\bVAR_PLACEHOLDER\\b\\s*}",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(|if[ ]*not[ ]*os\\.path\\.isdir\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)",
+            "VAR_PLACEHOLDER\\.replace\\(",
+            "if[ ]*not[ ]*VAR_PLACEHOLDER",
+            "json\\.loads\\(",
+            "\\.join\\([a-zA-Z]+[ ]*for[ ]*[a-zA-Z]+[ ]*in[ ]*VAR_PLACEHOLDER[ ]*if[ ]*[a-zA-Z]+\\.isalnum\\(\\)[ ]*or[ ]*[a-zA-Z]+\\.isspace\\(\\)\\)"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-006",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\bVAR_PLACEHOLDER\\b[ ]*:",
+        "pattern_not": [  
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)",
+            "if[ ]*not[ ]*VAR_PLACEHOLDER[ ]*|or[ ]*'/'[ ]*in[ ]*VAR_PLACEHOLDER|or[ ]*'\\'[ ]*in[ ]*VAR_PLACEHOLDER[ ]*|or[ ]*'\\.\\.'[ ]*in[ ]*VAR_PLACEHOLDER",
+            "VAR_PLACEHOLDER\\.replace\\(",
+            "repr\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-007",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\bVAR_PLACEHOLDER\\b[ ]*:|if[ ]*re\\.search\\(.*VAR_PLACEHOLDER",
+        "pattern_not": [  
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-012",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "re\\.search\\(.*VAR_PLACEHOLDER.*\\)",
+        "pattern_not": [  
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-013",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "[a-zA-Z0-9_]*\\[[ ]*('|\")[ ]*[a-zA-Z0-9_]*[ ]*('|\")[ ]*\\][ ]*=[ ]*VAR_PLACEHOLDER",
+        "pattern_not": [  
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-HEADER-GET-001",
+        "description": "Request header get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [  
+            "VAR_PLACEHOLDER\\.split\\([ ]*','[ ]*\\)\\[0\\]\\.strip\\(\\)",
+            "if[ ]*VAR_PLACEHOLDER[ ]*not[ ]*in|if[ ]*VAR_PLACEHOLDER[ ]*in",
+            "if[ ]*any\\([ ]*VAR_PLACEHOLDER\\.startswith\\(",
+            "\\.strip\\("
+        ],
+        "find_var": "request\\\\.headers\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-008",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(.*\\bVAR_PLACEHOLDER\\b.*?\\)|VAR_PLACEHOLDER\\.", 
+        "pattern_not": [       
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*VAR_PLACEHOLDER.*?\\], *check *= *True",
+            "os.path.isfile\\(.*VAR_PLACEHOLDER.*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)",
+            "json\\.load\\([ ]*VAR_PLACEHOLDER",
+            "base64\\.decodebytes\\(|decodebytes\\([ ]*VAR_PLACEHOLDER",
+            "urlparse\\([ ]*VAR_PLACEHOLDER.*if.*\\.scheme not in \\{.*https.*if.*\\.netloc in|urlparse\\([ ]*VAR_PLACEHOLDER.*if.*\\.netloc in",
+            "if[ ]*VAR_PLACEHOLDER\\.endswith\\([' ]*\\.png'[ ]*\\).*os\\.path\\.join\\(([^()]*\\bVAR_PLACEHOLDER\\b[^()]*)\\)",
+            "if.*\\.startswith\\([ ]*'ls'[ ]*\\).*try[ ]*\\:.*subprocess\\.run\\(.*check[ ]*=[ ]*(True|true).*except",   
+            "\\.execute\\([ ]*[\"'](SELECT|DELETE|UPDATE|INSERT).*(%s|\\?).*?[\"'][ ]*,[ ]*\\([^)]*?\\)[ ]*\\)",
+            "\\.execute\\([ ]*[a-zA-Z0-9_]*[ ]*,[ ]*\\([ ]*[a-zA-Z0-9_]*[ ]*,",
+            "base64\\.b64decode\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*not[ ]*re\\.match\\([a-zA-Z0-9_]*[ ]*,[ ]*VAR_PLACEHOLDER",
+            "yaml\\.safe_load\\([ ]*VAR_PLACEHOLDER",
+            "importlib\\.import_module\\([ ]*VAR_PLACEHOLDER",
+            "isistance\\([ ]*VAR_PLACEHOLDER",
+            "os\\.path\\.abspath\\([ ]*VAR_PLACEHOLDER",
+            "re\\.sub\\([ ]*VAR_PLACEHOLDER",
+            "urlparse\\([ ]*VAR_PLACEHOLDER",
+            "VAR_PLACEHOLDER\\.startswith\\(",
+            "VAR_PLACEHOLDER\\.replace\\(",
+            "if[ ]*not[ ]*VAR_PLACEHOLDER|or[ ]*not[ ]*VAR_PLACEHOLDER",
+            "bytes\\.fromhex\\([ ]*VAR_PLACEHOLDER[ ]*\\)\\.decode\\(",
+            "if[ ]*any\\(.*in[ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER[ ]*and[ ]*VAR_PLACEHOLDER[ ]*!=[ ]*'admin'[ ]*\\:",
+            "\\.join\\([a-zA-Z]+[ ]*for[ ]*[a-zA-Z]+[ ]*in[ ]*VAR_PLACEHOLDER[ ]*if[ ]*[a-zA-Z]+\\.isalnum\\(\\)[ ]*or[ ]*[a-zA-Z]+\\.isspace\\(\\)\\)",
+            "repr\\([ ]*VAR_PLACEHOLDER",
+            "etree\\.fromstring\\([ ]*VAR_PLACEHOLDER",
+            "re\\.fullmatch\\(.*VAR_PLACEHOLDER",
+            "fromstring\\([ ]*VAR_PLACEHOLDER",
+            "ast\\.literal_eval\\([ ]*VAR_PLACEHOLDER",
+            "json\\.loads\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*not[ ]*check_code\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*not[ ]*VAR_PLACEHOLDER",
+            "if[ ]*not[ ]*check_action\\([ ]*VAR_PLACEHOLDER",
+            "if[ ]*VAR_PLACEHOLDER[ ]*and[ ]*is_safe_url\\([ ]*VAR_PLACEHOLDER[ ]*\\)",
+            "process_config_value\\([ ]*VAR_PLACEHOLDER",
+            "_validate_redirect_url\\([ ]*VAR_PLACEHOLDER",
+            "make_url\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|form\\\\.get|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-009",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(.*\\bVAR_PLACEHOLDER\\b.*?\\)|VAR_PLACEHOLDER", 
+        "pattern_not": [       
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*VAR_PLACEHOLDER.*?\\], *check *= *True",
+            "os.path.isfile\\(.*VAR_PLACEHOLDER.*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)",
+            "json\\.load\\([ ]*VAR_PLACEHOLDER",
+            "base64\\.decodebytes\\(|decodebytes\\([ ]*VAR_PLACEHOLDER",
+            "urlparse\\([ ]*VAR_PLACEHOLDER.*if.*\\.scheme not in \\{.*https.*if.*\\.netloc in|urlparse\\([ ]*VAR_PLACEHOLDER.*if.*\\.netloc in",
+            "if[ ]*VAR_PLACEHOLDER\\.endswith\\([' ]*\\.png'[ ]*\\).*os\\.path\\.join\\(([^()]*\\bVAR_PLACEHOLDER\\b[^()]*)\\)",
+            "if.*\\.startswith\\([ ]*'ls'[ ]*\\).*try[ ]*\\:.*subprocess\\.run\\(.*check[ ]*=[ ]*(True|true).*except",   
+            "\\.execute\\([ ]*[\"'](SELECT|DELETE|UPDATE|INSERT).*(%s|\\?).*?[\"'][ ]*,[ ]*\\([^)]*?\\)[ ]*\\)",
+            "\\.execute\\([ ]*[a-zA-Z0-9_]*[ ]*,[ ]*\\([ ]*[a-zA-Z0-9_]*[ ]*,",
+            "secure_filename\\([ ]*VAR_PLACEHOLDER\\.",
+            "ast\\.literal_eval\\([ ]*VAR_PLACEHOLDER",
+            "defusedetree\\.fromstring\\([ ]*VAR_PLACEHOLDER\\.",
+            "VAR_PLACEHOLDER\\.encode\\(",
+            "url_for\\([ ]*VAR_PLACEHOLDER",
+            "app\\.logger\\.warning\\([ ]*VAR_PLACEHOLDER",
+            "allowed_file\\([ ]*VAR_PLACEHOLDER\\.filename[ ]*\\)"
+     
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-010",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "return VAR_PLACEHOLDER| \\VAR_PLACEHOLDER\\.[a-zA-Z]*\\(",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)",
+            "repr\\([ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS_GET-011",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "re\\.search\\(.*VAR_PLACEHOLDER",
+        "pattern_not": [  
+            "not[ ]*VAR_PLACEHOLDER"
+        ],
+        "find_var": "(flask\\\\.)?request\\\\.(args|args\\\\.get|GET|POST|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-JSON-001",
+        "description": "Request args json vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\+ \\*\\VAR_PLACEHOLDER\\b|= \\*\\VAR_PLACEHOLDER\\b|= \\*\\VAR_PLACEHOLDER\\b\\\\n|\\+ \\*\\VAR_PLACEHOLDER\\b\\\\n|% \\*\\VAR_PLACEHOLDER\\b|{ \\*\\VAR_PLACEHOLDER\\b \\*}",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.json",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-JSON-002",
+        "description": "Request args json vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\VAR_PLACEHOLDER\\b:|\\VAR_PLACEHOLDER\\b :",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"\\\\*= \\\\*(flask\\\\.)?request\\\\.json",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-JSON-003",
+        "description": "Request args json vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(.*\\VAR_PLACEHOLDER\\b.*?\\)|\\VAR_PLACEHOLDER\\b\\s?\\)",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.json",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-JSON-004",
+        "description": "Request args json vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "return \\VAR_PLACEHOLDER\\b| \\VAR_PLACEHOLDER\\b\\.[a-zA-Z]*\\(",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.json",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-008",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "return (flask\\.)?request\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\.get\\(",
+        "pattern_not": [        
+            "if.*\\.match\\(",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-009",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "return (flask\\\\\\.)?request\\\\\\.(args|args\\\\.get|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "pattern_not": [        
+            "if.*\\.match\\(",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-010",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "(\\+|=|%) *\\VAR_PLACEHOLDER\\b(?:\\\\n)?",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\],[ ]*check[ ]*=[ ]*(True|true)",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.(args|args\\\\.get|files|form|GET|POST|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-011",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "(\\+|=|%) *\\VAR_PLACEHOLDER\\b(?:\\\\n)?",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\],[ ]*check[ ]*=[ ]*(True|true)",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.(args|args\\\\.get|files|form|GET|POST|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-014",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "return (flask\\.)?request\\.(get|urlopen|read|get_data|get_json|from_values)\\(",
+        "pattern_not": [        
+            "escape\\(\\s*(flask\\.)?request\\.(get|urlopen|read|get_data|get_json|from_values)\\(",
+            "escape_filter_chars\\(\\s*(flask\\.)?request\\.(get|urlopen|read|get_data|get_json|from_values)\\(",
+            "escape_rdn\\(\\s*(flask\\.)?request\\.(get|urlopen|read|get_data|get_json|from_values)\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-015",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "(\\+|=) *\\VAR_PLACEHOLDER\\b(?:\\\\n)?",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.(get|urlopen|read|get_data|get_json|from_values)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-016",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\VAR_PLACEHOLDER\\b *:",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.(get|urlopen|read|get_data|get_json|from_values)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-017",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(.*\\VAR_PLACEHOLDER\\b.*?\\)|\\VAR_PLACEHOLDER\\b *\\)|\\( *\\VAR_PLACEHOLDER\\b",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.(get|urlopen|read|get_data|get_json|from_values)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-018",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "return \\VAR_PLACEHOLDER\\b| \\VAR_PLACEHOLDER\\b\\.[a-zA-Z]*\\(",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"(flask\\\\.)?request\\\\.(get|urlopen|read|get_data|get_json|from_values)\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-019",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "\\+ *(flask\\.)?request\\.(args|args\\.get|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\[",
+        "pattern_not": [        
+            "escape\\(\\s*\\+ *(flask\\.)?request\\.(args|args\\.get|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\[",
+            "escape_filter_chars\\(\\s*\\+ *(flask\\.)?request\\.(args|args\\.get|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\[",
+            "escape_rdn\\(\\s*\\+ *(flask\\.)?request\\.(args|args\\.get|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\["
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-020",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "\\+ *(flask\\.)?request\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\.get\\(",
+        "pattern_not": [        
+            "escape\\(\\s*\\+ *(flask\\.)?request\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\.get\\(",
+            "escape_filter_chars\\(\\s*\\+ *(flask\\.)?request\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\.get\\(",
+            "escape_rdn\\(\\s*\\+ *(flask\\.)?request\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\.get\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-021",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INSD",
+        "pattern": "(\\+|=|%) *\\VAR_PLACEHOLDER\\b(?:\\\\n)?",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"'\\\\{\\\\}'.format\\\\((flask\\\\.)?request\\\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-022",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INSD, INJC",
+        "pattern": "\\VAR_PLACEHOLDER\\b *:",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"'\\\\{\\\\}'.format\\\\((flask\\\\.)?request\\\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-023",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INSD, INJC",
+        "pattern": "\\(.*(\\VAR_PLACEHOLDER\\b).*?\\)|\\VAR_PLACEHOLDER\\b *\\)|\\( *\\VAR_PLACEHOLDER\\b",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"'\\\\{\\\\}'.format\\\\((flask\\\\.)?request\\\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-024",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "INSD, INJC",
+        "pattern": "return \\VAR_PLACEHOLDER\\b| \\VAR_PLACEHOLDER\\b\\.[a-zA-Z]*\\(",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"'\\\\{\\\\}'.format\\\\((flask\\\\.)?request\\\\.(args|POST|GET|files|form|data|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\\\[",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-025",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "\\( *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\(",
+        "pattern_not": [        
+            "escape\\(\\s*\\( *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\(",
+            "escape_filter_chars\\(\\s*\\( *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\(",
+            "escape_rdn\\(\\s*\\( *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUEST-ARGS-GET-026",
+        "description": "Request args vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "\\% *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\(",
+        "pattern_not": [        
+            "escape\\(\\s*\\% *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\(",
+            "escape_filter_chars\\(\\s*\\% *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\(",
+            "escape_rdn\\(\\s*\\% *(flask\\.)request\\.(args|args\\.get|POST|GET|files|formdata|headers|params|base_url|authorization|cookies|endpoint|host|host_url|module|path|query_strings|url|values|view_args)\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "DEBUG-TRUE-001",
+        "description": "Debug true vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "\\.debug[ ]*=[ ]*(True|true)|\\.run\\s*\\(\\s*.*?debug\\s*=\\s*True.*?\\)",
+        "pattern_not": [  
+            "[a-zA-Z0-9_]run\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "FLASK-REDIRECT-001",
+        "description": "redirect vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "redirect\\(",
+        "pattern_not": [  
+            "[a-zA-Z0-9_]*redirect\\(",
+            "if[ ]*\\w+\\.netloc[ ]*in|if[ ]*\\w+\\.netloc[ ]*not[ ]*in",
+            "if[ ]*session\\[[ ]*(\"|')[ ]*\\w+[ ]*(\"|')[ ]*\\][ ]*is[ ]*None[ ]*:.*return[ ]*redirect\\(",
+            "redirect\\([ ]*(\"|')[ ]*[a-zA-Z0-9_\\/\\.]*(\"|')[ ]*\\)",
+            "\\.startswith\\([ ]*'/'[ ]*\\)",
+            "redirect\\([ ]*escape\\(|redirect\\([ ]*html\\.escape\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "FLASK-CONFIG-001",
+        "description": "app config hardcoded",
+        "vulnerabilities": "SECM",
+        "pattern": "VAR_PLACEHOLDER\\.config\\[",
+        "pattern_not": [    
+            "os\\.getenv\\("
+        ],
+        "find_var":"Flask\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "FLASK-ROUTE-001",
+        "description": "app route hardcoded",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.route\\([ ]*'/measurement'[ ]*",
+        "pattern_not": [    
+            "if[ ]*request\\.remote_addr[ ]*!=[ ]*'127\\.0\\.0\\.1"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "FLASK-SOCKETIO-001",
+        "description": "flask socketio hardcoded",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*flask_socketio[ ]*import[ ]*SocketIO",
+        "pattern_not": [    
+            "@app\\.before_request"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    }
+
+]

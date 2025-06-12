@@ -1,0 +1,130 @@
+[
+    {
+        "id": "FILE-DIM-001",
+        "description": "file dimentions vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.extract\\(",
+        "pattern_not": [
+            "\\.file_size\\s*(<|>)\\s*\\d+",
+            "\\.file_size",
+            "if.*\\.size",
+            "max_file_size[ ]*=.*if.*\\.size[ ]*(>|<)[ ]*max_file_size",
+            "file_size[ ]*=.*if.*\\.size[ ]*(>|<)[ ]*file_size"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "FILE-RESPONSE-001",
+        "description": "path traversal vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "FileResponse\\(",
+        "pattern_not": [
+            "os\\.path\\.commonpath\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+        {
+        "id": "ZIP-EXTRACT-001",
+        "description": "zipfile extract all vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.extractall\\(",
+        "pattern_not": [
+            "os\\.path\\.join\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TEMPORARYFILE-MOD-001",
+        "description": "temporary file mode vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "tempfile\\.NamedTemporaryFile\\(",
+        "pattern_not": [
+            "os\\.chmod\\(\\w+,[ ]*stat.S_IRUSR[ ]*|[ ]*stat.S_IWUSR\\)",
+            "os\\.chmod\\(.*,[ ]*0o600[ ]*\\)",
+            "tempfile\\.NamedTemporaryFile\\([ ]*mode[ ]*=[ ]*'w\\+'[ ]*,[ ]*encoding[ ]*=[ ]*'utf-8'[ ]*,[ ]*delete[ ]*=[ ]*False[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "TEMPORARYFILE-001",
+        "description": "temporary file vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "temp_file\\.write\\(",
+        "pattern_not": [
+            "temp_file\\.write\\(.*\\.encode\\([ ]*'[ ]*utf-8[ ]*'[ ]*\\)",
+            "\\.encode\\([ ]*'[ ]*utf-8[ ]*'[ ]*\\)",
+            "temp_file\\.write\\(.*'.*'\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "ZIPLIB-COMPRESS-001",
+        "description": "ziplib compress vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "zlib\\.compress\\(|zlib\\.decompress\\(",
+        "pattern_not": [
+            "if[ ]*len\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SHUTIL-MOVE-001",
+        "description": "shutil move vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "shutil\\.move\\(",
+        "pattern_not": [
+            "os\\.path\\.commonprefix\\(",
+            "os\\.path\\.abspath\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "ZIP-DIM-001",
+        "description": "zip dim vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "zipfile\\.ZipFile\\(",
+        "pattern_not": [
+            "if.*\\.file_size",
+            "if.*\\.size"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "ZIP-IMPORT-MODULE-001",
+        "description": "zip import module vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "zip_importer\\.exec_module\\(",
+        "pattern_not": [
+            "if.*not[ ]*in|if.*in"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "PYPDF-EXTRACT-TEXT-001",
+        "description": "pypdf extract text vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.extract_text\\(",
+        "pattern_not": [
+            "try\\:.*\\.extract_text\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    }
+]

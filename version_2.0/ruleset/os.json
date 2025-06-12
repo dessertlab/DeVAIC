@@ -1,0 +1,347 @@
+[
+    {
+        "id": "OS-ENV-GET-001",
+        "description": "os environment get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "(\\+|=) *\\bVAR_PLACEHOLDER\\b(?:\\n)?",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"\\\\*= *os\\\\.environ\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-ENV-GET-002",
+        "description": "os environment get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\bVAR_PLACEHOLDER\\b *:",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"\\\\*= *os\\\\.environ\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-ENV-GET-001",
+        "description": "os environment get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "(\\+|=) *\\bVAR_PLACEHOLDER\\b(?:\\n)?",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"\\\\*= *os\\\\.environ\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-ENV-GET-003",
+        "description": "os environment get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\(.*\\bVAR_PLACEHOLDER\\b.*?\\)|\\bVAR_PLACEHOLDER\\b *\\)|\\( *\\bVAR_PLACEHOLDER\\b",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"\\\\*= *os\\\\.environ\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-ENV-GET-004",
+        "description": "os environment get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "return \\bVAR_PLACEHOLDER\\b| \\bVAR_PLACEHOLDER\\b\\.[a-zA-Z]*\\(",
+        "pattern_not": [        
+            "if.*\\.match\\(|if obj_match\\(|if os.path.isfile\\(|args.send_static_file\\(",
+            "subprocess.run\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\], *check *= *True",
+            "os.path.isfile\\(.*(\\bVAR_PLACEHOLDER\\b).*?\\)|try:.*(\\bVAR_PLACEHOLDER\\b).*?\\)",
+            "if\\s*VAR_PLACEHOLDER\\s*(?:is\\s*None|not\\s*VAR_PLACEHOLDER|VAR_PLACEHOLDER)",
+            "escape\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_filter_chars\\(\\s*VAR_PLACEHOLDER\\s*\\)|escape_rdn\\(\\s*VAR_PLACEHOLDER\\s*\\)"
+        ],
+        "find_var":"\\\\*= *os\\\\.environ\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-ENV-GET-005",
+        "description": "os environment get vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "\\+[ ]*VAR_PLACEHOLDER|VAR_PLACEHOLDER[ ]*\\+",
+        "pattern_not": [        
+            "VAR_PLACEHOLDER\\.split\\([ ]*os\\.pathsep[ ]*\\)"
+        ],
+        "find_var":"os\\\\.environ\\\\.get\\\\(",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SUBPROCESS-CAPTURE-001",
+        "description": "subprocess capture vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "subprocess\\.capture_output\\(",
+        "pattern_not": [        
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SUBPROCESS-SHELL-001",
+        "description": "subprocess shell vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "subprocess\\..*\\(.*shell\\s*=\\s*True",
+        "pattern_not": [        
+            "if[ ]*any\\(.*in",
+            "shlex\\.quote\\(",
+            "subprocess\\.run\\(\\[[ ]*'ping'[ ]*,[ ]*'-c'[ ]*,[ ]*'4'[ ]*,[ ]*link[ ]*\\],[ ]*stdout[ ]*=[ ]*subprocess\\.PIPE[ ]*,[ ]*stderr[ ]*=[ ]*subprocess\\.PIPE[ ]*,[ ]*text[ ]*=[ ]*True[ ]*\\)",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\(.*\\).*if.*in|[a-zA-Z0-9_]*[ ]*=[ ]*\\(.*\\).*if.*not[ ]*in",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\{.*\\}.*if.*in|[a-zA-Z0-9_]*[ ]*=[ ]*\\{.*\\}.*if.*not[ ]*in",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\[.*\\].*if.*in|[a-zA-Z0-9_]*[ ]*=[ ]*\\[.*\\].*if.*not[ ]*in"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "MKTEMP-001",
+        "description": "mktemp vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "mktemp\\(",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]mktemp\\(",
+            "def mktemp\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-SYSTEM-001",
+        "description": "os system vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "os\\.system\\([^a-z]*[a-z]*\\.bin",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]os\\.system\\([^a-z]*[a-z]*\\.bin"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-SYSTEM-002",
+        "description": "os system vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "os\\.system\\(",
+        "pattern_not": [   
+            "os\\.system\\([ ]*escape\\(",
+            "eval\\(.*os\\.system\\(.*\\)",
+            "exec\\(.*os\\.system\\(.*\\)",
+            "requests\\.get\\(\\url\\)",
+            "os\\.system\\(\"python\"\\)",
+            "os\\.path\\.dirname\\([ ]*sys\\.executable[ ]*\\)",
+            "\"[ ]*os\\.system\\(|'os\\.system\\(|\"import os;[ ]*os\\.system\\(|'import os;[ ]*os\\.system\\(",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\(.*\\).*if.*in|[a-zA-Z0-9_]*[ ]*=[ ]*\\(.*\\).*if.*not[ ]*in",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\{.*\\}.*if.*in|[a-zA-Z0-9_]*[ ]*=[ ]*\\{.*\\}.*if.*not[ ]*in",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\[.*\\].*if.*in|[a-zA-Z0-9_]*[ ]*=[ ]*\\[.*\\].*if.*not[ ]*in"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "REQUESTS-VERIFY-001",
+        "description": "requests verify false vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "requests\\.\\..*\\(.*verify=False",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]requests\\."
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "ELEMENT-TREE-001",
+        "description": "Element tree vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "etree\\.XSLTAccessControl\\(.*read_network=True|XSLTAccessControl\\(.*read_network=True|XSLTAccessControl\\(.*write_network=True",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]XSLTAccessControl\\(.*read_network=True"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "MAKEDIRS-001",
+        "description": "makedirs vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "os\\.makedirs\\(",
+        "pattern_not": [
+            "os\\.makedirs\\(.*[ ]*mode=[ ]*0o700",
+            "os\\.makedirs\\(.*[ ]*stat.S_IRUSR[ ]*|[ ]*stat.S_IWUSR"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "CHMOD-001",
+        "description": "chmod vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "tempfile\\.mkdtemp\\(",
+        "pattern_not": [
+            "os\\.chmod\\([ ]*\\w+\\,[ ]*stat\\.S_IRWXU"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "IMPORT-MODULE-001",
+        "description": "import module vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "__import__\\(",
+        "pattern_not": [
+            "sys\\.path",
+            "\"__import__",
+            "os\\.path\\.abspath\\(",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\[.*\\].*if.*in",
+            "[a-zA-Z0-9_]*[ ]*=[ ]*\\{.*\\}.*if.*in"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "OS-ENVIRON-PYTHON-PATH-001",
+        "description": "os environ python path vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "os\\.environ\\[[ ]*'PYTHONPATH'[ ]*\\]",
+        "pattern_not": [
+            "os\\.pathsep\\.join\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PATH-001",
+        "description": "path vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "path\\.normpath\\(",
+        "pattern_not": [
+            "if[ ]*'\\\\0'[ ]*in",
+            "'\\\\0'[ ]*in"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "OS-REALPATH-001",
+        "description": "realpath vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER",
+        "pattern_not": [
+            "if[ ]*len\\([ ]*VAR_PLACEHOLDER[ ]*\\)[ }*>[ ]*4096"
+        ],
+        "find_var": "os\\\\.path\\\\.realpath\\\\(",
+        "remediation": []
+    },
+    {
+        "id": "OA-PATH-TRAVERSAL-001",
+        "description": "os path traversal vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "filepath[ ]*=[ ]*os\\.path\\.join\\(.*filename.*\\)",
+        "pattern_not": [
+            "if[ ]*not[ ]*all\\(.*isalnum\\(\\)[ ]*or.*==[ ]*('|\")[ ]*_[ ]*('|\")"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SYMLINK-001",
+        "description": "os symlink vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "os\\.symlink\\(",
+        "pattern_not": [
+            "if[ ]*len\\(|os\\.path\\.exists\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "MKDIR-001",
+        "description": "os mkdir vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.mkdir\\(",
+        "pattern_not": [
+            "\\.mkdir\\(.*exist_ok[ ]*=[ ]*False"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "OS-CHMOD-001",
+        "description": "OS chmod vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "os\\.chmod\\(.*,[ ]*0\\)|os\\.chmod\\(.*,[ ]*0000\\)|os\\.chmod\\(.*,[ ]*0o000\\)|os\\.chmod\\(.*,[ ]*755\\)|os\\.chmod\\(.*,[ ]*0o755\\)|os\\.chmod\\(.*,[ ]*777\\)|os\\.chmod\\(.*,[ ]*0o777\\)|os\\.chmod\\(.*,[ ]*0o400\\)|os\\.chmod\\(.*,[ ]*128\\)|os\\.chmod\\(.*,[ ]*664\\)|os\\.chmod\\(.*,[ ]*0o644\\)",
+        "pattern_not": [  
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-PSUTIL-KILL-001",
+        "description": "OS psutil kill vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.kill\\(",
+        "pattern_not": [  
+            "if[ ]*.*os\\.getpid\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-REMOVE-001",
+        "description": "OS remove vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "os\\.remove\\(",
+        "pattern_not": [  
+            "os\\.path\\.exists\\(",
+            "os\\.path\\.isfile\\(",
+            "os\\.path\\.join\\(.*if[ ]*os\\.path\\.commonprefix\\([ ]*\\(os\\.path\\.realpath\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OS-REMOVE-002",
+        "description": "OS remove vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "if[ ]*os\\.path\\.exists\\([ ]*path[ ]*\\).*os\\.remove\\([ ]*path[ ]*\\)",
+        "pattern_not": [  
+            "if[ ]*os\\.path\\.exists\\([ ]*path[ ]*\\)[ ]*and[ ]*os\\.path\\.isfile\\([ ]*path[ ]*\\).*os\\.remove\\([ ]*path[ ]*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    }
+    
+]

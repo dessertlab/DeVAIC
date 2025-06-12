@@ -1,0 +1,329 @@
+[
+    {
+        "id": "RANDOM-001",
+        "description": "random vulnerabiltiy",
+        "vulnerabilities": "CRYF",
+        "pattern": "random\\.randint\\(|random\\.randrange\\(|random\\.random\\(|random\\.uniform\\(|random\\.getrandbits\\(|random\\.sample\\(|random\\.shuffle\\(|random\\.seed\\(",
+        "pattern_not": [        
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "HASHLIB-SHA256-001",
+        "description": "hashlib sha256 vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "hashlib\\.sha256\\(|sha256\\(",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]sha256\\(",
+            " sha256\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "DSA-001",
+        "description": "dsa vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "DSA\\.generate\\([ ]*2[ ]*\\)|DSA\\.generate\\([ ]*4[ ]*\\)|DSA\\.generate\\([ ]*8[ ]*\\)|DSA\\.generate\\([ ]*16[ ]*\\)|DSA\\.generate\\([ ]*32[ ]*\\)|DSA\\.generate\\([ ]*64[ ]*\\)|DSA\\.generate\\([ ]*128[ ]*\\)|DSA\\.generate\\([ ]*256[ ]*\\)|DSA\\.generate\\([ ]*512[ ]*\\)|DSA\\.generate\\([ ]*1024[ ]*\\)",
+        "pattern_not": [        
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "DES-001",
+        "description": "des vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": " DES.new\\(",
+        "pattern_not": [        
+            "DSA\\.construct\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "MD5-001",
+        "description": "md5 vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "hashlib.md5\\(|md5\\(",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]md5\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SHA1-001",
+        "description": "sha1 vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "hashlib\\.sha1\\(|sha1\\(",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]sha1\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "EBC-MODE-001",
+        "description": "ebc mode vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "modes\\.ECB\\(|AES\\.MODE_ECB",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]ECB\\(",
+            "def ECB\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CBC-MODE-001",
+        "description": "cbc mode vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "modes.CBC\\(|AES\\.MODE_CBC",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]CBC\\(",
+            "def CBC\\(",
+            "get_random_bytes\\([ ]*AES\\.block_size[ ]*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "RANDOM-CHOICE-001",
+        "description": "random choice vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "random.choice\\(|choice\\(|random.choices\\(",
+        "pattern_not": [        
+            "[a-zA-Z0-9_]choice\\(",
+            "secrets\\.choice\\(",
+            "secrets\\."
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "HASHLIB-001",
+        "description": "hashlib vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "hashlib\\.new\\([^a-z]*[a-zA-Z0-9]*[^,][^a-Z]*\\)",
+        "pattern_not": [        
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SSL-METHOD-001",
+        "description": "ssl method vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "(ssl|SSL)\\.(SSLv2|SSLv3|SSLv23|TLSv1|TLSv1_1)_METHOD|ssl\\.PROTOCOL_(SSLv2|SSLv3|TLSv1(_1)?)",
+        "pattern_not": [        
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "URANDOM-001",
+        "description": "urandom vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "urandom\\((0|1|2|4|8|16|32)\\)|urandom\\( (0|1|2|4|8|16|32) \\)|urandom\\( (0|1|2|4|8|16|32)\\)|urandom\\((0|1|2|4|8|16|32) \\)",
+        "pattern_not": [    
+            "[a-zA-Z0-9_]urandom"    
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SIGNATURE-001",
+        "description": "signature vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "VerifyingKey\\.from_string\\(|vk\\.verify\\(",
+        "pattern_not": [    
+            "try:.*VerifyingKey\\.from_string\\(|vk\\.verify\\(.*except"    
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SIGNATURE-002",
+        "description": "signature vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "def[ ]*sign\\([ ]*self[ ]*,[ ]*[a-zA-Z0-9_]*[ ]*\\)",
+        "pattern_not": [  
+            "hmac\\.new\\(.*\\)\\.hexdigest\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CIPHERTEXT-NULL-001",
+        "description": "ciphertext vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "rsa\\.decrypt\\(",
+        "pattern_not": [    
+            "\\.startswith\\("    
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CJSON-001",
+        "description": "cjson vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "cjson\\.encode\\(",
+        "pattern_not": [    
+            "\\.replace\\s*\\(\\s*['\"]\\/['\"]\\s*,\\s*['\"]\\\\\\\\\\/['\"]\\s*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "PADDING-001",
+        "description": "add padding vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "padding\\.PKCS1v15\\(\\)",
+        "pattern_not": [    
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CIPHER-001",
+        "description": "cryptography hazmat primitives ciphers cipher vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "from[ ]*cryptography\\.hazmat\\.primitives\\.ciphers[ ]*import.*Cipher.*Cipher\\(",
+        "pattern_not": [  
+            "Cipher\\(.*backend[ ]*=[ ]*default_backend\\(",
+            "=[ ]*default_backend\\(.*Cipher\\(.*backend[ ]*="
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "OPENSSL-CRYPTO-001",
+        "description": "openSSL crypto vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "crypto\\.load_pkcs12\\(",
+        "pattern_not": [  
+            "crypto\\.X509Store\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "AES-CIPHER-001",
+        "description": "aes cipher vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "\\.encrypt\\(|\\.decrypt\\(",
+        "pattern_not": [  
+            "\\.encrypt\\([ ]*pad\\([ ]*\\w+,[ ]*AES\\.block_size",
+            "if[ ]*len\\(\\w+\\)[ ]*<[ ]*16",
+            "if[ ]*len\\([a-zA-Z0-9_]*\\)[ ]*<[ ]*AES\\.block_size",
+            "pad\\(",
+            "from[ ]*cryptography\\.fernet[ ]*import[ ]*Fernet",
+            "rsa\\.decrypt\\(",
+            "padding\\.OAEP\\(",
+            "def[ ]*is_valid_pkcs1v15_padding\\("
+            ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "AES-CIPHER-002",
+        "description": "aes cipher vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "\\.encrypt\\(|\\.decrypt\\(",
+        "pattern_not": [  
+            "try:.*\\.encrypt\\(.*except|try:.*\\.decrypt\\(.*except",
+            "def[ ]*encrypt\\(|def[ ]*decrypt\\(",
+            "def[ ]*is_valid_pkcs1v15_padding\\(",
+            "from[ ]*cryptography\\.fernet[ ]*import[ ]*Fernet"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "PUBLICKEY-VERIFY-001",
+        "description": "public ket verify vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "public_key\\.verify\\(",
+        "pattern_not": [  
+            "der_decode\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "RSA-KEY-001",
+        "description": "rsa key vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "RSA\\.generate\\([0-9]+",
+        "pattern_not": [  
+            "RSA\\.generate\\([ ]*2048[ ]*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "HMAC-NEW-001",
+        "description": "rsa key vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "hmac\\.new\\(",
+        "pattern_not": [  
+            "os\\.getenv\\(",
+            "hmac\\.new\\(.*hashlib\\.sha512[ ]*\\)\\.digest\\(",
+            "hmac\\.new\\(.*hashlib\\.sha512[ ]*\\)\\.hexdigest\\("
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "HASHLIB-002",
+        "description": "hashlib md5 vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "hashlib\\.new\\([ ]*'md5'[ ]*\\)",
+        "pattern_not": [  
+            "hashlib\\.new\\([ ]*'sha512'[ ]*\\)"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "PBKDF2-HMAC-001",
+        "description": "algorithm vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "pbkdf2_hmac\\([ ]*'sha256'",
+        "pattern_not": [  
+            "pbkdf2_hmac\\([ ]*'sha512'"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    }
+    
+]

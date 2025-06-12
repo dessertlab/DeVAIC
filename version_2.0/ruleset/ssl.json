@@ -1,0 +1,98 @@
+[
+    {
+        "id": "SSL-WRAP-SOCKET-001",
+        "description": "Wrap socket vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "ssl\\.wrap_socket\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SET-COOKIE-001",
+        "description": "Set cookie vulnerability",
+        "vulnerabilities": "SECM",
+        "pattern": "\\.set_cookie\\([^,]*, [a-zA-Z0-9_]*\\)|set_cookie\\(.*, [a-zA-Z0-9]*\\)|\\.set_cookie\\([^a-z]*[a-zA-Z0-9]*[^a-z]*\\)|set_cookie\\([^a-z]*[a-zA-Z0-9]*[^a-z]*\\)",
+        "pattern_not": [
+            "\\.set_cookie(.*,(expires|max_age) *=",
+            "\\.set_cookie(.*,httponly *=",
+            "\\.set_cookie(.*,secure *=",
+            "\\.set_cookie(.*,samesite *="
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CREATE-DEFAULT-CONTEXT-001",
+        "description": "Default context vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "(SSL|ssl)\\.create_default_context\\(\\).*ctx\\.verify_mode\\s*=\\s*ssl\\.CERT_NONE|(SSL|ssl)\\.create_default_context\\(\\)",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CREATE-UNVERIFIED-CONTEXT-001",
+        "description": "Unverified context vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "ssl\\._create_unverified_context\\(\\)|ctx\\._create_unverified_context\\s*=\\s*True",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CREATE-STDLIB-CONTEXT-001",
+        "description": "Stdlib context vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "ssl\\._create_stdlib_context\\(\\)",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CHECK-HOSTNAME-001",
+        "description": "Check hostname vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "check_hostname\\s*=\\s*False",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CERT-001",
+        "description": "Cert vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "\\.verify_mode[ ]*=[ ]*ssl\\.CERT_NONE",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "CONTEXT-001",
+        "description": "Cert vulnerability",
+        "vulnerabilities": "IDAF",
+        "pattern": "(ssl|SSL)\\.SSLContext\\(|(ssl|SSL)\\.Context\\(",
+        "pattern_not": [
+            "(ssl|SSL)\\.SSLContext\\([^)]*'tlsv1_2'|set_verify\\([ ]*SSL\\.verify_peer,[ ]*1[ ]*\\)",
+            "(ssl|SSL)\\.SSLContext\\([ ]*ssl.PROTOCOL_TLS",
+            "(ssl|SSL)\\.Context\\([ ]*ssl\\.PROTOCOL_TLS"
+        
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    }
+]

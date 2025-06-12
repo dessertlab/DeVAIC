@@ -1,0 +1,38 @@
+[
+    {
+        "id": "GIT-CLONE-001",
+        "description": "git clone vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "\\.Repo\\.clone_from\\([^)]*kwargs",
+        "pattern_not": [
+            "if\\s*['\\\"]depth['\\\"]\\s*in\\s*kwargs\\s*and\\s*kwargs\\s*\\[\\s*['\\\"]depth['\\\"]\\s*\\]\\s*!=\\s*1"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "GIT-CLONE-002",
+        "description": "git clone vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "git\\.Repo\\.clone_from\\(",
+        "pattern_not": [
+            "urllib\\.parse\\.urlparse\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "INSTALL-PACKAGE-GITHUB-001",
+        "description": "install package github vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "def[ ]*install_package\\([ ]*git_url[ ]*,[ ]*reference[ ]*\\)",
+        "pattern_not": [
+            "def[ ]*sanitize_git_reference\\([ ]*reference[ ]*\\)"
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    }
+]

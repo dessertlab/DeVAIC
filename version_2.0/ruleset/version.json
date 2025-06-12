@@ -1,0 +1,152 @@
+[
+    {
+        "id": "PIL-VERSION-001",
+        "description": "pill version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*PIL[ ]*import",
+        "pattern_not": [
+            "version\\(\\\"Pillow",
+            "version\\('Pillow"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "APENPYXL-VERSION-001",
+        "description": "openpyxl version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*openpyxl",
+        "pattern_not": [
+            "version\\(\\\"openpyxl"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TARFILE-VERSION-001",
+        "description": "tarfile version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*tarfile",
+        "pattern_not": [
+            "version\\(\"tarfile\"|version\\('tarfile'",
+            "if[ ]*sys\\.version_info[ ]*(<|>)[ ]*required_version|if[ ]*version_info[ ]*(<|>)[ ]*required_version"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HYPER-VERSION-001",
+        "description": "hyper version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*hyper",
+        "pattern_not": [
+            "version\\(\\\"hyper"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PYBLUMONDAY-VERSION-001",
+        "description": "pybluemonday version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*pybluemonday",
+        "pattern_not": [
+            "version\\(\\\"pybluemonday"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "IPADDRESS-VERSION-001",
+        "description": "ipaddress version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*ipaddress",
+        "pattern_not": [
+            "\\.version",
+            "version\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "URLLIB3-VERSION-001",
+        "description": "urllib3 version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*urllib3",
+        "pattern_not": [
+            "version\\(\\\"urllib3"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TENSORFLOW-VERSION-001",
+        "description": "tensorflow version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*tensorflow",
+        "pattern_not": [
+            "\\__version__"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SHA3-VERSION-001",
+        "description": "SHA3 version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*_sha3",
+        "pattern_not": [
+            "pkg_resources\\.get_distribution\\(\"pysha3\")\\.version"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "MARCADOR-VERSION-001",
+        "description": "maracdor version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*marcador",
+        "pattern_not": [
+            "pkg_resources\\.get_distribution\\(\"marcador\")\\.version"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "TKVIDEOPLAYER-VERSION-001",
+        "description": "tkvideoplayer version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "from[ ]*tkvideoplayer[ ]*import[ ]*TkinterVideo",
+        "pattern_not": [
+            "pkg_resources\\.get_distribution\\(\"tkvideoplayer\")\\.version"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PYTHON-001",
+        "description": "python version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*http\\.server|import[ ]*wave|import[ ]*xml\\.parsers\\.expat|import[ ]*urllib3",
+        "pattern_not": [
+            "sys\\.version\\.split\\(\\)\\[0\\]",
+            "sys\\.version_info"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "SETUP_TOOLS-001",
+        "description": "setup tools version vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "import[ ]*setuptools",
+        "pattern_not": [
+            "pkg_resources\\.get_distribution\\(\"setuptools\"\\)"
+        ],
+        "find_var": "",
+        "remediation": []
+    }
+    
+    
+    
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "id": "TOKEN-DIM-001",
+        "description": "token dimension vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "VAR_PLACEHOLDER\\.encode\\(",
+        "pattern_not": [  
+          "if[ ]*len\\(VAR_PLACEHOLDER\\.encode\\("
+        ],
+        "find_var": "jwe\\\\.decode\\\\(",
+        "remediation": []
+      }
+      
+]

@@ -1,0 +1,49 @@
+[
+    {
+        "id": "JWT-PROCESS-FUNCTION-001",
+        "description": "JWT vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "jwt.process_jwt\\([a-zA-Z0-9]*[^,]\\)",
+        "pattern_not": [
+            "[a-zA-Z0-9_]process_jwt\\(",
+            "verify_jwt\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "KEY-SIZE-001",
+        "description": "Parser vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "key_size=([1-9] |[1-1][0-9][0-9] |[1-1][0-9][0-9][0-9] |204[0-7] )|key_size=([1-9]\\\\\\n |[1-1][0-9][0-9]\\\\\\n |[1-1][0-9][0-9][0-9]\\\\\\n |204[0-7]\\\\\\n )",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "JWT-DECODE-001",
+        "description": "Decode vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "jwt\\.decode\\([^)]*verify *= *False",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "JWT-DECODE-002",
+        "description": "Decode vulnerability",
+        "vulnerabilities": "CRYF",
+        "pattern": "jwt\\.decode\\([a-zA-Z0-9_]*\\)",
+        "pattern_not": [
+            "[a-zA-Z0-9_]decode\\("
+        ],
+        "find_var": "",
+        "remediation": [
+        ]
+    }
+]

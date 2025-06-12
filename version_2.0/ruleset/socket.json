@@ -1,0 +1,36 @@
+[
+    {
+        "id": "SOCKET-001",
+        "description": "socket vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "socket\\.socket\\(|socket\\.connect\\(|socket\\.bind\\(|socket\\.listen\\(|socket\\.accept\\(|socket\\.send\\(|socket\\.recv\\(|socket\\.sendto\\(|socket\\.recvfrom\\(|socket\\.sendmsg\\(|socket\\.recvmsg\\(|socket\\.setsockopt\\(|socket\\.getsockopt\\(|socket\\.getsockname\\(|socket\\.getpeername\\(|socket\\.shutdown\\(",
+        "pattern_not": [
+            "try\\:.*socket\\.socket\\(.*except|socket\\.connect\\(.*except|socket\\.bind\\(.*except|socket\\.listen\\(.*except|socket\\.accept\\(.*except|socket\\.send\\(.*except|socket\\.recv\\(.*except|socket\\.sendto\\(.*except|socket\\.recvfrom\\(.*except|socket\\.sendmsg\\(.*except|socket\\.recvmsg\\(.*except|socket\\.setsockopt\\(.*except|socket\\.getsockopt\\(.*except|socket\\.getsockname\\(.*except|socket\\.getpeername\\(.*except|socket\\.shutdown\\(.*except"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "PARSE-UDP-001",
+        "description": "parse udp packet vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "def[ ]*parseUDPpacket\\([ ]*[a-zA-Z0-9_]*[ ]*\\)[ ]*:[ ]*(?:\\\\n){1,4}[ ]*pass",
+        "pattern_not": [    
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    },
+    {
+        "id": "SOCKET-GET-ADDRESS-INFO-001",
+        "description": "get address info vulnerability",
+        "vulnerabilities": "BRAC",
+        "pattern": "socket\\.getaddrinfo\\([ ]*host[ ]*,[ ]*port[ ]*\\)",
+        "pattern_not": [    
+            "if[ ]*len\\([ ]*host[ ]*\\)[ ]*>[ ]*255"
+        ],
+        "find_var":"",
+        "remediation": [
+        ]
+    }
+]

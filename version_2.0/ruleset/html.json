@@ -1,0 +1,35 @@
+[
+    {
+        "id": "HTML-INJC-001",
+        "description": "html injection vulnerability",
+        "vulnerabilities": "INJC",
+        "pattern": "<mj-text>\\s*\\{\\s*\\w+\\s*\\}\\s*</mj-text>",
+        "pattern_not": [  
+          "html\\.escape\\("
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "HTML-PARSER-001",
+        "description": "HTML parser vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "HTMLParser\\(",
+        "pattern_not": [
+            "HTMLParser\\([^}]*tree[ ]*=[ ]*treebuilders\\.getTreeBuilder\\(\\\"dom\\\"\\)[^}]*namespaceHTMLElements\\s*=\\s*False[^}]*strict\\s*=\\s*True"
+        ],
+        "find_var": "",
+        "remediation": []
+    },
+    {
+        "id": "XLML-HTML-CLEAN-001",
+        "description": "HTML parser vulnerability",
+        "vulnerabilities": "SDIF",
+        "pattern": "html\\.clean\\.clean_html\\(",
+        "pattern_not": [
+        ],
+        "find_var": "",
+        "remediation": []
+    }
+      
+]
