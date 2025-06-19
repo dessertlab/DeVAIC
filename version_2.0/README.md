@@ -42,7 +42,14 @@ Move to the `launch_tool` folder and type this command:
 ```bash
 chmod u+x *.sh
 ```
+### For macOS 🍎
 
+Please **do not** run `./devaic.sh` using `zsh` (the default shell on macOS). Instead, use `bash`:
+
+```bash
+bash devaic.sh [...]
+```
+This is due to compatibility issues with `zsh`and `mapfile` when executing certain scripts.
 
 ## 🚀 Run the experiments
 
