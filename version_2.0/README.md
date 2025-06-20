@@ -43,13 +43,6 @@ Move to the `launch_tool` folder and type this command:
 chmod u+x *.sh
 ```
 
-### For macOS 🍎
-
-Install the latest version of GNU Bash using this command:
-
-```bash
-brew install bash
-```
 
 ## 🚀 Run the experiments
 
