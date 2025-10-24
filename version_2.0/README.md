@@ -91,6 +91,19 @@ At the end of execution, the tool generates a report file which can be found at 
 2. Then, move to the path ``version_1.0/results/`` to analyze the results of the detection shown in the file ``[timestamp]_test_multi.json`` and/or ``[timestamp]_test_source.json``.
 
 
+## 📄 License
+
+This project is licensed under the  
+**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)** License.  
+
+You are free to **share** and **adapt** the material under the following terms:
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.  
+- **NonCommercial** — You may not use the material for commercial purposes.  
+- **ShareAlike** — If you remix, transform, or build upon the material, you must distribute your contributions under the same license.
+
+View the full license here: [https://creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+
 ## Citation
 
 If you use DeVAIC in academic context, please cite it as follows:
